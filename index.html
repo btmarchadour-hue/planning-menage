@@ -427,7 +427,7 @@
         { id: 11, title: "Nettoyer les vitres", freq: "annee", interval: 180, nextDue: "2026-12-15", lastDone: null }
     ];
 
-    let tasks = JSON.parse(localStorage.getItem('home_poster_tasks_v17')) || defaultTasks;
+    let tasks = JSON.parse(localStorage.getItem('home_poster_tasks_v18')) || defaultTasks;
     let customAbsences = JSON.parse(localStorage.getItem('home_poster_absences')) || [];
     let calDate = new Date('2026-10-19');
     let selectedDateStr = '2026-10-19';
@@ -436,7 +436,7 @@
     let timerInterval = null;
 
     function save() { 
-        localStorage.setItem('home_poster_tasks_v17', JSON.stringify(tasks)); 
+        localStorage.setItem('home_poster_tasks_v18', JSON.stringify(tasks)); 
         localStorage.setItem('home_poster_absences', JSON.stringify(customAbsences));
     }
 
@@ -840,16 +840,55 @@
 
     function changeMonth(delta) { calDate.setMonth(calDate.getMonth() + delta); renderCalendar(); }
 
+    /* GESTION COMPLÈTE & TEST DE NOTIFICATION */
     function toggleNotifications() {
-        if (!("Notification" in window)) return alert("Notifications non supportées.");
-        if (Notification.permission === "granted") alert("Notifications déjà activées !");
-        else Notification.requestPermission().then(p => { if(p === 'granted') alert("Notifications activées !"); });
+        if (!("Notification" in window)) {
+            return alert("⚠️ Votre navigateur ou système ne prend pas en charge les notifications directes.");
+        }
+
+        if (Notification.permission === "granted") {
+            sendNotification("🔔 Test de Notification", "Les notifications fonctionnent parfaitement sur votre appareil !");
+        } else if (Notification.permission !== "denied") {
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    sendNotification("🎉 Notifications activées !", "Vous recevrez désormais les rappels de ménage.");
+                } else {
+                    alert("⚠️ Vous avez refusé les notifications dans les paramètres de votre navigateur.");
+                }
+            });
+        } else {
+            alert("⚠️ Les notifications sont bloquées. Veuillez cliquer sur le petit cadenas 🔒 à gauche de l'URL pour les autoriser.");
+        }
+    }
+
+    function sendNotification(title, body) {
+        if (Notification.permission === "granted") {
+            try {
+                new Notification(title, {
+                    body: body,
+                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🧹</text></svg>'
+                });
+            } catch (e) {
+                alert(`${title}\n\n${body}`);
+            }
+        }
+    }
+
+    function checkDailyDueTasks() {
+        if (Notification.permission === "granted") {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const dueToday = tasks.filter(t => !t.lastDone && t.nextDue === todayStr);
+            if (dueToday.length > 0) {
+                sendNotification("🧹 Tâches du jour !", `Vous avez ${dueToday.length} tâche(s) au programme aujourd'hui.`);
+            }
+        }
     }
 
     // Init
     changeSeason('auto');
     updateHarmonyScore();
     renderPoster();
+    setTimeout(checkDailyDueTasks, 2000);
 </script>
 </body>
 </html>
