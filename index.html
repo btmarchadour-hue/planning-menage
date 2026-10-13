@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Planning de Ménage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-season-main: #606c38;
+            --bg-season-dark: #283618;
+            --card-bg: rgba(254, 250, 224, 0.96);
+            --card-border: rgba(221, 161, 94, 0.45);
+            --text-dark: #283618;
+            --text-muted: #606c38;
+            --primary: #283618;
+            --radius-lg: 22px;
+
+            --header-semaine: #bc6c25;
+            --header-mois: #dda15e;
+            --header-2mois: #9a3412;
+            --header-trimestre: #606c38;
+            --header-annee: #283618;
+        }
+
+        body.season-printemps {
+            --bg-season-main: #81b29a;
+            --bg-season-dark: #3d405b;
+            --header-semaine: #e07a5f;
+            --header-mois: #f2cc8f;
+            --header-2mois: #d4a373;
+            --header-trimestre: #81b29a;
+            --header-annee: #3d405b;
+            --card-border: rgba(224, 122, 95, 0.4);
+        }
+
+        body.season-ete {
+            --bg-season-main: #e07a5f;
+            --bg-season-dark: #7f2913;
+            --header-semaine: #d97706;
+            --header-mois: #f59e0b;
+            --header-2mois: #b45309;
+            --header-trimestre: #e07a5f;
+            --header-annee: #7f2913;
+            --card-border: rgba(245, 158, 11, 0.5);
+        }
+
+        body.season-automne {
+            --bg-season-main: #606c38;
+            --bg-season-dark: #283618;
+            --header-semaine: #bc6c25;
+            --header-mois: #dda15e;
+            --header-2mois: #9a3412;
+            --header-trimestre: #606c38;
+            --header-annee: #283618;
+            --card-border: rgba(221, 161, 94, 0.45);
+        }
+
+        body.season-hiver {
+            --bg-season-main: #3a5a40;
+            --bg-season-dark: #132a13;
+            --header-semaine: #588157;
+            --header-mois: #a3b18a;
+            --header-2mois: #344e41;
+            --header-trimestre: #3a5a40;
+            --header-annee: #132a13;
+            --card-border: rgba(163, 177, 138, 0.4);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            margin: 0; padding: 16px; padding-bottom: 40px;
+            min-height: 100vh; color: var(--text-dark);
+            background-color: var(--bg-season-main);
+            background-image: radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.25) 0%, transparent 60%),
+                              linear-gradient(135deg, var(--bg-season-main) 0%, var(--bg-season-dark) 100%);
+            background-attachment: fixed; transition: background 0.6s ease, color 0.6s ease;
+            position: relative; overflow-x: hidden;
+        }
+
+        .season-illustration {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; opacity: 0.15;
+            background-repeat: repeat; background-size: 180px 180px;
+        }
+
+        body.season-printemps .season-illustration {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M20 20 Q30 5 40 20 Q55 30 40 40 Q30 55 20 40 Q5 30 20 20 Z' fill='%23ffffff'/%3E%3Ccircle cx='30' cy='30' r='5' fill='%23f2cc8f'/%3E%3C/svg%3E");
+        }
+
+        body.season-ete .season-illustration {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='20' fill='%23ffffff'/%3E%3Cpath d='M50 10 L50 25 M50 75 L50 90 M10 50 L25 50 M75 50 L90 50 M22 22 L33 33 M67 67 L78 78 M22 78 L33 67 M67 33 L78 22' stroke='%23ffffff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E");
+        }
+
+        body.season-automne .season-illustration {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M30 10 Q50 30 70 10 Q60 50 80 70 Q40 60 30 90 Q30 50 10 30 Z' fill='%23ffffff'/%3E%3C/svg%3E");
+        }
+
+        body.season-hiver .season-illustration {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M50 10 L50 90 M10 50 L90 50 M22 22 L78 78 M22 78 L78 22' stroke='%23ffffff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
+        }
+
+        .container { max-width: 520px; margin: 0 auto; position: relative; z-index: 1; }
+
+        .main-header {
+            background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            padding: 14px 16px; border-radius: var(--radius-lg); border: 2px solid var(--card-border);
+            text-align: center; margin-bottom: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px; flex-wrap: wrap; }
+        .main-header h1 { margin: 0; font-size: 1.15rem; font-weight: 900; text-transform: uppercase; color: var(--text-dark); letter-spacing: 0.3px; }
+        .header-controls { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+        .season-select, .btn-notif {
+            background: #fefae0; color: var(--text-dark); border: 2px solid var(--header-semaine);
+            padding: 6px 10px; border-radius: 12px; font-weight: 800; font-size: 0.8rem; cursor: pointer; outline: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .harmony-box { background: rgba(255, 255, 255, 0.7); border-radius: 14px; padding: 10px 14px; margin-bottom: 12px; border: 1px solid rgba(0, 0, 0, 0.08); }
+        .harmony-header { display: flex; justify-content: space-between; font-weight: 900; font-size: 0.82rem; color: var(--bg-season-dark); margin-bottom: 6px; }
+        .harmony-bar-bg { height: 12px; background: rgba(0, 0, 0, 0.08); border-radius: 10px; overflow: hidden; }
+        .harmony-bar-fill { height: 100%; background: linear-gradient(90deg, var(--header-semaine), var(--header-mois), var(--bg-season-dark)); width: 100%; border-radius: 10px; transition: width 0.5s ease-in-out; }
+
+        .tab-bar { display: flex; background: rgba(0, 0, 0, 0.06); padding: 4px; border-radius: 14px; gap: 2px; }
+        .tab-btn { flex: 1; padding: 8px 2px; border: none; background: transparent; font-weight: 800; font-size: 0.72rem; color: var(--text-muted); border-radius: 10px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn.active { background: var(--bg-season-dark); color: #fefae0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18); }
+
+        .freq-block { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg); border: 2px solid var(--card-border); margin-bottom: 14px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); }
+        .freq-header { padding: 10px 16px; color: #fefae0; font-weight: 900; font-size: 0.9rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; letter-spacing: 0.5px; }
+
+        .bg-semaine { background: var(--header-semaine); }
+        .bg-mois { background: var(--header-mois); }
+        .bg-2mois { background: var(--header-2mois); }
+        .bg-trimestre { background: var(--header-trimestre); }
+        .bg-annee { background: var(--header-annee); }
+
+        .task-list { padding: 6px 14px; }
+        .task-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.08); gap: 6px; }
+        .task-item:last-child { border-bottom: none; }
+        .task-checkbox-container { display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer; }
+
+        .custom-check { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--text-muted); background: #fefae0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 900; transition: all 0.2s; }
+        .task-item.done .custom-check { background: var(--header-semaine); border-color: var(--header-semaine); color: #fefae0; }
+        .task-title { font-size: 0.9rem; font-weight: 800; color: var(--text-dark); }
+        .task-item.done .task-title { text-decoration: line-through; color: #a3a3a3; }
+        .task-meta { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; margin-top: 2px; }
+
+        .task-right-actions { display: flex; align-items: center; gap: 6px; }
+
+        .due-badge { font-size: 0.7rem; font-weight: 800; padding: 4px 8px; border-radius: 8px; background: rgba(0, 0, 0, 0.06); color: var(--bg-season-dark); white-space: nowrap; }
+        .due-badge.vacances { background: #fef08a; color: #854d0e; border: 1px solid #fde047; }
+        .due-badge.absence { background: #fed7aa; color: #9a3412; border: 1px solid #fdba74; }
+
+        .btn-delete-task { background: none; border: none; font-size: 0.85rem; cursor: pointer; padding: 2px 4px; opacity: 0.6; transition: opacity 0.2s; }
+        .btn-delete-task:hover { opacity: 1; }
+
+        .btn-add-inline { width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.04); border: none; border-top: 1px dashed rgba(0, 0, 0, 0.15); color: var(--bg-season-dark); font-weight: 800; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .content-card { background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: var(--radius-lg); border: 2px solid var(--card-border); padding: 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); }
+
+        .express-timer-card { text-align: center; padding: 16px 12px; background: #fefae0; border-radius: 18px; border: 2px solid var(--header-semaine); margin-bottom: 14px; }
+        .express-clock { font-size: 2.8rem; font-weight: 900; color: var(--bg-season-dark); margin: 8px 0; font-variant-numeric: tabular-nums; }
+        .express-controls { display: flex; justify-content: center; gap: 8px; }
+        .btn-timer { padding: 8px 18px; border-radius: 10px; font-weight: 800; font-size: 0.82rem; border: none; cursor: pointer; }
+        .btn-timer-start { background: var(--bg-season-dark); color: #fefae0; }
+        .btn-timer-reset { background: #e2e8f0; color: var(--text-dark); }
+
+        .backup-zone { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 2px dashed rgba(0,0,0,0.1); }
+        .btn-backup { width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-backup-export { background: var(--bg-season-dark); color: #fefae0; }
+        .btn-backup-import { background: #e2e8f0; color: var(--text-dark); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 1000; }
+        .celebration-card { background: #fefae0; border: 4px solid var(--bg-season-main); border-radius: 28px; padding: 24px 18px; text-align: center; max-width: 360px; width: 100%; box-shadow: 0 25px 50px rgba(0,0,0,0.35); animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        .dancing-character { width: 100px; height: 100px; margin: 0 auto 10px auto; animation: danceMove 0.5s ease-in-out infinite alternate; }
+        @keyframes danceMove { 0% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-12px) rotate(0deg); } 100% { transform: translateY(0) rotate(8deg); } }
+        .celebration-title { font-size: 1.35rem; font-weight: 900; color: var(--bg-season-dark); margin: 0 0 6px 0; text-transform: uppercase; }
+        .celebration-sub { font-size: 0.9rem; font-weight: 700; color: var(--header-semaine); margin-bottom: 18px; }
+        .btn-celebration { background: var(--bg-season-dark); color: #fefae0; border: none; padding: 12px 24px; border-radius: 14px; font-weight: 800; font-size: 0.95rem; cursor: pointer; }
+
+        .modal-card { background: #fefae0; border-radius: var(--radius-lg); padding: 20px; width: 100%; max-width: 400px; border: 3px solid var(--header-semaine); }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 800; color: var(--text-muted); margin-bottom: 4px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 2px solid var(--card-border); border-radius: 12px; font-family: inherit; font-size: 0.88rem; font-weight: 700; background: white; }
+        .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+        .btn-submit { flex: 1; padding: 12px; background: var(--bg-season-dark); color: #fefae0; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
+        .btn-cancel { flex: 1; padding: 12px; background: #e2e8f0; color: var(--text-muted); border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
+    </style>
+</head>
+<body class="season-automne">
+
+<div class="season-illustration"></div>
+
+<div class="container">
+    <div class="main-header">
+        <div class="header-top">
+            <h1>Planning Ménage</h1>
+            <div class="header-controls">
+                <select class="season-select" id="seasonSelect" onchange="changeSeason(this.value)">
+                    <option value="auto">🍂 Saison : Auto</option>
+                    <option value="printemps">🌸 Printemps</option>
+                    <option value="ete">☀️ Été</option>
+                    <option value="automne">🍁 Automne</option>
+                    <option value="hiver">❄️ Hiver</option>
+                </select>
+                <button class="btn-notif" id="notifBtn" onclick="toggleNotifications()">🔔 Notifs</button>
+            </div>
+        </div>
+
+        <div class="harmony-box">
+            <div class="harmony-header">
+                <span>🏡 Propreté & Harmonie</span>
+                <span id="harmonyScoreText">100%</span>
+            </div>
+            <div class="harmony-bar-bg">
+                <div class="harmony-bar-fill" id="harmonyBar"></div>
+            </div>
+        </div>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchView('poster', this)">🗂️ Blocs</button>
+            <button class="tab-btn" onclick="switchView('express', this)">⏱️ Express</button>
+            <button class="tab-btn" onclick="switchView('next10', this)">⏳ 10 Jours</button>
+            <button class="tab-btn" onclick="switchView('calendar', this)">📅 Agenda</button>
+            <button class="tab-btn" onclick="switchView('install', this)">📲 Tuto</button>
+        </div>
+    </div>
+
+    <!-- ONGLET 1: BLOCS -->
+    <div id="viewPoster">
+        <div class="freq-block">
+            <div class="freq-header bg-semaine"><span>Toutes les semaines</span><span>📅</span></div>
+            <div class="task-list" id="list-semaine"></div>
+            <button class="btn-add-inline" onclick="openAddTaskModal('semaine')">➕ Ajouter une tâche</button>
+        </div>
+
+        <div class="freq-block">
+            <div class="freq-header bg-mois"><span>Tous les mois</span><span>🗓️</span></div>
+            <div class="task-list" id="list-mois"></div>
+            <button class="btn-add-inline" onclick="openAddTaskModal('mois')">➕ Ajouter une tâche</button>
+        </div>
+
+        <div class="freq-block">
+            <div class="freq-header bg-2mois"><span>Tous les 2 mois</span><span>🧺</span></div>
+            <div class="task-list" id="list-2mois"></div>
+            <button class="btn-add-inline" onclick="openAddTaskModal('2mois')">➕ Ajouter une tâche</button>
+        </div>
+
+        <div class="freq-block">
+            <div class="freq-header bg-trimestre"><span>Tous les 3 à 6 mois</span><span>⏳</span></div>
+            <div class="task-list" id="list-trimestre"></div>
+            <button class="btn-add-inline" onclick="openAddTaskModal('trimestre')">➕ Ajouter une tâche</button>
+        </div>
+
+        <div class="freq-block">
+            <div class="freq-header bg-annee"><span>Tous les ans</span><span>🪴</span></div>
+            <div class="task-list" id="list-annee"></div>
+            <button class="btn-add-inline" onclick="openAddTaskModal('annee')">➕ Ajouter une tâche</button>
+        </div>
+    </div>
+
+    <!-- ONGLET 2: MODE MENAGE EXPRESS 15 MIN -->
+    <div id="viewExpress" style="display: none;">
+        <div class="content-card">
+            <div class="express-timer-card">
+                <div style="font-weight: 900; font-size: 0.95rem; color: var(--header-semaine);">⚡ Coup de propre 15 minutes</div>
+                <div class="express-clock" id="timerClock">15:00</div>
+                <div class="express-controls">
+                    <button class="btn-timer btn-timer-start" id="timerStartBtn" onclick="toggleTimer()">▶ Démarrer</button>
+                    <button class="btn-timer btn-timer-reset" onclick="resetTimer()">🔄 Reset</button>
+                </div>
+            </div>
+
+            <div style="font-weight: 900; font-size: 0.9rem; margin-bottom: 10px;">🎯 Vos 3 tâches prioritaires :</div>
+            <div class="task-list" id="expressTasksList" style="padding:0;"></div>
+            <button class="btn-add-inline" style="margin-top:12px; border-radius:12px;" onclick="generateExpressTasks()">🔀 Tirer au sort d'autres tâches</button>
+        </div>
+    </div>
+
+    <!-- ONGLET 3: 10 JOURS -->
+    <div id="viewNext10" style="display: none;">
+        <div class="content-card">
+            <div style="font-weight: 900; font-size: 0.95rem; margin-bottom: 12px;">📋 Tâches des 10 prochains jours</div>
+            <div class="task-list" id="next10TasksList" style="padding: 0;"></div>
+        </div>
+    </div>
+
+    <!-- ONGLET 4: AGENDA -->
+    <div id="viewCalendar" style="display: none;">
+        <div class="content-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-weight:900; margin-bottom:12px;">
+                <button style="border:none; background:none; font-weight:900; font-size:1.1rem;" onclick="changeMonth(-1)">◀</button>
+                <span id="calTitle">Octobre 2026</span>
+                <button style="border:none; background:none; font-weight:900; font-size:1.1rem;" onclick="changeMonth(1)">▶</button>
+            </div>
+            <div class="cal-grid" id="calGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px; text-align:center;"></div>
+            <div style="margin-top:16px; padding-top:12px; border-top:1px solid rgba(0,0,0,0.1);">
+                <div style="font-weight:900; font-size:0.9rem; margin-bottom:8px;" id="selectedDateTitle">Tâches prévues</div>
+                <div id="selectedDateTasks"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONGLET 5: TUTO, ABSENCES & REGALGES -->
+    <div id="viewInstall" style="display: none;">
+        <div class="content-card">
+            <div style="font-weight: 900; font-size: 1rem; margin-bottom: 12px; text-align: center;">📱 Absences & Anti-Overload</div>
+            <p style="font-size:0.82rem; font-weight:700; line-height:1.4;">
+                • <b>Vacances Zone B & Absences :</b> Les tâches récurrentes tombant pendant les vacances scolaires ou vos absences sont étalées au retour.<br><br>
+                • <b>Étalement Intelligent :</b> 1 seule tâche reportée par jour au retour pour une reprise en douceur !
+            </p>
+
+            <div class="backup-zone" style="border-top:2px dashed rgba(0,0,0,0.1); margin-top:12px; padding-top:12px;">
+                <div style="font-weight: 900; font-size: 0.9rem; color: var(--bg-season-dark);">🧳 Gestion de mes absences :</div>
+                <div class="form-group" style="margin-bottom:6px;">
+                    <label>Du :</label>
+                    <input type="date" id="absStart">
+                </div>
+                <div class="form-group" style="margin-bottom:6px;">
+                    <label>Au :</label>
+                    <input type="date" id="absEnd">
+                </div>
+                <div class="form-group" style="margin-bottom:8px;">
+                    <label>Motif :</label>
+                    <input type="text" id="absReason" placeholder="ex: Vacances d'été">
+                </div>
+                <button class="btn-backup btn-backup-export" onclick="addAbsence()">➕ Enregistrer cette absence</button>
+                <div id="absencesList" style="margin-top:10px; font-size:0.8rem; font-weight:700;"></div>
+            </div>
+
+            <div class="backup-zone">
+                <div style="font-weight: 900; font-size: 0.9rem; color: var(--bg-season-dark);">🛡️ Sécurité & Sauvegarde :</div>
+                <button class="btn-backup btn-backup-export" onclick="exportBackup()">💾 Exporter ma sauvegarde</button>
+                <button class="btn-backup btn-backup-import" onclick="document.getElementById('importFile').click()">📂 Restaurer une sauvegarde</button>
+                <input type="file" id="importFile" style="display:none;" onchange="importBackup(event)" accept=".json">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- POP-UP CELEBRATION -->
+<div class="modal-overlay" id="celebrationModal" style="display: none;">
+    <div class="celebration-card">
+        <div class="dancing-character">
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
+                <circle cx="50" cy="25" r="14" fill="#606c38" />
+                <circle cx="45" cy="22" r="2.5" fill="#fefae0" />
+                <circle cx="55" cy="22" r="2.5" fill="#fefae0" />
+                <path d="M 44 30 Q 50 35 56 30" stroke="#fefae0" stroke-width="2.5" fill="none" />
+                <path d="M 50 39 L 50 65" stroke="#606c38" stroke-width="10" stroke-linecap="round" />
+                <path d="M 50 45 Q 30 30 20 20" stroke="#bc6c25" stroke-width="6" stroke-linecap="round" fill="none" />
+                <path d="M 50 45 Q 70 30 80 20" stroke="#bc6c25" stroke-width="6" stroke-linecap="round" fill="none" />
+                <path d="M 50 63 Q 35 75 25 88" stroke="#dda15e" stroke-width="7" stroke-linecap="round" fill="none" />
+                <path d="M 50 63 Q 65 75 75 88" stroke="#dda15e" stroke-width="7" stroke-linecap="round" fill="none" />
+            </svg>
+        </div>
+        <div class="celebration-title">Bien joué Kalaggan !! 🎉</div>
+        <div class="celebration-sub" id="celebrationTaskName">Tâche accomplie !</div>
+        <button class="btn-celebration" onclick="closeCelebrationModal()">C'est parfait ! 🔥</button>
+    </div>
+</div>
+
+<!-- MODAL AJOUT DE TACHE -->
+<div class="modal-overlay" id="taskModal" style="display: none;">
+    <div class="modal-card">
+        <h2 style="margin:0 0 14px 0; font-size:1.05rem; font-weight:900;">➕ Nouvelle Tâche</h2>
+        <div class="form-group">
+            <label>Nom de la tâche</label>
+            <input type="text" id="newTaskTitle" placeholder="ex: Nettoyer le balcon">
+        </div>
+        <div class="form-group">
+            <label>Périodicité</label>
+            <select id="newTaskFreq" onchange="updateDefaultInterval()">
+                <option value="semaine">Toutes les semaines</option>
+                <option value="mois">Tous les mois</option>
+                <option value="2mois">Tous les 2 mois</option>
+                <option value="trimestre">Tous les 3 à 6 mois</option>
+                <option value="annee">Tous les ans</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Intervalle (en jours)</label>
+            <input type="number" id="newTaskInterval" value="7">
+        </div>
+        <div class="form-group">
+            <label>Première date</label>
+            <input type="date" id="newTaskDueDate">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeAddTaskModal()">Annuler</button>
+            <button class="btn-submit" onclick="submitNewTask()">Ajouter</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const holidaysZoneB = [
+        { name: "Toussaint 2025", start: "2025-10-18", return: "2025-11-03" },
+        { name: "Noël 2025", start: "2025-12-20", return: "2026-01-05" },
+        { name: "Hiver 2026", start: "2026-02-14", return: "2026-03-02" },
+        { name: "Printemps 2026", start: "2026-04-11", return: "2026-04-27" },
+        { name: "Été 2026", start: "2026-07-04", return: "2026-09-01" },
+        { name: "Toussaint 2026", start: "2026-10-17", return: "2026-11-02" },
+        { name: "Noël 2026", start: "2026-12-19", return: "2027-01-04" },
+        { name: "Hiver 2027", start: "2027-02-20", return: "2027-03-08" },
+        { name: "Printemps 2027", start: "2027-04-17", return: "2027-05-03" },
+        { name: "Été 2027", start: "2027-07-03", return: "2027-09-02" }
+    ];
+
+    const defaultTasks = [
+        { id: 1, title: "Changer les draps Adulte", freq: "semaine", interval: 7, nextDue: "2026-10-19", lastDone: null },
+        { id: 2, title: "Changer les draps Enfant", freq: "semaine", interval: 7, nextDue: "2026-10-21", lastDone: null },
+        { id: 3, title: "Lavage des sols", freq: "semaine", interval: 7, nextDue: "2026-10-23", lastDone: null },
+        { id: 4, title: "Nettoyer la machine à laver", freq: "mois", interval: 30, nextDue: "2026-11-02", lastDone: null, shiftedHoliday: true },
+        { id: 5, title: "Nettoyer le lave-vaisselle", freq: "mois", interval: 30, nextDue: "2026-11-03", lastDone: null, shiftedHoliday: true },
+        { id: 6, title: "Nettoyer le frigo", freq: "mois", interval: 30, nextDue: "2026-11-04", lastDone: null, shiftedHoliday: true },
+        { id: 7, title: "Ranger le cellier", freq: "2mois", interval: 60, nextDue: "2026-11-05", lastDone: null, shiftedHoliday: true },
+        { id: 8, title: "Détartrage Machine à Café", freq: "trimestre", interval: 90, nextDue: "2026-11-06", lastDone: null },
+        { id: 9, title: "Nettoyer le four", freq: "trimestre", interval: 90, nextDue: "2026-11-09", lastDone: null },
+        { id: 10, title: "Shampouinage Canapé", freq: "trimestre", interval: 120, nextDue: "2026-12-01", lastDone: null },
+        { id: 11, title: "Nettoyer les vitres", freq: "annee", interval: 180, nextDue: "2026-12-15", lastDone: null }
+    ];
+
+    let tasks = JSON.parse(localStorage.getItem('home_poster_tasks_v17')) || defaultTasks;
+    let customAbsences = JSON.parse(localStorage.getItem('home_poster_absences')) || [];
+    let calDate = new Date('2026-10-19');
+    let selectedDateStr = '2026-10-19';
+    let expressSelection = [];
+    let timerSeconds = 15 * 60;
+    let timerInterval = null;
+
+    function save() { 
+        localStorage.setItem('home_poster_tasks_v17', JSON.stringify(tasks)); 
+        localStorage.setItem('home_poster_absences', JSON.stringify(customAbsences));
+    }
+
+    function deleteTask(id) {
+        const task = tasks.find(t => t.id === id);
+        if(!task) return;
+        if(confirm(`Voulez-vous vraiment supprimer la tâche "${task.title}" ?`)) {
+            tasks = tasks.filter(t => t.id !== id);
+            save();
+            updateHarmonyScore();
+            renderPoster();
+            renderNext10();
+            renderCalendar();
+            if (document.getElementById('viewExpress').style.display === 'block') generateExpressTasks();
+        }
+    }
+
+    function updateHarmonyScore() {
+        if(tasks.length === 0) return;
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        const onTimeTasks = tasks.filter(t => {
+            if (t.lastDone) return true;
+            return t.nextDue >= todayStr;
+        });
+
+        const percent = Math.round((onTimeTasks.length / tasks.length) * 100);
+        document.getElementById('harmonyScoreText').textContent = `${percent}%`;
+        document.getElementById('harmonyBar').style.width = `${percent}%`;
+    }
+
+    function addAbsence() {
+        const start = document.getElementById('absStart').value;
+        const end = document.getElementById('absEnd').value;
+        const reason = document.getElementById('absReason').value.trim() || 'Absence';
+        if (!start || !end) return alert("Dates requises");
+        customAbsences.push({ start, end, reason });
+        save();
+        renderAbsencesList();
+        alert("✅ Absence enregistrée !");
+    }
+
+    function renderAbsencesList() {
+        const container = document.getElementById('absencesList');
+        if (!container) return;
+        if (customAbsences.length === 0) {
+            container.innerHTML = "Aucune absence enregistrée.";
+            return;
+        }
+        container.innerHTML = "<b>Vos absences :</b><br>" + customAbsences.map((a, i) => 
+            `• ${a.reason} : du ${formatDateFr(a.start)} au ${formatDateFr(a.end)} <button style="border:none; background:none; cursor:pointer;" onclick="deleteAbsence(${i})">❌</button>`
+        ).join('<br>');
+    }
+
+    function deleteAbsence(index) {
+        customAbsences.splice(index, 1);
+        save();
+        renderAbsencesList();
+    }
+
+    function adjustDateForVacationsAndAbsences(dueDateStr, intervalDays, currentTaskId = null) {
+        if (intervalDays < 28) return { date: dueDateStr, shiftedHoliday: false, shiftedAbsence: false };
+        let date = new Date(dueDateStr);
+        let shiftedHoliday = false;
+        let shiftedAbsence = false;
+
+        let foundConflict = true;
+        while (foundConflict) {
+            foundConflict = false;
+            for (let h of holidaysZoneB) {
+                let start = new Date(h.start);
+                let ret = new Date(h.return);
+                if (date >= start && date < ret) {
+                    date = ret;
+                    shiftedHoliday = true;
+                    foundConflict = true;
+                    break;
+                }
+            }
+            for (let a of customAbsences) {
+                let start = new Date(a.start);
+                let ret = new Date(a.end);
+                ret.setDate(ret.getDate() + 1);
+                if (date >= start && date < ret) {
+                    date = ret;
+                    shiftedAbsence = true;
+                    foundConflict = true;
+                    break;
+                }
+            }
+        }
+
+        if (shiftedHoliday || shiftedAbsence) {
+            let candidateStr = date.toISOString().split('T')[0];
+            let sameDayCount = tasks.filter(t => t.id !== currentTaskId && t.nextDue === candidateStr).length;
+            while (sameDayCount >= 1) {
+                date.setDate(date.getDate() + 1);
+                if (date.getDay() === 6) date.setDate(date.getDate() + 2);
+                else if (date.getDay() === 0) date.setDate(date.getDate() + 1);
+                candidateStr = date.toISOString().split('T')[0];
+                sameDayCount = tasks.filter(t => t.id !== currentTaskId && t.nextDue === candidateStr).length;
+            }
+        }
+
+        return { date: date.toISOString().split('T')[0], shiftedHoliday, shiftedAbsence };
+    }
+
+    function toggleTask(id) {
+        const task = tasks.find(t => t.id === id);
+        if(!task) return;
+        const todayStr = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+
+        if(task.lastDone === todayStr) {
+            task.lastDone = null;
+        } else {
+            task.lastDone = todayStr;
+            let nextDate = new Date();
+            nextDate.setDate(nextDate.getDate() + task.interval);
+            let res = adjustDateForVacationsAndAbsences(nextDate.toISOString().split('T')[0], task.interval, task.id);
+            task.nextDue = res.date;
+            task.shiftedHoliday = res.shiftedHoliday;
+            task.shiftedAbsence = res.shiftedAbsence;
+            triggerCelebration(task.title);
+        }
+        save(); 
+        updateHarmonyScore();
+        renderPoster(); 
+        renderNext10(); 
+        renderCalendar();
+        if (document.getElementById('viewExpress').style.display === 'block') renderExpressList();
+    }
+
+    function renderPoster() {
+        ['semaine', 'mois', '2mois', 'trimestre', 'annee'].forEach(freq => {
+            const listEl = document.getElementById(`list-${freq}`);
+            if(!listEl) return;
+            listEl.innerHTML = '';
+            tasks.filter(t => t.freq === freq).forEach(t => {
+                const isDone = !!t.lastDone;
+                let badgeHtml = `📅 ${formatDateFr(t.nextDue)}`;
+                if (t.shiftedHoliday) badgeHtml = `🎒 ${formatDateFr(t.nextDue)}`;
+                else if (t.shiftedAbsence) badgeHtml = `🧳 ${formatDateFr(t.nextDue)}`;
+
+                listEl.innerHTML += `
+                    <div class="task-item ${isDone ? 'done' : ''}">
+                        <div class="task-checkbox-container" onclick="toggleTask(${t.id})">
+                            <div class="custom-check">${isDone ? '✓' : ''}</div>
+                            <div>
+                                <div class="task-title">${t.title}</div>
+                                <div class="task-meta">${isDone ? `Fait le ${t.lastDone}` : `Tous les ${t.interval}j`}</div>
+                            </div>
+                        </div>
+                        <div class="task-right-actions">
+                            <div class="due-badge ${t.shiftedHoliday ? 'vacances' : t.shiftedAbsence ? 'absence' : ''}">
+                                ${badgeHtml}
+                            </div>
+                            <button class="btn-delete-task" onclick="deleteTask(${t.id})" title="Supprimer">🗑️</button>
+                        </div>
+                    </div>`;
+            });
+        });
+    }
+
+    function exportBackup() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ tasks, customAbsences }));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `sauvegarde_menage_${new Date().toISOString().split('T')[0]}.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    }
+
+    function importBackup(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.tasks) {
+                    tasks = data.tasks;
+                    if (data.customAbsences) customAbsences = data.customAbsences;
+                    save();
+                    updateHarmonyScore();
+                    renderPoster();
+                    renderAbsencesList();
+                    alert("✅ Sauvegarde restaurée avec succès !");
+                }
+            } catch(err) { alert("❌ Erreur de lecture."); }
+        };
+        reader.readAsText(file);
+    }
+
+    function formatDateFr(dStr) {
+        if (!dStr) return '';
+        return new Date(dStr).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    }
+
+    function changeSeason(season) {
+        document.body.className = '';
+        if (season === 'auto') {
+            const m = new Date().getMonth();
+            if (m >= 2 && m <= 4) document.body.classList.add('season-printemps');
+            else if (m >= 5 && m <= 7) document.body.classList.add('season-ete');
+            else if (m >= 8 && m <= 10) document.body.classList.add('season-automne');
+            else document.body.classList.add('season-hiver');
+        } else {
+            document.body.classList.add('season-' + season);
+        }
+    }
+
+    function switchView(view, btn) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('viewPoster').style.display = 'none';
+        document.getElementById('viewExpress').style.display = 'none';
+        document.getElementById('viewNext10').style.display = 'none';
+        document.getElementById('viewCalendar').style.display = 'none';
+        document.getElementById('viewInstall').style.display = 'none';
+
+        if (view === 'poster') { document.getElementById('viewPoster').style.display = 'block'; renderPoster(); }
+        else if (view === 'express') { document.getElementById('viewExpress').style.display = 'block'; generateExpressTasks(); }
+        else if (view === 'next10') { document.getElementById('viewNext10').style.display = 'block'; renderNext10(); }
+        else if (view === 'calendar') { document.getElementById('viewCalendar').style.display = 'block'; renderCalendar(); }
+        else if (view === 'install') { document.getElementById('viewInstall').style.display = 'block'; renderAbsencesList(); }
+    }
+
+    function triggerCelebration(taskTitle) {
+        document.getElementById('celebrationTaskName').textContent = `« ${taskTitle} » terminée !`;
+        document.getElementById('celebrationModal').style.display = 'flex';
+        if (typeof confetti === 'function') confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function closeCelebrationModal() { document.getElementById('celebrationModal').style.display = 'none'; }
+
+    function toggleTimer() {
+        const btn = document.getElementById('timerStartBtn');
+        if(timerInterval) {
+            clearInterval(timerInterval); timerInterval = null; btn.textContent = "▶ Reprendre";
+        } else {
+            timerInterval = setInterval(() => {
+                if(timerSeconds > 0) { timerSeconds--; updateTimerClock(); }
+                else { clearInterval(timerInterval); timerInterval = null; alert("⏰ Temps écoulé !"); btn.textContent = "▶ Démarrer"; }
+            }, 1000);
+            btn.textContent = "⏸ Pause";
+        }
+    }
+
+    function resetTimer() {
+        if(timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+        timerSeconds = 15 * 60; updateTimerClock(); document.getElementById('timerStartBtn').textContent = "▶ Démarrer";
+    }
+
+    function updateTimerClock() {
+        const mins = Math.floor(timerSeconds / 60); const secs = timerSeconds % 60;
+        document.getElementById('timerClock').textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    }
+
+    function generateExpressTasks() {
+        const pending = tasks.filter(t => !t.lastDone);
+        const shuffled = [...pending].sort(() => 0.5 - Math.random());
+        expressSelection = shuffled.slice(0, 3);
+        renderExpressList();
+    }
+
+    function renderExpressList() {
+        const container = document.getElementById('expressTasksList');
+        container.innerHTML = '';
+        if(expressSelection.length === 0) {
+            container.innerHTML = `<div style="font-size:0.85rem; color:var(--text-muted); padding:10px 0;">Toutes les tâches sont terminées ! 🎉</div>`;
+            return;
+        }
+        expressSelection.forEach(t => {
+            const isDone = !!t.lastDone;
+            container.innerHTML += `
+                <div class="task-item ${isDone ? 'done' : ''}">
+                    <div class="task-checkbox-container" onclick="toggleTask(${t.id})">
+                        <div class="custom-check">${isDone ? '✓' : ''}</div>
+                        <div>
+                            <div class="task-title">${t.title}</div>
+                            <div class="task-meta">${t.freq}</div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function openAddTaskModal(defaultFreq = 'semaine') {
+        document.getElementById('newTaskFreq').value = defaultFreq;
+        updateDefaultInterval();
+        document.getElementById('newTaskDueDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('newTaskTitle').value = '';
+        document.getElementById('taskModal').style.display = 'flex';
+    }
+
+    function closeAddTaskModal() { document.getElementById('taskModal').style.display = 'none'; }
+
+    function updateDefaultInterval() {
+        const freq = document.getElementById('newTaskFreq').value;
+        const input = document.getElementById('newTaskInterval');
+        if(freq === 'semaine') input.value = 7;
+        else if(freq === 'mois') input.value = 30;
+        else if(freq === '2mois') input.value = 60;
+        else if(freq === 'trimestre') input.value = 90;
+        else if(freq === 'annee') input.value = 365;
+    }
+
+    function submitNewTask() {
+        const title = document.getElementById('newTaskTitle').value.trim();
+        if(!title) return alert("Nom requis");
+        const interval = parseInt(document.getElementById('newTaskInterval').value) || 7;
+        const initialDate = document.getElementById('newTaskDueDate').value;
+        const res = adjustDateForVacationsAndAbsences(initialDate, interval);
+
+        tasks.push({
+            id: Date.now(), title, freq: document.getElementById('newTaskFreq').value,
+            interval, nextDue: res.date, shiftedHoliday: res.shiftedHoliday, shiftedAbsence: res.shiftedAbsence, lastDone: null
+        });
+        save(); updateHarmonyScore(); closeAddTaskModal(); renderPoster();
+    }
+
+    function renderNext10() {
+        const container = document.getElementById('next10TasksList');
+        container.innerHTML = '';
+        const refDate = new Date('2026-10-19');
+        const limitDate = new Date('2026-10-19');
+        limitDate.setDate(limitDate.getDate() + 10);
+
+        const filtered = tasks.filter(t => {
+            const d = new Date(t.nextDue);
+            return d >= refDate && d <= limitDate;
+        }).sort((a, b) => new Date(a.nextDue) - new Date(b.nextDue));
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div style="font-size:0.82rem; color:var(--text-muted); padding:8px 0;">Aucune tâche dans les 10 jours 🎉</div>`;
+            return;
+        }
+
+        filtered.forEach(t => {
+            const isDone = !!t.lastDone;
+            container.innerHTML += `
+                <div class="task-item ${isDone ? 'done' : ''}">
+                    <div class="task-checkbox-container" onclick="toggleTask(${t.id})">
+                        <div class="custom-check">${isDone ? '✓' : ''}</div>
+                        <div>
+                            <div class="task-title">${t.title}</div>
+                            <div class="task-meta">Échéance : ${formatDateFr(t.nextDue)}</div>
+                        </div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function renderCalendar() {
+        const year = calDate.getFullYear();
+        const month = calDate.getMonth();
+        const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        document.getElementById('calTitle').textContent = `${monthNames[month]} ${year}`;
+
+        const grid = document.getElementById('calGrid');
+        grid.innerHTML = ['L','M','M','J','V','S','D'].map(d => `<div style="font-size:0.75rem; font-weight:800; color:var(--text-muted); padding-bottom:6px;">${d}</div>`).join('');
+
+        const firstDay = new Date(year, month, 1);
+        let start = firstDay.getDay() - 1; if(start === -1) start = 6;
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        for(let i=0; i<start; i++) grid.innerHTML += `<div></div>`;
+
+        for(let day=1; day<=totalDays; day++) {
+            const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            const hasTask = tasks.some(t => t.nextDue === dStr);
+            const isSel = (dStr === selectedDateStr);
+            grid.innerHTML += `<div class="cal-day ${hasTask ? 'has-task' : ''} ${isSel ? 'selected' : ''}" onclick="selectCalDay('${dStr}')">${day}</div>`;
+        }
+        renderSelectedDayTasks();
+    }
+
+    function selectCalDay(dStr) { selectedDateStr = dStr; renderCalendar(); }
+
+    function renderSelectedDayTasks() {
+        const container = document.getElementById('selectedDateTasks');
+        document.getElementById('selectedDateTitle').textContent = `Tâches du ${formatDateFr(selectedDateStr)}`;
+        container.innerHTML = '';
+        const dayTasks = tasks.filter(t => t.nextDue === selectedDateStr);
+        if(dayTasks.length === 0) {
+            container.innerHTML = `<div style="font-size:0.82rem; color:var(--text-muted);">Rien de prévu ce jour-là 🎉</div>`;
+            return;
+        }
+        dayTasks.forEach(t => {
+            const isDone = !!t.lastDone;
+            container.innerHTML += `
+                <div class="task-item ${isDone ? 'done' : ''}">
+                    <div class="task-checkbox-container" onclick="toggleTask(${t.id})">
+                        <div class="custom-check">${isDone ? '✓' : ''}</div>
+                        <div><div class="task-title">${t.title}</div></div>
+                    </div>
+                </div>`;
+        });
+    }
+
+    function changeMonth(delta) { calDate.setMonth(calDate.getMonth() + delta); renderCalendar(); }
+
+    function toggleNotifications() {
+        if (!("Notification" in window)) return alert("Notifications non supportées.");
+        if (Notification.permission === "granted") alert("Notifications déjà activées !");
+        else Notification.requestPermission().then(p => { if(p === 'granted') alert("Notifications activées !"); });
+    }
+
+    // Init
+    changeSeason('auto');
+    updateHarmonyScore();
+    renderPoster();
+</script>
+</body>
+</html>
