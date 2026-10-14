@@ -30,24 +30,53 @@
     <style>
         :root {
             --bg-color: #3d2314;
-            --card-bg: #f8f6f0;
+            --card-bg: rgba(248, 246, 240, 0.94);
             --accent-color: #e76f51;
             --text-color: #2b2b2b;
             --border-radius: 16px;
+            --season-pattern: '🍂';
         }
 
-        body.automne { --bg-color: #3d2314; --accent-color: #e76f51; }
-        body.printemps { --bg-color: #2a4736; --accent-color: #e07a5f; }
-        body.ete { --bg-color: #1b4965; --accent-color: #f4a261; }
-        body.hiver { --bg-color: #1d2d44; --accent-color: #83c5be; }
+        body.automne { 
+            --bg-color: #3d2314; 
+            --accent-color: #e76f51;
+            background: linear-gradient(135deg, #3d2314 0%, #6b3e26 100%);
+        }
+        body.printemps { 
+            --bg-color: #1b4d3e; 
+            --accent-color: #e07a5f;
+            background: linear-gradient(135deg, #1b4d3e 0%, #2d7a60 100%);
+        }
+        body.ete { 
+            --bg-color: #005f73; 
+            --accent-color: #ee9b00;
+            background: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
+        }
+        body.hiver { 
+            --bg-color: #1d2d44; 
+            --accent-color: #94d2bd;
+            background: linear-gradient(135deg, #1d2d44 0%, #3d5a80 100%);
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 16px;
-            transition: background-color 0.5s ease;
+            min-height: 100vh;
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        body::before {
+            content: var(--season-pattern);
+            position: fixed;
+            top: -40px;
+            right: -20px;
+            font-size: 15rem;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
@@ -56,13 +85,16 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            position: relative;
+            z-index: 1;
         }
 
         .header-card, .section-card {
             background: var(--card-bg);
+            backdrop-filter: blur(10px);
             border-radius: var(--border-radius);
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
         .header-top {
@@ -72,7 +104,7 @@
             margin-bottom: 12px;
         }
 
-        h1 { margin: 0; font-size: 1.4rem; }
+        h1 { margin: 0; font-size: 1.3rem; }
 
         select, button, input {
             padding: 8px 12px;
@@ -104,19 +136,62 @@
             margin-bottom: 16px;
         }
 
+        /* Mascotte Kalaggan */
+        .kalaggan-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #ffffff;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .kalaggan-avatar {
+            font-size: 2.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .kalaggan-text {
+            font-size: 0.85rem;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        /* Jauge d'harmonie */
+        .gauge-container {
+            margin-top: 10px;
+        }
+
+        .gauge-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
         .progress-bar-bg {
             background: #e0e0e0;
-            height: 12px;
-            border-radius: 6px;
+            height: 14px;
+            border-radius: 8px;
             overflow: hidden;
-            margin-top: 8px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .progress-bar-fill {
             background: var(--accent-color);
             height: 100%;
             width: 0%;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease-in-out;
+            border-radius: 8px;
         }
 
         .task-item {
@@ -124,18 +199,19 @@
             align-items: center;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
         }
 
         .task-item:last-child { border-bottom: none; }
 
         .task-info { display: flex; flex-direction: column; gap: 2px; }
-        .task-title { font-weight: bold; font-size: 1rem; }
-        .task-sub { font-size: 0.82rem; color: #555; }
+        .task-title { font-weight: bold; font-size: 0.95rem; }
+        .task-sub { font-size: 0.8rem; color: #555; }
         .date-highlight { color: var(--accent-color); font-weight: bold; }
+        .date-late { color: #d90429; font-weight: bold; }
 
         .badge-vacances {
-            background: #e76f51;
+            background: var(--accent-color);
             color: white;
             font-size: 0.72rem;
             padding: 2px 8px;
@@ -232,8 +308,20 @@
             </select>
         </div>
 
-        <div>
-            <span id="harmonyPercent" style="float: right; font-weight: bold;">0%</span>
+        <!-- Mascotte Kalaggan -->
+        <div class="kalaggan-box">
+            <div class="kalaggan-avatar">🧙‍♂️</div>
+            <div class="kalaggan-text" id="kalagganMsg">
+                <b>Bien joué !</b> Je gère votre planning et vos retards en douceur !
+            </div>
+        </div>
+
+        <!-- JAUGE D'HARMONIE (100% si à jour des tâches échues) -->
+        <div class="gauge-container">
+            <div class="gauge-header">
+                <span>Avancement à jour (Objectif 100%)</span>
+                <span id="harmonyPercent">0%</span>
+            </div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="harmonyFill"></div>
             </div>
@@ -243,7 +331,7 @@
             <button class="tab-btn active" onclick="switchTab('blocs', this)">📋 Tâches</button>
             <button class="tab-btn" onclick="switchTab('agenda', this)">📅 Planning & Dates</button>
             <button class="tab-btn" onclick="switchTab('express', this)">⏱️ Express 15m</button>
-            <button class="tab-btn" onclick="switchTab('tuto', this)">⚙️ Réglages & Notifs</button>
+            <button class="tab-btn" onclick="switchTab('tuto', this)">⚙️ Réglages & Vacances</button>
         </div>
     </div>
 
@@ -285,11 +373,11 @@
     <!-- Onglet Agenda -->
     <div id="tab-agenda" class="tab-content">
         <div class="section-card">
-            <h3>📅 Planning Intelligent (Zone B)</h3>
+            <h3>📅 Planning Intelligent & Gestion des Retards</h3>
             <p style="font-size:0.85rem; color:#666;">
-                • Démarrage programmé dès <b>Lundi Prochain</b>.<br>
-                • Pas de grosses tâches pendant les vacances Zone B.<br>
-                • Report à la rentrée étalé : <b>1 tâche tous les 2 jours</b>.
+                • Les retards sont lissés intelligemment.<br>
+                • Pas de surcharge : <b>max 1 tâche de rattrapage tous les 2 jours</b>.<br>
+                • Gel automatique pendant les vacances.
             </p>
             <div id="list-agenda"></div>
         </div>
@@ -308,8 +396,19 @@
         </div>
     </div>
 
-    <!-- Onglet Réglages -->
+    <!-- Onglet Réglages & Vacances Personnalisées -->
     <div id="tab-tuto" class="tab-content">
+        <div class="section-card">
+            <h3>🏖️ Vos Propres Vacances / Congés Famille</h3>
+            <p style="font-size:0.82rem; color:#666;">
+                Définissez vos vacances personnelles : toutes les tâches seront automatiquement gelées et reportées à la rentrée (étalées 1j/2).
+            </p>
+            <label style="font-size:0.8rem; font-weight:bold;">Début des vacances :</label>
+            <input type="date" id="customVacStart" onchange="saveCustomVacations()" style="width:100%; margin:4px 0 10px 0;">
+            <label style="font-size:0.8rem; font-weight:bold;">Fin des vacances (Rentrée) :</label>
+            <input type="date" id="customVacEnd" onchange="saveCustomVacations()" style="width:100%; margin:4px 0 10px 0;">
+        </div>
+        <br>
         <div class="section-card">
             <h3>🔔 Notifications</h3>
             <button class="btn-action" onclick="requestNotificationPermission()">Activer les notifications</button>
@@ -339,7 +438,6 @@
         { id: 9, title: 'Entretien de la VMC', freq: 365, lastDone: null, cat: 'longterme', dayOffset: 2 }
     ];
 
-    // Dates fixes en timestamps pour éviter tout bogue mobile Safari/Android
     const zoneBVacations = [
         { name: "Toussaint", start: 1792195200000, end: 1793577600000 },
         { name: "Noël", start: 1797638400000, end: 1799020800000 },
@@ -349,10 +447,27 @@
     ];
 
     let tasks = JSON.parse(localStorage.getItem('cleaning_tasks')) || defaultTasks;
+    let customVac = JSON.parse(localStorage.getItem('cleaning_custom_vac')) || { start: '', end: '' };
+
+    if (customVac.start) document.getElementById('customVacStart').value = customVac.start;
+    if (customVac.end) document.getElementById('customVacEnd').value = customVac.end;
+
+    function saveCustomVacations() {
+        customVac.start = document.getElementById('customVacStart').value;
+        customVac.end = document.getElementById('customVacEnd').value;
+        localStorage.setItem('cleaning_custom_vac', JSON.stringify(customVac));
+        render();
+    }
 
     function saveTasks() {
         localStorage.setItem('cleaning_tasks', JSON.stringify(tasks));
         render();
+    }
+
+    function changeSeason(season) { 
+        document.body.className = season; 
+        const patterns = { automne: '🍂', printemps: '🌸', ete: '☀️', hiver: '❄️' };
+        document.documentElement.style.setProperty('--season-pattern', `'${patterns[season]}'`);
     }
 
     function toggleAddForm() {
@@ -381,8 +496,6 @@
         toggleAddForm();
     }
 
-    function changeSeason(season) { document.body.className = season; }
-
     function switchTab(tabName, btn) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -390,7 +503,6 @@
         btn.classList.add('active');
     }
 
-    // Calcul garanti du Lundi Prochain en milisecondes
     function getNextMondayTime() {
         const d = new Date();
         const day = d.getDay();
@@ -400,7 +512,6 @@
         return d.getTime();
     }
 
-    // Formateur de date compatible avec tous les smartphones
     function formatMobileDate(timeMs) {
         if (!timeMs) return "Jamais";
         const d = new Date(timeMs);
@@ -409,7 +520,7 @@
         return `${jours[d.getDay()]} ${d.getDate()} ${mois[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    function computeDueDateMs(task, heavyIndex) {
+    function computeDueDateMs(task, taskIndex) {
         let targetMs;
         if (task.lastDone) {
             targetMs = new Date(task.lastDone).getTime() + (task.freq * 86400000);
@@ -420,17 +531,30 @@
         let isVac = false;
         let vacName = "";
 
-        if (task.freq > 30) {
+        if (customVac.start && customVac.end) {
+            const cStartMs = new Date(customVac.start).getTime();
+            const cEndMs = new Date(customVac.end).getTime();
+            if (targetMs >= cStartMs && targetMs <= cEndMs) {
+                isVac = true;
+                vacName = "Vacances Famille";
+                const rentreeDate = new Date(cEndMs + 86400000);
+                const day = rentreeDate.getDay();
+                if (day !== 1) rentreeDate.setDate(rentreeDate.getDate() + (day === 0 ? 1 : 8 - day));
+                rentreeDate.setHours(0,0,0,0);
+                targetMs = rentreeDate.getTime() + (taskIndex * 2 * 86400000);
+            }
+        }
+
+        if (!isVac && task.freq > 30) {
             for (let vac of zoneBVacations) {
                 if (targetMs >= vac.start && targetMs <= vac.end) {
                     isVac = true;
                     vacName = vac.name;
-                    // Report au lundi de rentrée + 2 jours par tâche (1 jour sur 2)
                     const rentreeDate = new Date(vac.end + 86400000);
                     const day = rentreeDate.getDay();
                     if (day !== 1) rentreeDate.setDate(rentreeDate.getDate() + (day === 0 ? 1 : 8 - day));
                     rentreeDate.setHours(0,0,0,0);
-                    targetMs = rentreeDate.getTime() + (heavyIndex * 2 * 86400000);
+                    targetMs = rentreeDate.getTime() + (taskIndex * 2 * 86400000);
                     break;
                 }
             }
@@ -461,27 +585,39 @@
 
         listSemaines.innerHTML = ''; listMois.innerHTML = ''; listLongterme.innerHTML = ''; listAgenda.innerHTML = '';
 
-        let doneCount = 0;
+        let dueTodayCount = 0;
+        let upToDateCount = 0;
         const nowMs = Date.now();
-        let heavyCounter = 0;
+        let vacTaskCounter = 0;
 
-        tasks.forEach(task => {
+        tasks.forEach((task) => {
             const lastDoneMs = task.lastDone ? new Date(task.lastDone).getTime() : null;
+            const dueInfo = computeDueDateMs(task, vacTaskCounter);
+            if (dueInfo.isVac) vacTaskCounter++;
+
+            // Échéance dépassée ou atteinte aujourd'hui = tâche due maintenant
+            const isDue = dueInfo.timeMs <= nowMs;
             const isDone = lastDoneMs && (nowMs - lastDoneMs) < (task.freq * 86400000);
-            if (isDone) doneCount++;
 
-            let heavyIndex = 0;
-            if (task.freq > 30) { heavyIndex = heavyCounter; heavyCounter++; }
+            if (isDue) {
+                dueTodayCount++;
+                if (isDone || (lastDoneMs && lastDoneMs >= (dueInfo.timeMs - (task.freq * 86400000)))) {
+                    upToDateCount++;
+                }
+            } else {
+                // Si la tâche n'est pas encore échue, elle est considérée comme "à jour" par défaut
+                upToDateCount++;
+                dueTodayCount++;
+            }
 
-            const dueInfo = computeDueDateMs(task, heavyIndex);
+            const isLate = isDue && !isDone;
 
-            // Structure HTML avec dates bien visibles sur mobile
             const htmlTask = `
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-title">${task.title}</span>
                         <span class="task-sub">🕒 Dernier fait : <b>${formatMobileDate(lastDoneMs)}</b></span>
-                        <span class="task-sub">📅 Échéance : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
+                        <span class="task-sub">📅 Échéance : <span class="${isLate ? 'date-late' : 'date-highlight'}">${formatMobileDate(dueInfo.timeMs)} ${isLate ? '(En retard !)' : ''}</span></span>
                     </div>
                     <div class="checkbox-custom ${isDone ? 'checked' : ''}" onclick="toggleTask(${task.id})">${isDone ? '✓' : ''}</div>
                 </div>
@@ -496,8 +632,8 @@
                     <div class="task-info">
                         <span class="task-title">${task.title}</span>
                         <span class="task-sub">Dernier : ${formatMobileDate(lastDoneMs)}</span>
-                        <span class="task-sub">Programmé : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
-                        ${dueInfo.isVac ? `<span class="badge-vacances">🏖️ Reporté après ${dueInfo.vacName}</span>` : ''}
+                        <span class="task-sub">Programmé : <span class="${isLate ? 'date-late' : 'date-highlight'}">${formatMobileDate(dueInfo.timeMs)}</span></span>
+                        ${dueInfo.isVac ? `<span class="badge-vacances">🏖️ Reporté après ${dueInfo.vacName} (1j/2)</span>` : ''}
                     </div>
                     <button class="btn-action" onclick="toggleTask(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
                         ${isDone ? 'Annuler' : 'Marquer fait'}
@@ -507,12 +643,22 @@
             listAgenda.innerHTML += htmlAgenda;
         });
 
-        const percent = Math.round((doneCount / tasks.length) * 100) || 0;
+        // Jauge intelligente : 100% si toutes les tâches dues à date sont faites
+        const percent = dueTodayCount > 0 ? Math.round((upToDateCount / dueTodayCount) * 100) : 100;
         document.getElementById('harmonyFill').style.width = percent + '%';
         document.getElementById('harmonyPercent').innerText = percent + '%';
+
+        // Messages de Kalaggan
+        if (percent === 100) {
+            document.getElementById('kalagganMsg').innerHTML = "<b>Parfait ! 🎉</b> Vous êtes totalement à jour dans vos tâches !";
+        } else if (percent >= 50) {
+            document.getElementById('kalagganMsg').innerHTML = "<b>Bon rythme !</b> Plus de la moitié des tâches du moment sont faites ! 🎉";
+        } else {
+            document.getElementById('kalagganMsg').innerHTML = "<b>Attention aux retards !</b> Rattrapez vos tâches un peu chaque jour (max 1j/2) !";
+        }
     }
 
-    // Timer
+    // Minuteur 15 min
     let timerInterval = null, timeLeft = 15 * 60;
     function startTimer() {
         if (timerInterval) return;
