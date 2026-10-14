@@ -30,32 +30,29 @@
     <style>
         :root {
             --bg-color: #3d2314;
-            --card-bg: rgba(248, 246, 240, 0.94);
+            --card-bg: rgba(255, 255, 255, 0.95);
             --accent-color: #e76f51;
             --text-color: #2b2b2b;
             --border-radius: 16px;
             --season-pattern: '🍂';
         }
 
+        /* Thèmes Saisons immersifs et riches */
         body.automne { 
-            --bg-color: #3d2314; 
+            background: linear-gradient(135deg, #2b1408 0%, #5c2c16 50%, #8c4a28 100%);
             --accent-color: #e76f51;
-            background: linear-gradient(135deg, #3d2314 0%, #6b3e26 100%);
         }
         body.printemps { 
-            --bg-color: #1b4d3e; 
+            background: linear-gradient(135deg, #0f2b22 0%, #1b4d3e 50%, #2d7a60 100%);
             --accent-color: #e07a5f;
-            background: linear-gradient(135deg, #1b4d3e 0%, #2d7a60 100%);
         }
         body.ete { 
-            --bg-color: #005f73; 
+            background: linear-gradient(135deg, #003049 0%, #005f73 50%, #0a9396 100%);
             --accent-color: #ee9b00;
-            background: linear-gradient(135deg, #005f73 0%, #0a9396 100%);
         }
         body.hiver { 
-            --bg-color: #1d2d44; 
-            --accent-color: #94d2bd;
-            background: linear-gradient(135deg, #1d2d44 0%, #3d5a80 100%);
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 50%, #415a77 100%);
+            --accent-color: #48cae4;
         }
 
         body {
@@ -64,19 +61,21 @@
             margin: 0;
             padding: 16px;
             min-height: 100vh;
-            transition: all 0.5s ease;
+            transition: background 0.6s ease;
             position: relative;
         }
 
+        /* Symbole géant en filigrane d'arrière-plan */
         body::before {
             content: var(--season-pattern);
             position: fixed;
-            top: -40px;
+            bottom: -30px;
             right: -20px;
-            font-size: 15rem;
-            opacity: 0.08;
+            font-size: 18rem;
+            opacity: 0.06;
             pointer-events: none;
             z-index: 0;
+            transition: content 0.5s ease;
         }
 
         .container {
@@ -91,10 +90,10 @@
 
         .header-card, .section-card {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border-radius: var(--border-radius);
             padding: 20px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .header-top {
@@ -122,7 +121,9 @@
             padding: 8px 16px;
             border-radius: 20px;
             cursor: pointer;
+            transition: opacity 0.2s;
         }
+        .btn-action:active { opacity: 0.8; }
 
         .btn-add {
             background: #2a9d8f;
@@ -141,12 +142,12 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: #ffffff;
+            background: #fff;
             padding: 12px 16px;
             border-radius: 16px;
             margin-bottom: 12px;
             border-left: 5px solid var(--accent-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .kalaggan-avatar {
@@ -165,11 +166,8 @@
             line-height: 1.3;
         }
 
-        /* Jauge d'harmonie */
-        .gauge-container {
-            margin-top: 10px;
-        }
-
+        /* Jauge */
+        .gauge-container { margin-top: 10px; }
         .gauge-header {
             display: flex;
             justify-content: space-between;
@@ -177,7 +175,6 @@
             font-weight: bold;
             margin-bottom: 6px;
         }
-
         .progress-bar-bg {
             background: #e0e0e0;
             height: 14px;
@@ -185,7 +182,6 @@
             overflow: hidden;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
-
         .progress-bar-fill {
             background: var(--accent-color);
             height: 100%;
@@ -201,7 +197,6 @@
             padding: 12px 0;
             border-bottom: 1px solid rgba(0,0,0,0.08);
         }
-
         .task-item:last-child { border-bottom: none; }
 
         .task-info { display: flex; flex-direction: column; gap: 2px; }
@@ -222,8 +217,8 @@
         }
 
         .checkbox-custom {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             border: 2px solid #ccc;
             cursor: pointer;
@@ -232,8 +227,9 @@
             justify-content: center;
             font-weight: bold;
             font-size: 1.1rem;
+            background: #fff;
+            transition: all 0.2s;
         }
-
         .checkbox-custom.checked {
             background: var(--accent-color);
             border-color: var(--accent-color);
@@ -246,20 +242,17 @@
             margin-top: 16px;
             overflow-x: auto;
         }
-
         .tab-btn {
-            background: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.7);
             border: none;
             padding: 8px 14px;
             border-radius: 12px;
             white-space: nowrap;
         }
-
         .tab-btn.active {
             background: var(--accent-color);
             color: white;
         }
-
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
@@ -270,12 +263,7 @@
             margin: 16px 0;
             color: var(--accent-color);
         }
-
-        .flex-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
+        .flex-buttons { display: flex; gap: 10px; justify-content: center; }
 
         .add-form {
             display: none;
@@ -287,11 +275,7 @@
             flex-direction: column;
             gap: 10px;
         }
-
-        .add-form input, .add-form select {
-            width: 100%;
-            box-sizing: border-box;
-        }
+        .add-form input, .add-form select { width: 100%; box-sizing: border-box; }
     </style>
 </head>
 <body class="automne">
@@ -316,7 +300,7 @@
             </div>
         </div>
 
-        <!-- JAUGE D'HARMONIE (100% si à jour des tâches échues) -->
+        <!-- Jauge d'harmonie -->
         <div class="gauge-container">
             <div class="gauge-header">
                 <span>Avancement à jour (Objectif 100%)</span>
@@ -335,7 +319,7 @@
         </div>
     </div>
 
-    <!-- Onglet Bloc Tâches -->
+    <!-- Onglet Tâches -->
     <div id="tab-blocs" class="tab-content active">
         <button class="btn-add" onclick="toggleAddForm()">➕ Ajouter une tâche</button>
 
@@ -375,15 +359,14 @@
         <div class="section-card">
             <h3>📅 Planning Intelligent & Gestion des Retards</h3>
             <p style="font-size:0.85rem; color:#666;">
-                • Les retards sont lissés intelligemment.<br>
-                • Pas de surcharge : <b>max 1 tâche de rattrapage tous les 2 jours</b>.<br>
+                • Max 1 tâche de rattrapage tous les 2 jours.<br>
                 • Gel automatique pendant les vacances.
             </p>
             <div id="list-agenda"></div>
         </div>
     </div>
 
-    <!-- Onglet Express 15 min -->
+    <!-- Onglet Express -->
     <div id="tab-express" class="tab-content">
         <div class="section-card" style="text-align: center;">
             <h3>⏱️ Session Express 15 Minutes</h3>
@@ -396,12 +379,12 @@
         </div>
     </div>
 
-    <!-- Onglet Réglages & Vacances Personnalisées -->
+    <!-- Onglet Réglages -->
     <div id="tab-tuto" class="tab-content">
         <div class="section-card">
             <h3>🏖️ Vos Propres Vacances / Congés Famille</h3>
             <p style="font-size:0.82rem; color:#666;">
-                Définissez vos vacances personnelles : toutes les tâches seront automatiquement gelées et reportées à la rentrée (étalées 1j/2).
+                Gel et report automatique de toutes les tâches à la rentrée (étalées 1j/2).
             </p>
             <label style="font-size:0.8rem; font-weight:bold;">Début des vacances :</label>
             <input type="date" id="customVacStart" onchange="saveCustomVacations()" style="width:100%; margin:4px 0 10px 0;">
@@ -563,17 +546,34 @@
         return { timeMs: targetMs, isVac: isVac, vacName: vacName };
     }
 
-    function toggleTask(id) {
+    // Validation avec confirmation, affichage immédiat de la prochaine échéance et Kalaggan
+    function confirmAndToggleTask(id, taskTitle, freq) {
         const task = tasks.find(t => t.id === id);
-        if (task) {
-            const now = Date.now();
-            const last = task.lastDone ? new Date(task.lastDone).getTime() : 0;
-            if (last && (now - last) < 86400000) {
+        if (!task) return;
+
+        const now = Date.now();
+        const last = task.lastDone ? new Date(task.lastDone).getTime() : 0;
+        const isCurrentlyDone = last && (now - last) < (freq * 86400000);
+
+        if (isCurrentlyDone) {
+            if (confirm(`Annuler la validation de "${taskTitle}" ?`)) {
                 task.lastDone = null;
-            } else {
-                task.lastDone = new Date().toISOString();
+                saveTasks();
+                document.getElementById('kalagganMsg').innerHTML = `<b>Oups !</b> La tâche "${taskTitle}" a été décochée.`;
             }
+            return;
+        }
+
+        // Calcul de la prochaine échéance future si on valide aujourd'hui
+        const nextDateMs = now + (freq * 86400000);
+        const nextDateStr = formatMobileDate(nextDateMs);
+
+        if (confirm(`Valider "${taskTitle}" ?\n\n✨ Prochaine échéance calculée au : ${nextDateStr}`)) {
+            task.lastDone = new Date().toISOString();
             saveTasks();
+            
+            // Apparition et message de Kalaggan
+            document.getElementById('kalagganMsg').innerHTML = `<b>🧙‍♂️ Kalaggan applaudit !</b> "${taskTitle}" validée. Prochaine échéance : <b>${nextDateStr}</b> 🌟`;
         }
     }
 
@@ -595,7 +595,6 @@
             const dueInfo = computeDueDateMs(task, vacTaskCounter);
             if (dueInfo.isVac) vacTaskCounter++;
 
-            // Échéance dépassée ou atteinte aujourd'hui = tâche due maintenant
             const isDue = dueInfo.timeMs <= nowMs;
             const isDone = lastDoneMs && (nowMs - lastDoneMs) < (task.freq * 86400000);
 
@@ -605,7 +604,6 @@
                     upToDateCount++;
                 }
             } else {
-                // Si la tâche n'est pas encore échue, elle est considérée comme "à jour" par défaut
                 upToDateCount++;
                 dueTodayCount++;
             }
@@ -619,7 +617,7 @@
                         <span class="task-sub">🕒 Dernier fait : <b>${formatMobileDate(lastDoneMs)}</b></span>
                         <span class="task-sub">📅 Échéance : <span class="${isLate ? 'date-late' : 'date-highlight'}">${formatMobileDate(dueInfo.timeMs)} ${isLate ? '(En retard !)' : ''}</span></span>
                     </div>
-                    <div class="checkbox-custom ${isDone ? 'checked' : ''}" onclick="toggleTask(${task.id})">${isDone ? '✓' : ''}</div>
+                    <div class="checkbox-custom ${isDone ? 'checked' : ''}" onclick="confirmAndToggleTask(${task.id}, '${task.title.replace(/'/g, "\\'")}', ${task.freq})">${isDone ? '✓' : ''}</div>
                 </div>
             `;
 
@@ -635,7 +633,7 @@
                         <span class="task-sub">Programmé : <span class="${isLate ? 'date-late' : 'date-highlight'}">${formatMobileDate(dueInfo.timeMs)}</span></span>
                         ${dueInfo.isVac ? `<span class="badge-vacances">🏖️ Reporté après ${dueInfo.vacName} (1j/2)</span>` : ''}
                     </div>
-                    <button class="btn-action" onclick="toggleTask(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
+                    <button class="btn-action" onclick="confirmAndToggleTask(${task.id}, '${task.title.replace(/'/g, "\\'")}', ${task.freq})" style="padding: 4px 10px; font-size: 0.8rem;">
                         ${isDone ? 'Annuler' : 'Marquer fait'}
                     </button>
                 </div>
@@ -643,19 +641,9 @@
             listAgenda.innerHTML += htmlAgenda;
         });
 
-        // Jauge intelligente : 100% si toutes les tâches dues à date sont faites
         const percent = dueTodayCount > 0 ? Math.round((upToDateCount / dueTodayCount) * 100) : 100;
         document.getElementById('harmonyFill').style.width = percent + '%';
         document.getElementById('harmonyPercent').innerText = percent + '%';
-
-        // Messages de Kalaggan
-        if (percent === 100) {
-            document.getElementById('kalagganMsg').innerHTML = "<b>Parfait ! 🎉</b> Vous êtes totalement à jour dans vos tâches !";
-        } else if (percent >= 50) {
-            document.getElementById('kalagganMsg').innerHTML = "<b>Bon rythme !</b> Plus de la moitié des tâches du moment sont faites ! 🎉";
-        } else {
-            document.getElementById('kalagganMsg').innerHTML = "<b>Attention aux retards !</b> Rattrapez vos tâches un peu chaque jour (max 1j/2) !";
-        }
     }
 
     // Minuteur 15 min
