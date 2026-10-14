@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planning Ménage 🧹</title>
     
-    <!-- Icônes PWA (Balai 🧹) -->
+    <!-- Icônes PWA -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
 
@@ -129,14 +129,15 @@
 
         .task-item:last-child { border-bottom: none; }
 
-        .task-info { display: flex; flex-direction: column; }
-        .task-title { font-weight: bold; }
-        .task-sub { font-size: 0.8rem; color: #666; margin-top: 2px; }
+        .task-info { display: flex; flex-direction: column; gap: 2px; }
+        .task-title { font-weight: bold; font-size: 1rem; }
+        .task-sub { font-size: 0.82rem; color: #555; }
+        .date-highlight { color: var(--accent-color); font-weight: bold; }
 
         .badge-vacances {
             background: #e76f51;
             color: white;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             padding: 2px 8px;
             border-radius: 10px;
             font-weight: bold;
@@ -145,8 +146,8 @@
         }
 
         .checkbox-custom {
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             border: 2px solid #ccc;
             cursor: pointer;
@@ -154,6 +155,7 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
+            font-size: 1.1rem;
         }
 
         .checkbox-custom.checked {
@@ -199,7 +201,6 @@
             justify-content: center;
         }
 
-        /* Formulaire ajout tâche */
         .add-form {
             display: none;
             background: #fff;
@@ -240,7 +241,7 @@
 
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('blocs', this)">📋 Tâches</button>
-            <button class="tab-btn" onclick="switchTab('agenda', this)">📅 Planning & Échéances</button>
+            <button class="tab-btn" onclick="switchTab('agenda', this)">📅 Planning & Dates</button>
             <button class="tab-btn" onclick="switchTab('express', this)">⏱️ Express 15m</button>
             <button class="tab-btn" onclick="switchTab('tuto', this)">⚙️ Réglages & Notifs</button>
         </div>
@@ -248,16 +249,14 @@
 
     <!-- Onglet Bloc Tâches -->
     <div id="tab-blocs" class="tab-content active">
-        <!-- Bouton d'ajout -->
         <button class="btn-add" onclick="toggleAddForm()">➕ Ajouter une tâche</button>
 
-        <!-- Formulaire d'ajout masqué par défaut -->
         <div id="addForm" class="add-form">
-            <h4 style="margin: 0 0 8px 0;">Créer une nouvelle tâche</h4>
-            <input type="text" id="newTaskTitle" placeholder="Nom de la tâche (ex: Nettoyer le four)">
+            <h4 style="margin: 0 0 8px 0;">Nouvelle tâche</h4>
+            <input type="text" id="newTaskTitle" placeholder="Nom (ex: Nettoyer le four)">
             <select id="newTaskCat">
-                <option value="semaines">Toutes les semaines (7 jours)</option>
-                <option value="mois">Tous les mois (30 jours)</option>
+                <option value="semaines">Semaine (7 jours)</option>
+                <option value="mois">Mois (30 jours)</option>
                 <option value="longterme">Trimestriel / Annuel (> 30 jours)</option>
             </select>
             <input type="number" id="newTaskFreq" placeholder="Fréquence en jours (ex: 7, 30, 90)" value="7">
@@ -283,14 +282,14 @@
         </div>
     </div>
 
-    <!-- Onglet Agenda & Échéances -->
+    <!-- Onglet Agenda -->
     <div id="tab-agenda" class="tab-content">
         <div class="section-card">
             <h3>📅 Planning Intelligent (Zone B)</h3>
             <p style="font-size:0.85rem; color:#666;">
                 • Démarrage programmé dès <b>Lundi Prochain</b>.<br>
                 • Pas de grosses tâches pendant les vacances Zone B.<br>
-                • Report à la rentrée étalé : <b>1 tâche tous les 2 jours</b> (Lundi, Mercredi...).
+                • Report à la rentrée étalé : <b>1 tâche tous les 2 jours</b>.
             </p>
             <div id="list-agenda"></div>
         </div>
@@ -300,7 +299,7 @@
     <div id="tab-express" class="tab-content">
         <div class="section-card" style="text-align: center;">
             <h3>⏱️ Session Express 15 Minutes</h3>
-            <p>Un coup de propre rapide avant de recevoir ou pour décompresser !</p>
+            <p>Un coup de propre rapide !</p>
             <div class="timer-display" id="timerDisplay">15:00</div>
             <div class="flex-buttons">
                 <button class="btn-action" onclick="startTimer()">Démarrer</button>
@@ -309,18 +308,17 @@
         </div>
     </div>
 
-    <!-- Onglet Réglages & Notifs -->
+    <!-- Onglet Réglages -->
     <div id="tab-tuto" class="tab-content">
         <div class="section-card">
             <h3>🔔 Notifications</h3>
-            <p style="font-size:0.85rem; color:#666;">Recevez des rappels automatiques sur votre téléphone pour vos échéances :</p>
             <button class="btn-action" onclick="requestNotificationPermission()">Activer les notifications</button>
         </div>
         <br>
         <div class="section-card">
             <h3>⚙️ Sauvegarde & Restauration</h3>
             <div class="flex-buttons" style="justify-content: flex-start;">
-                <button onclick="exportData()" class="btn-action">💾 Exporter les données</button>
+                <button onclick="exportData()" class="btn-action">💾 Exporter</button>
                 <input type="file" id="importFile" onchange="importData(event)" style="display:none">
                 <button onclick="document.getElementById('importFile').click()">📂 Importer</button>
             </div>
@@ -341,12 +339,13 @@
         { id: 9, title: 'Entretien de la VMC', freq: 365, lastDone: null, cat: 'longterme', dayOffset: 2 }
     ];
 
+    // Dates fixes en timestamps pour éviter tout bogue mobile Safari/Android
     const zoneBVacations = [
-        { name: "Toussaint", start: new Date('2026-10-17'), end: new Date('2026-11-02') },
-        { name: "Noël", start: new Date('2026-12-19'), end: new Date('2027-01-04') },
-        { name: "Hiver", start: new Date('2027-02-06'), end: new Date('2027-02-22') },
-        { name: "Printemps", start: new Date('2027-04-03'), end: new Date('2027-04-20') },
-        { name: "Été", start: new Date('2027-07-03'), end: new Date('2027-09-01') }
+        { name: "Toussaint", start: 1792195200000, end: 1793577600000 },
+        { name: "Noël", start: 1797638400000, end: 1799020800000 },
+        { name: "Hiver", start: 1801872000000, end: 1803254400000 },
+        { name: "Printemps", start: 1806710400000, end: 1808179200000 },
+        { name: "Été", start: 1814572800000, end: 1819756800000 }
     ];
 
     let tasks = JSON.parse(localStorage.getItem('cleaning_tasks')) || defaultTasks;
@@ -366,23 +365,18 @@
         const cat = document.getElementById('newTaskCat').value;
         const freq = parseInt(document.getElementById('newTaskFreq').value) || 7;
 
-        if (!title) {
-            alert("Veuillez saisir un nom de tâche.");
-            return;
-        }
+        if (!title) { alert("Veuillez entrer un nom."); return; }
 
-        const newTask = {
+        tasks.push({
             id: Date.now(),
             title: title,
             freq: freq,
             lastDone: null,
             cat: cat,
             dayOffset: tasks.length % 7
-        };
+        });
 
-        tasks.push(newTask);
         saveTasks();
-
         document.getElementById('newTaskTitle').value = '';
         toggleAddForm();
     }
@@ -396,70 +390,64 @@
         btn.classList.add('active');
     }
 
-    function getNextMonday() {
+    // Calcul garanti du Lundi Prochain en milisecondes
+    function getNextMondayTime() {
         const d = new Date();
         const day = d.getDay();
-        const diff = d.getDate() + (day === 0 ? 1 : (8 - day));
-        const nextMonday = new Date(d.setDate(diff));
-        nextMonday.setHours(0,0,0,0);
-        return nextMonday;
+        const diff = day === 0 ? 1 : (8 - day);
+        d.setDate(d.getDate() + diff);
+        d.setHours(0,0,0,0);
+        return d.getTime();
     }
 
-    function getVacationInfo(dateObj) {
-        for (let vac of zoneBVacations) {
-            if (dateObj >= vac.start && dateObj <= vac.end) {
-                return vac;
-            }
-        }
-        return null;
+    // Formateur de date compatible avec tous les smartphones
+    function formatMobileDate(timeMs) {
+        if (!timeMs) return "Jamais";
+        const d = new Date(timeMs);
+        const jours = ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'];
+        const mois = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
+        return `${jours[d.getDay()]} ${d.getDate()} ${mois[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    function getPostVacationMonday(vacationEnd) {
-        const returnDate = new Date(vacationEnd.getTime() + 86400000);
-        const day = returnDate.getDay();
-        if (day !== 1) {
-            const diff = (day === 0 ? 1 : (8 - day));
-            returnDate.setDate(returnDate.getDate() + diff);
-        }
-        returnDate.setHours(0,0,0,0);
-        return returnDate;
-    }
-
-    function computeDueDate(task, heavyTaskIndex) {
-        let baseDate;
+    function computeDueDateMs(task, heavyIndex) {
+        let targetMs;
         if (task.lastDone) {
-            baseDate = new Date(new Date(task.lastDone).getTime() + (task.freq * 86400000));
+            targetMs = new Date(task.lastDone).getTime() + (task.freq * 86400000);
         } else {
-            const startMonday = getNextMonday();
-            baseDate = new Date(startMonday.getTime() + (task.dayOffset * 86400000));
+            targetMs = getNextMondayTime() + (task.dayOffset * 86400000);
         }
+
+        let isVac = false;
+        let vacName = "";
 
         if (task.freq > 30) {
-            const inVacation = getVacationInfo(baseDate);
-            if (inVacation) {
-                const rentreeMonday = getPostVacationMonday(inVacation.end);
-                baseDate = new Date(rentreeMonday.getTime() + (heavyTaskIndex * 2 * 86400000));
-                baseDate.isShiftedForVacation = true;
-                baseDate.vacationName = inVacation.name;
+            for (let vac of zoneBVacations) {
+                if (targetMs >= vac.start && targetMs <= vac.end) {
+                    isVac = true;
+                    vacName = vac.name;
+                    // Report au lundi de rentrée + 2 jours par tâche (1 jour sur 2)
+                    const rentreeDate = new Date(vac.end + 86400000);
+                    const day = rentreeDate.getDay();
+                    if (day !== 1) rentreeDate.setDate(rentreeDate.getDate() + (day === 0 ? 1 : 8 - day));
+                    rentreeDate.setHours(0,0,0,0);
+                    targetMs = rentreeDate.getTime() + (heavyIndex * 2 * 86400000);
+                    break;
+                }
             }
         }
-        return baseDate;
-    }
 
-    function formatDate(dateObj) {
-        if (!dateObj) return "Jamais";
-        return dateObj.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        return { timeMs: targetMs, isVac: isVac, vacName: vacName };
     }
 
     function toggleTask(id) {
         const task = tasks.find(t => t.id === id);
         if (task) {
-            const now = new Date();
-            const lastDone = task.lastDone ? new Date(task.lastDone) : null;
-            if (lastDone && (now - lastDone) < 86400000) {
+            const now = Date.now();
+            const last = task.lastDone ? new Date(task.lastDone).getTime() : 0;
+            if (last && (now - last) < 86400000) {
                 task.lastDone = null;
             } else {
-                task.lastDone = now.toISOString();
+                task.lastDone = new Date().toISOString();
             }
             saveTasks();
         }
@@ -471,34 +459,29 @@
         const listLongterme = document.getElementById('list-longterme');
         const listAgenda = document.getElementById('list-agenda');
 
-        listSemaines.innerHTML = ''; 
-        listMois.innerHTML = ''; 
-        listLongterme.innerHTML = ''; 
-        listAgenda.innerHTML = '';
+        listSemaines.innerHTML = ''; listMois.innerHTML = ''; listLongterme.innerHTML = ''; listAgenda.innerHTML = '';
 
         let doneCount = 0;
-        const now = new Date();
-        let heavyTaskCounter = 0;
+        const nowMs = Date.now();
+        let heavyCounter = 0;
 
         tasks.forEach(task => {
-            const lastDoneDate = task.lastDone ? new Date(task.lastDone) : null;
-            const isDone = lastDoneDate && (now - lastDoneDate) < (task.freq * 86400000);
+            const lastDoneMs = task.lastDone ? new Date(task.lastDone).getTime() : null;
+            const isDone = lastDoneMs && (nowMs - lastDoneMs) < (task.freq * 86400000);
             if (isDone) doneCount++;
 
             let heavyIndex = 0;
-            if (task.freq > 30) {
-                heavyIndex = heavyTaskCounter;
-                heavyTaskCounter++;
-            }
+            if (task.freq > 30) { heavyIndex = heavyCounter; heavyCounter++; }
 
-            const dueDate = computeDueDate(task, heavyIndex);
+            const dueInfo = computeDueDateMs(task, heavyIndex);
 
+            // Structure HTML avec dates bien visibles sur mobile
             const htmlTask = `
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-title">${task.title}</span>
-                        <span class="task-sub">Dernière fois : ${lastDoneDate ? formatDate(lastDoneDate) : 'Jamais'}</span>
-                        <span class="task-sub">Prochaine échéance : <b>${formatDate(dueDate)}</b></span>
+                        <span class="task-sub">🕒 Dernier fait : <b>${formatMobileDate(lastDoneMs)}</b></span>
+                        <span class="task-sub">📅 Échéance : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
                     </div>
                     <div class="checkbox-custom ${isDone ? 'checked' : ''}" onclick="toggleTask(${task.id})">${isDone ? '✓' : ''}</div>
                 </div>
@@ -512,12 +495,12 @@
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-title">${task.title}</span>
-                        <span class="task-sub">Dernière réalisation : ${lastDoneDate ? formatDate(lastDoneDate) : 'Jamais'}</span>
-                        <span class="task-sub">Programmée le : <b style="color:var(--accent-color);">${formatDate(dueDate)}</b></span>
-                        ${dueDate.isShiftedForVacation ? `<span class="badge-vacances">🏖️ Reportée après Vacances ${dueDate.vacationName} (Étalée 1j/2)</span>` : ''}
+                        <span class="task-sub">Dernier : ${formatMobileDate(lastDoneMs)}</span>
+                        <span class="task-sub">Programmé : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
+                        ${dueInfo.isVac ? `<span class="badge-vacances">🏖️ Reporté après ${dueInfo.vacName}</span>` : ''}
                     </div>
                     <button class="btn-action" onclick="toggleTask(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
-                        ${isDone ? 'Annuler' : 'Marquer faite'}
+                        ${isDone ? 'Annuler' : 'Marquer fait'}
                     </button>
                 </div>
             `;
@@ -529,61 +512,40 @@
         document.getElementById('harmonyPercent').innerText = percent + '%';
     }
 
-    // Minuteur 15m
-    let timerInterval = null;
-    let timeLeft = 15 * 60;
+    // Timer
+    let timerInterval = null, timeLeft = 15 * 60;
     function startTimer() {
         if (timerInterval) return;
         timerInterval = setInterval(() => {
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                alert("⏱️ Le temps est écoulé ! Bravo !");
-            } else {
-                timeLeft--;
-                updateTimerDisplay();
-            }
+            if (timeLeft <= 0) { clearInterval(timerInterval); timerInterval = null; alert("⏱️ Fin des 15 minutes !"); }
+            else { timeLeft--; updateTimerDisplay(); }
         }, 1000);
     }
-    function resetTimer() {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        timeLeft = 15 * 60;
-        updateTimerDisplay();
-    }
+    function resetTimer() { clearInterval(timerInterval); timerInterval = null; timeLeft = 15 * 60; updateTimerDisplay(); }
     function updateTimerDisplay() {
         const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
         const s = (timeLeft % 60).toString().padStart(2, '0');
         document.getElementById('timerDisplay').innerText = `${m}:${s}`;
     }
 
-    // Notifications
     function requestNotificationPermission() {
         if ('Notification' in window) {
             Notification.requestPermission().then(p => {
-                if (p === 'granted') new Notification("Planning Ménage 🧹", { body: "Les rappels automatiques sont activés !" });
-                else alert("Notifications refusées.");
+                if (p === 'granted') new Notification("Planning 🧹", { body: "Rappels activés !" });
             });
         }
     }
 
-    // Sauvegarde JSON
     function exportData() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
-        const a = document.createElement('a');
-        a.href = dataStr;
-        a.download = "planning_menage_sauvegarde.json";
-        a.click();
+        const a = document.createElement('a'); a.href = dataStr; a.download = "planning_menage.json"; a.click();
     }
 
     function importData(event) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            try {
-                tasks = JSON.parse(e.target.result);
-                saveTasks();
-                alert("Sauvegarde restaurée avec succès !");
-            } catch(err) { alert("Erreur lors de la lecture du fichier."); }
+            try { tasks = JSON.parse(e.target.result); saveTasks(); alert("Restauré !"); }
+            catch(err) { alert("Fichier invalide."); }
         };
         reader.readAsText(event.target.files[0]);
     }
