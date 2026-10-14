@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planning de Ménage</title>
+    <title>Planning Ménage 🧹</title>
     
-    <!-- Icônes (Balai 🧹) -->
+    <!-- Icônes PWA (Balai 🧹) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
 
@@ -36,6 +36,7 @@
             --border-radius: 16px;
         }
 
+        body.automne { --bg-color: #3d2314; --accent-color: #e76f51; }
         body.printemps { --bg-color: #2a4736; --accent-color: #e07a5f; }
         body.ete { --bg-color: #1b4965; --accent-color: #f4a261; }
         body.hiver { --bg-color: #1d2d44; --accent-color: #83c5be; }
@@ -86,6 +87,9 @@
             background: var(--accent-color);
             color: white;
             border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
         }
 
         .progress-bar-bg {
@@ -115,17 +119,18 @@
 
         .task-info { display: flex; flex-direction: column; }
         .task-title { font-weight: bold; }
-        .task-sub { font-size: 0.8rem; color: #666; }
+        .task-sub { font-size: 0.8rem; color: #666; margin-top: 2px; }
 
         .checkbox-custom {
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             border: 2px solid #ccc;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: bold;
         }
 
         .checkbox-custom.checked {
@@ -156,6 +161,20 @@
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 16px 0;
+            color: var(--accent-color);
+        }
+
+        .flex-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
     </style>
 </head>
 <body class="automne">
@@ -181,39 +200,67 @@
 
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('blocs', this)">📋 Tâches</button>
-            <button class="tab-btn" onclick="switchTab('agenda', this)">📅 Agenda & Dates</button>
-            <button class="tab-btn" onclick="switchTab('tuto', this)">⚙️</button>
+            <button class="tab-btn" onclick="switchTab('express', this)">⏱️ Express 15m</button>
+            <button class="tab-btn" onclick="switchTab('agenda', this)">📅 Dates & Échéances</button>
+            <button class="tab-btn" onclick="switchTab('tuto', this)">⚙️ Réglages & Notifs</button>
         </div>
     </div>
 
-    <!-- Onglet Tâches -->
+    <!-- Onglet Bloc Tâches -->
     <div id="tab-blocs" class="tab-content active">
         <div class="section-card">
-            <h3>TOUTES LES SEMAINES</h3>
+            <h3>🗓️ TOUTES LES SEMAINES</h3>
             <div id="list-semaines"></div>
         </div>
         <br>
         <div class="section-card">
-            <h3>TOUS LES MOIS</h3>
+            <h3>📅 TOUS LES MOIS</h3>
             <div id="list-mois"></div>
+        </div>
+        <br>
+        <div class="section-card">
+            <h3>🌿 TRIMESTRIEL & ANNUEL</h3>
+            <div id="list-longterme"></div>
+        </div>
+    </div>
+
+    <!-- Onglet Express 15 min -->
+    <div id="tab-express" class="tab-content">
+        <div class="section-card" style="text-align: center;">
+            <h3>⏱️ Session Express 15 Minutes</h3>
+            <p>Un coup de propre rapide avant de recevoir ou pour décompresser !</p>
+            <div class="timer-display" id="timerDisplay">15:00</div>
+            <div class="flex-buttons">
+                <button class="btn-action" onclick="startTimer()">Démarrer</button>
+                <button onclick="resetTimer()">Réinitialiser</button>
+            </div>
         </div>
     </div>
 
     <!-- Onglet Agenda & Dates -->
     <div id="tab-agenda" class="tab-content">
         <div class="section-card">
-            <h3>📅 Suivi des échéances et dernières dates</h3>
+            <h3>📅 Suivi détaillé des dates</h3>
+            <p style="font-size:0.85rem; color:#666;">Dernière réalisation et prochaine échéance pour chaque tâche :</p>
             <div id="list-agenda"></div>
         </div>
     </div>
 
-    <!-- Onglet Sauvegarde -->
+    <!-- Onglet Réglages, Notifs & Sauvegarde -->
     <div id="tab-tuto" class="tab-content">
         <div class="section-card">
-            <h3>⚙️ Sauvegarde</h3>
-            <button onclick="exportData()" class="btn-action">💾 Exporter</button>
-            <input type="file" id="importFile" onchange="importData(event)" style="display:none">
-            <button onclick="document.getElementById('importFile').click()">📂 Restaurer</button>
+            <h3>🔔 Notifications</h3>
+            <p>Activez les rappels pour vos échéances de ménage :</p>
+            <button class="btn-action" onclick="requestNotificationPermission()">Activer les notifications</button>
+        </div>
+        <br>
+        <div class="section-card">
+            <h3>⚙️ Sauvegarde & Restauration</h3>
+            <div class="flex-buttons" style="justify-content: flex-start;">
+                <button onclick="exportData()" class="btn-action">💾 Exporter les données</button>
+                <input type="file" id="importFile" onchange="importData(event)" style="display:none">
+                <button onclick="document.getElementById('importFile').click()">📂 Importer</button>
+            </div>
         </div>
     </div>
 </div>
@@ -225,7 +272,10 @@
         { id: 3, title: 'Lavage des sols', freq: 7, lastDone: null, cat: 'semaines' },
         { id: 4, title: 'Nettoyer la machine à laver', freq: 30, lastDone: null, cat: 'mois' },
         { id: 5, title: 'Nettoyer le lave-vaisselle', freq: 30, lastDone: null, cat: 'mois' },
-        { id: 6, title: 'Nettoyer le frigo', freq: 30, lastDone: null, cat: 'mois' }
+        { id: 6, title: 'Nettoyer le frigo', freq: 30, lastDone: null, cat: 'mois' },
+        { id: 7, title: 'Detartrage cafetière', freq: 90, lastDone: null, cat: 'longterme' },
+        { id: 8, title: 'Nettoyage des vitres', freq: 90, lastDone: null, cat: 'longterme' },
+        { id: 9, title: 'Entretien de la VMC', freq: 365, lastDone: null, cat: 'longterme' }
     ];
 
     let tasks = JSON.parse(localStorage.getItem('cleaning_tasks')) || defaultTasks;
@@ -249,24 +299,39 @@
     function toggleTask(id) {
         const task = tasks.find(t => t.id === id);
         if (task) {
-            task.lastDone = new Date().toISOString();
+            const now = new Date();
+            const lastDone = task.lastDone ? new Date(task.lastDone) : null;
+            if (lastDone && (now - lastDone) < 86400000) {
+                task.lastDone = null;
+            } else {
+                task.lastDone = now.toISOString();
+            }
             saveTasks();
         }
     }
 
     function formatDate(isoString) {
-        if (!isoString) return "Jamais fait";
+        if (!isoString) return "Jamais effectué";
         const date = new Date(isoString);
-        return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+        return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function getNextDueDate(isoString, freqDays) {
+        if (!isoString) return "À faire dès maintenant";
+        const last = new Date(isoString);
+        const next = new Date(last.getTime() + (freqDays * 86400000));
+        return next.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
     }
 
     function render() {
         const listSemaines = document.getElementById('list-semaines');
         const listMois = document.getElementById('list-mois');
+        const listLongterme = document.getElementById('list-longterme');
         const listAgenda = document.getElementById('list-agenda');
 
         listSemaines.innerHTML = ''; 
         listMois.innerHTML = ''; 
+        listLongterme.innerHTML = ''; 
         listAgenda.innerHTML = '';
 
         let doneCount = 0;
@@ -277,28 +342,27 @@
             const isDone = lastDoneDate && (now - lastDoneDate) < (task.freq * 86400000);
             if (isDone) doneCount++;
 
-            // Affichage dans les blocs (Tâches)
             const htmlTask = `
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-title">${task.title}</span>
-                        <span class="task-sub">Fait le : ${formatDate(task.lastDone)}</span>
+                        <span class="task-sub">Dernière fois : ${formatDate(task.lastDone)}</span>
                     </div>
                     <div class="checkbox-custom ${isDone ? 'checked' : ''}" onclick="toggleTask(${task.id})">${isDone ? '✓' : ''}</div>
                 </div>
             `;
 
             if (task.cat === 'semaines') listSemaines.innerHTML += htmlTask;
-            else listMois.innerHTML += htmlTask;
+            else if (task.cat === 'mois') listMois.innerHTML += htmlTask;
+            else listLongterme.innerHTML += htmlTask;
 
-            // Affichage détaillé dans l'agenda avec les dates
             const htmlAgenda = `
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-title">${task.title}</span>
-                        <span class="task-sub">Dernière fois : ${formatDate(task.lastDone)} (Tous les ${task.freq}j)</span>
+                        <span class="task-sub">Fait le : <b>${formatDate(task.lastDone)}</b> | Prochaine échéance : <b>${getNextDueDate(task.lastDone, task.freq)}</b></span>
                     </div>
-                    <button class="btn-action" onclick="toggleTask(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">Fait aujourd'hui</button>
+                    <button class="btn-action" onclick="toggleTask(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">Marquer fait</button>
                 </div>
             `;
             listAgenda.innerHTML += htmlAgenda;
@@ -309,6 +373,53 @@
         document.getElementById('harmonyPercent').innerText = percent + '%';
     }
 
+    // Gestion du Chrono 15m
+    let timerInterval = null;
+    let timeLeft = 15 * 60;
+
+    function startTimer() {
+        if (timerInterval) return;
+        timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                alert("⏱️ Le temps est écoulé ! Bravo !");
+            } else {
+                timeLeft--;
+                updateTimerDisplay();
+            }
+        }, 1000);
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        timeLeft = 15 * 60;
+        updateTimerDisplay();
+    }
+
+    function updateTimerDisplay() {
+        const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+        const s = (timeLeft % 60).toString().padStart(2, '0');
+        document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+    }
+
+    // Notifications
+    function requestNotificationPermission() {
+        if ('Notification' in window) {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    new Notification("Planning Ménage 🧹", { body: "Les notifications sont activées avec succès !" });
+                } else {
+                    alert("Les notifications ont été refusées.");
+                }
+            });
+        } else {
+            alert("Votre navigateur ne supporte pas les notifications.");
+        }
+    }
+
+    // Sauvegarde JSON
     function exportData() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
         const a = document.createElement('a');
@@ -320,9 +431,13 @@
     function importData(event) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            tasks = JSON.parse(e.target.result);
-            saveTasks();
-            alert("Sauvegarde restaurée !");
+            try {
+                tasks = JSON.parse(e.target.result);
+                saveTasks();
+                alert("Sauvegarde restaurée avec succès !");
+            } catch(err) {
+                alert("Erreur lors de la lecture du fichier JSON.");
+            }
         };
         reader.readAsText(event.target.files[0]);
     }
