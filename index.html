@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Planning de Ménage</title>
     
-    <!-- Icônes (utilisant des emojis) -->
+    <!-- Icônes (Balai 🧹) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
 
-    <!-- Manifeste PWA pour une bonne icône de raccourci -->
+    <!-- Manifeste PWA -->
     <link rel="manifest" href="data:application/json,{
         'name': 'Planning Ménage',
         'short_name': 'Ménage',
@@ -170,7 +170,6 @@
                 <option value="ete">☀️ Été</option>
                 <option value="hiver">❄️ Hiver</option>
             </select>
-            <button class="btn-action" onclick="requestPermission()">🔔</button>
         </div>
 
         <div>
@@ -182,14 +181,12 @@
 
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('blocs', this)">📋 Tâches</button>
-            <button class="tab-btn" onclick="switchTab('express', this)">⏱️ Express</button>
-            <button class="tab-btn" onclick="switchTab('agenda', this)">📅 Agenda</button>
-            <button class="tab-btn" onclick="switchTab('absences', this)">🧳 Vacances</button>
+            <button class="tab-btn" onclick="switchTab('agenda', this)">📅 Agenda & Dates</button>
             <button class="tab-btn" onclick="switchTab('tuto', this)">⚙️</button>
         </div>
     </div>
 
-    <!-- Contenus des onglets simplifiés -->
+    <!-- Onglet Tâches -->
     <div id="tab-blocs" class="tab-content active">
         <div class="section-card">
             <h3>TOUTES LES SEMAINES</h3>
@@ -202,16 +199,19 @@
         </div>
     </div>
 
-    <!-- Autres onglets masqués dans cette version -->
-    <div id="tab-express" class="tab-content">
-        <div class="section-card" style="text-align:center;"><h3>⏱️ Session 15'</h3><h2 id="timerDisplay">15:00</h2><button onclick="toggleTimer()">Go !</button></div>
+    <!-- Onglet Agenda & Dates -->
+    <div id="tab-agenda" class="tab-content">
+        <div class="section-card">
+            <h3>📅 Suivi des échéances et dernières dates</h3>
+            <div id="list-agenda"></div>
+        </div>
     </div>
-    <div id="tab-agenda" class="tab-content"><div class="section-card"><h3>📅 Agenda</h3><div id="list-agenda"></div></div></div>
-    <div id="tab-absences" class="tab-content"><div class="section-card"><h3>🧳 Vacances / Absences</h3><button onclick="addAbsence()">+ Ajouter</button><ul id="absenceList"></ul></div></div>
+
+    <!-- Onglet Sauvegarde -->
     <div id="tab-tuto" class="tab-content">
         <div class="section-card">
             <h3>⚙️ Sauvegarde</h3>
-            <button onclick="exportData()">💾 Exporter</button>
+            <button onclick="exportData()" class="btn-action">💾 Exporter</button>
             <input type="file" id="importFile" onchange="importData(event)" style="display:none">
             <button onclick="document.getElementById('importFile').click()">📂 Restaurer</button>
         </div>
@@ -229,11 +229,9 @@
     ];
 
     let tasks = JSON.parse(localStorage.getItem('cleaning_tasks')) || defaultTasks;
-    let absences = JSON.parse(localStorage.getItem('cleaning_absences')) || [];
 
     function saveTasks() {
         localStorage.setItem('cleaning_tasks', JSON.stringify(tasks));
-        localStorage.setItem('cleaning_absences', JSON.stringify(absences));
         render();
     }
 
@@ -256,35 +254,77 @@
         }
     }
 
+    function formatDate(isoString) {
+        if (!isoString) return "Jamais fait";
+        const date = new Date(isoString);
+        return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    }
+
     function render() {
         const listSemaines = document.getElementById('list-semaines');
         const listMois = document.getElementById('list-mois');
         const listAgenda = document.getElementById('list-agenda');
 
-        listSemaines.innerHTML = ''; listMois.innerHTML = ''; listAgenda.innerHTML = '';
+        listSemaines.innerHTML = ''; 
+        listMois.innerHTML = ''; 
+        listAgenda.innerHTML = '';
 
         let doneCount = 0;
         const now = new Date();
 
         tasks.forEach(task => {
-            const isDone = task.lastDone && (now - new Date(task.lastDone)) < (task.freq * 86400000);
+            const lastDoneDate = task.lastDone ? new Date(task.lastDone) : null;
+            const isDone = lastDoneDate && (now - lastDoneDate) < (task.freq * 86400000);
             if (isDone) doneCount++;
 
-            const html = `
+            // Affichage dans les blocs (Tâches)
+            const htmlTask = `
                 <div class="task-item">
-                    <div class="task-info"><span class="task-title">${task.title}</span><span class="task-sub">Tous les ${task.freq}j</span></div>
+                    <div class="task-info">
+                        <span class="task-title">${task.title}</span>
+                        <span class="task-sub">Fait le : ${formatDate(task.lastDone)}</span>
+                    </div>
                     <div class="checkbox-custom ${isDone ? 'checked' : ''}" onclick="toggleTask(${task.id})">${isDone ? '✓' : ''}</div>
                 </div>
             `;
 
-            if (task.cat === 'semaines') listSemaines.innerHTML += html;
-            else listMois.innerHTML += html;
-            listAgenda.innerHTML += html;
+            if (task.cat === 'semaines') listSemaines.innerHTML += htmlTask;
+            else listMois.innerHTML += htmlTask;
+
+            // Affichage détaillé dans l'agenda avec les dates
+            const htmlAgenda = `
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-title">${task.title}</span>
+                        <span class="task-sub">Dernière fois : ${formatDate(task.lastDone)} (Tous les ${task.freq}j)</span>
+                    </div>
+                    <button class="btn-action" onclick="toggleTask(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">Fait aujourd'hui</button>
+                </div>
+            `;
+            listAgenda.innerHTML += htmlAgenda;
         });
 
         const percent = Math.round((doneCount / tasks.length) * 100) || 0;
         document.getElementById('harmonyFill').style.width = percent + '%';
         document.getElementById('harmonyPercent').innerText = percent + '%';
+    }
+
+    function exportData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
+        const a = document.createElement('a');
+        a.href = dataStr;
+        a.download = "planning_menage_sauvegarde.json";
+        a.click();
+    }
+
+    function importData(event) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            tasks = JSON.parse(e.target.result);
+            saveTasks();
+            alert("Sauvegarde restaurée !");
+        };
+        reader.readAsText(event.target.files[0]);
     }
 
     render();
