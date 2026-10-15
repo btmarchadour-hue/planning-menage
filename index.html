@@ -1,616 +1,978 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planning Ménage 🧹</title>
-    
-    <!-- Icônes PWA -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
-
-    <!-- Manifeste PWA -->
-    <link rel="manifest" href="data:application/json,{
-        'name': 'Planning Ménage',
-        'short_name': 'Ménage',
-        'start_url': '.',
-        'display': 'standalone',
-        'theme_color': '#3d2314',
-        'background_color': '#f8f6f0',
-        'icons': [
-            {
-                'src': 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🧹</text></svg>',
-                'sizes': '512x512',
-                'type': 'image/svg+xml',
-                'purpose': 'any maskable'
-            }
-        ]
-    }">
-
+    <title>Planning de Ménage Intelligent - Kalaggan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --card-bg: rgba(255, 255, 255, 0.94);
-            --accent-color: #e76f51;
-            --text-color: #2b2b2b;
-            --border-radius: 18px;
-        }
-
-        /* Thèmes Saisons avec Motifs Colorés & Tranchés */
-        body.automne { 
-            background: #3e1f14 linear-gradient(135deg, #2c140a 0%, #542b1a 50%, #2c140a 100%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 100 100'%3E%3Cg transform='rotate(15 50 50)'%3E%3Cpath d='M20 20 Q 35 5 50 20 Q 35 35 20 20 Z' fill='%23ff7b00' opacity='0.85'/%3E%3Cpath d='M20 20 L20 38' stroke='%23d00000' stroke-width='2'/%3E%3Ccircle cx='75' cy='30' r='8' fill='%23ffb703' opacity='0.9'/%3E%3Cpath d='M75 22 L75 16' stroke='%238b4513' stroke-width='3'/%3E%3Cpath d='M25 80 C 15 65 40 55 50 75 Z' fill='%23e63946' opacity='0.85'/%3E%3C/g%3E%3C/svg%3E");
-            --accent-color: #e76f51;
-        }
-        body.printemps { 
-            background: #14382c linear-gradient(135deg, #0d261e 0%, #1e4d3d 50%, #0d261e 100%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 100 100'%3E%3Ccircle cx='30' cy='30' r='7' fill='%23ffb703' opacity='0.9'/%3E%3Ccircle cx='23' cy='30' r='5' fill='%23ffb3c1' opacity='0.9'/%3E%3Ccircle cx='37' cy='30' r='5' fill='%23ffb3c1' opacity='0.9'/%3E%3Ccircle cx='30' cy='23' r='5' fill='%23ffb3c1' opacity='0.9'/%3E%3Ccircle cx='30' cy='37' r='5' fill='%23ffb3c1' opacity='0.9'/%3E%3Cpath d='M70 70 C 60 55 85 45 90 65' fill='none' stroke='%2300b4d8' stroke-width='4' stroke-linecap='round' opacity='0.85'/%3E%3Cpath d='M85 60 L 95 65 L 88 72 Z' fill='%2300b4d8' opacity='0.85'/%3E%3C/svg%3E");
-            --accent-color: #e07a5f;
-        }
-        body.ete { 
-            background: #004250 linear-gradient(135deg, #002b36 0%, #005f73 50%, #002b36 100%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130' viewBox='0 0 100 100'%3E%3Ccircle cx='30' cy='30' r='14' fill='%23ffb703' opacity='0.95'/%3E%3Cpath d='M30 8 L30 2 M30 52 L30 58 M8 30 L2 30 M52 30 L58 30 M14 14 L10 10 M46 46 L50 50 M14 46 L10 50 M46 14 L50 10' stroke='%23fb8500' stroke-width='4' stroke-linecap='round' opacity='0.9'/%3E%3Cpath d='M75 85 C 65 70 85 60 85 85 Z' fill='%232a9d8f' opacity='0.85'/%3E%3Cpath d='M65 85 L 85 85' stroke='%23e76f51' stroke-width='4' opacity='0.85'/%3E%3C/svg%3E");
-            --accent-color: #f4a261;
-        }
-        body.hiver { 
-            background: #111d2d linear-gradient(135deg, #0a111a 0%, #1b2a3f 50%, #0a111a 100%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 100 100'%3E%3Cpath d='M30 15 L30 45 M15 30 L45 30 M20 20 L40 40 M20 40 L40 20' stroke='%2300b4d8' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/%3E%3Cpolygon points='75,65 65,85 85,85' fill='%232a9d8f' opacity='0.85'/%3E%3Cpolygon points='75,55 68,70 82,70' fill='%232a9d8f' opacity='0.85'/%3E%3Crect x='73' y='85' width='4' height='6' fill='%23e76f51' opacity='0.85'/%3E%3C/svg%3E");
-            --accent-color: #48cae4;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: var(--text-color);
-            margin: 0;
-            padding: 16px;
-            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
             transition: background 0.5s ease;
         }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        /* Motifs et Arrière-plans dynamiques par Saison / Thème avec icônes chaleureuses visibles */
+        body.theme-automne {
+            background: linear-gradient(135deg, #2C1307 0%, #4D210D 35%, #7A3515 70%, #A84E1D 100%);
         }
-
-        .header-card, .section-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-            border: 1px solid rgba(255,255,255,0.5);
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        h1 { margin: 0; font-size: 1.3rem; }
-
-        select, button, input {
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 1px solid #ccc;
-            background: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-action {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .btn-add {
-            background: #2a9d8f;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 16px;
-        }
-
-        /* Mascotte Kalaggan Dansante */
-        .kalaggan-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: #ffffff;
-            padding: 12px 16px;
-            border-radius: 16px;
-            margin-bottom: 12px;
-            border-left: 5px solid var(--accent-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .kalaggan-avatar {
-            font-size: 2.3rem;
-            display: inline-block;
-        }
-
-        .dance-anim {
-            animation: dance 0.4s ease infinite alternate;
-        }
-
-        @keyframes dance {
-            0% { transform: translateY(0) rotate(-15deg) scale(1); }
-            100% { transform: translateY(-8px) rotate(15deg) scale(1.2); }
-        }
-
-        .kalaggan-text {
-            font-size: 0.85rem;
-            color: #333;
-            line-height: 1.3;
-        }
-
-        /* Jauge */
-        .gauge-container { margin-top: 10px; }
-        .gauge-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
-        .progress-bar-bg {
-            background: #e0e0e0;
-            height: 14px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .progress-bar-fill {
-            background: var(--accent-color);
-            height: 100%;
-            width: 100%;
-            transition: width 0.5s ease-in-out;
-            border-radius: 8px;
-        }
-
-        .task-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-        }
-        .task-item:last-child { border-bottom: none; }
-
-        .task-info { display: flex; flex-direction: column; gap: 2px; }
-        .task-title { font-weight: bold; font-size: 0.95rem; }
-        .task-sub { font-size: 0.8rem; color: #555; }
-        .date-highlight { color: var(--accent-color); font-weight: bold; }
-
-        .badge-vacances {
-            background: var(--accent-color);
-            color: white;
-            font-size: 0.72rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: bold;
-            margin-top: 4px;
-            display: inline-block;
-        }
-
-        /* Cercle de validation : reste toujours vierge et blanc */
-        .checkbox-custom {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 3px solid var(--accent-color);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #ffffff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-            transition: transform 0.15s ease;
-        }
-        .checkbox-custom:active { 
-            transform: scale(0.82); 
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-top: 16px;
-            overflow-x: auto;
-        }
-        .tab-btn {
-            background: rgba(255,255,255,0.7);
-            border: none;
-            padding: 8px 14px;
-            border-radius: 12px;
-            white-space: nowrap;
-        }
-        .tab-btn.active {
-            background: var(--accent-color);
-            color: white;
-        }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .timer-display {
-            font-size: 2.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin: 16px 0;
-            color: var(--accent-color);
-        }
-        .flex-buttons { display: flex; gap: 10px; justify-content: center; }
-
-        .add-form {
-            display: none;
-            background: #fff;
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            margin-bottom: 16px;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .add-form input, .add-form select { width: 100%; box-sizing: border-box; }
-
-        /* Modal Pop-up Personnalisée */
-        .modal-overlay {
-            display: none;
+        body.theme-automne::before {
+            content: "🍂 🍁 🌾 🍂 🍁 🌾 🍂 🍁";
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            box-sizing: border-box;
+            top: -20px; left: -20px; width: 120%; height: 120%;
+            font-size: 32px;
+            opacity: 0.18;
+            letter-spacing: 35px;
+            line-height: 65px;
+            pointer-events: none;
+            z-index: -1;
+            word-break: break-all;
         }
-        .modal-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            text-align: center;
+
+        body.theme-hiver {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 35%, #334155 70%, #475569 100%);
         }
-        .modal-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 12px; }
-        .modal-sub { font-size: 0.9rem; color: #555; margin-bottom: 20px; line-height: 1.4; }
+        body.theme-hiver::before {
+            content: "❄️ 🌨️ ⛄ ❄️ 🌨️ ⛄ ❄️ 🌨️";
+            position: fixed;
+            top: -20px; left: -20px; width: 120%; height: 120%;
+            font-size: 32px;
+            opacity: 0.18;
+            letter-spacing: 35px;
+            line-height: 65px;
+            pointer-events: none;
+            z-index: -1;
+            word-break: break-all;
+        }
+
+        body.theme-printemps {
+            background: linear-gradient(135deg, #143823 0%, #1F5234 35%, #2E7D4E 70%, #43A047 100%);
+        }
+        body.theme-printemps::before {
+            content: "🌸 🌷 🦋 🌿 🌸 🌷 🦋 🌿";
+            position: fixed;
+            top: -20px; left: -20px; width: 120%; height: 120%;
+            font-size: 32px;
+            opacity: 0.18;
+            letter-spacing: 35px;
+            line-height: 65px;
+            pointer-events: none;
+            z-index: -1;
+            word-break: break-all;
+        }
+
+        body.theme-ete {
+            background: linear-gradient(135deg, #612009 0%, #80280B 35%, #A8360E 70%, #D94814 100%);
+        }
+        body.theme-ete::before {
+            content: "☀️ 🍉 🌊 🌴 ☀️ 🍉 🌊 🌴";
+            position: fixed;
+            top: -20px; left: -20px; width: 120%; height: 120%;
+            font-size: 32px;
+            opacity: 0.18;
+            letter-spacing: 35px;
+            line-height: 65px;
+            pointer-events: none;
+            z-index: -1;
+            word-break: break-all;
+        }
+
+        body.theme-terracotta {
+            background: linear-gradient(135deg, #210D05 0%, #3B1709 35%, #63260E 70%, #823211 100%);
+        }
+        body.theme-terracotta::before {
+            content: "🔥 🧱 🏺 🪵 🔥 🧱 🏺 🪵";
+            position: fixed;
+            top: -20px; left: -20px; width: 120%; height: 120%;
+            font-size: 32px;
+            opacity: 0.18;
+            letter-spacing: 35px;
+            line-height: 65px;
+            pointer-events: none;
+            z-index: -1;
+            word-break: break-all;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px; width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(194, 94, 34, 0.4);
+            border-radius: 9999px;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
+        }
+        .floating-wizard { animation: floatSlow 3.5s ease-in-out infinite; }
+
+        @keyframes danceWizard {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-14px) rotate(-8deg) scale(1.15); }
+            50% { transform: translateY(0) rotate(0deg) scale(1); }
+            75% { transform: translateY(-14px) rotate(8deg) scale(1.15); }
+        }
+        .dancing-wizard { animation: danceWizard 0.55s ease-in-out infinite; }
     </style>
 </head>
-<body class="automne">
+<body class="min-h-screen text-stone-800 pb-16 theme-automne">
 
-<!-- Fenêtre Pop-up Modal de Confirmation -->
-<div id="modalOverlay" class="modal-overlay">
-    <div class="modal-card">
-        <div style="font-size: 2.5rem; margin-bottom: 8px;">🧙‍♂️</div>
-        <div id="modalTitle" class="modal-title">Valider la tâche ?</div>
-        <div id="modalSub" class="modal-sub"></div>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-            <button id="modalConfirmBtn" class="btn-action" style="flex: 1; padding: 10px;">Valider</button>
-            <button onclick="closeModal()" style="flex: 1; padding: 10px;">Annuler</button>
-        </div>
-    </div>
-</div>
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
-<div class="container">
-    <div class="header-card">
-        <div class="header-top">
-            <h1>PLANNING MÉNAGE 🧹</h1>
-            <select id="seasonSelect" onchange="changeSeason(this.value)">
-                <option value="automne">🍂 Automne</option>
-                <option value="printemps">🌸 Printemps</option>
-                <option value="ete">☀️ Été</option>
-                <option value="hiver">❄️ Hiver</option>
-            </select>
-        </div>
+    <div class="max-w-4xl mx-auto px-4 py-6">
 
-        <!-- Mascotte Kalaggan Dansante -->
-        <div class="kalaggan-box">
-            <div id="kalagganAvatar" class="kalaggan-avatar">🧙‍♂️</div>
-            <div class="kalaggan-text" id="kalagganMsg">
-                <b>Bien joué !</b> Cliquez sur le cercle d'une tâche pour la valider et mettre à jour la date !
-            </div>
-        </div>
-
-        <!-- Jauge d'harmonie -->
-        <div class="gauge-container">
-            <div class="gauge-header">
-                <span>Avancement à jour (Objectif 100%)</span>
-                <span id="harmonyPercent">100%</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div class="progress-bar-fill" id="harmonyFill"></div>
-            </div>
-        </div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('blocs', this)">📋 Tâches</button>
-            <button class="tab-btn" onclick="switchTab('agenda', this)">📅 Planning & Dates</button>
-            <button class="tab-btn" onclick="switchTab('express', this)">⏱️ Express 15m</button>
-            <button class="tab-btn" onclick="switchTab('tuto', this)">⚙️ Réglages & Vacances</button>
-        </div>
-    </div>
-
-    <!-- Onglet Tâches -->
-    <div id="tab-blocs" class="tab-content active">
-        <button class="btn-add" onclick="toggleAddForm()">➕ Ajouter une tâche</button>
-
-        <div id="addForm" class="add-form">
-            <h4 style="margin: 0 0 8px 0;">Nouvelle tâche</h4>
-            <input type="text" id="newTaskTitle" placeholder="Nom (ex: Nettoyer le four)">
-            <select id="newTaskCat">
-                <option value="semaines">Semaine (7 jours)</option>
-                <option value="mois">Mois (30 jours)</option>
-                <option value="longterme">Trimestriel / Annuel (> 30 jours)</option>
-            </select>
-            <input type="number" id="newTaskFreq" placeholder="Fréquence en jours" value="7">
-            <div style="display:flex; gap:8px;">
-                <button class="btn-action" onclick="addNewTask()" style="flex:1;">Valider</button>
-                <button onclick="toggleAddForm()" style="flex:1;">Annuler</button>
-            </div>
-        </div>
-
-        <div class="section-card">
-            <h3>🗓️ TOUTES LES SEMAINES</h3>
-            <div id="list-semaines"></div>
-        </div>
-        <br>
-        <div class="section-card">
-            <h3>📅 TOUS LES MOIS</h3>
-            <div id="list-mois"></div>
-        </div>
-        <br>
-        <div class="section-card">
-            <h3>🌿 TRIMESTRIEL & ANNUEL</h3>
-            <div id="list-longterme"></div>
-        </div>
-    </div>
-
-    <!-- Onglet Agenda -->
-    <div id="tab-agenda" class="tab-content">
-        <div class="section-card">
-            <h3>📅 Planning Intelligent</h3>
-            <div id="list-agenda"></div>
-        </div>
-    </div>
-
-    <!-- Onglet Express -->
-    <div id="tab-express" class="tab-content">
-        <div class="section-card" style="text-align: center;">
-            <h3>⏱️ Session Express 15 Minutes</h3>
-            <div class="timer-display" id="timerDisplay">15:00</div>
-            <div class="flex-buttons">
-                <button class="btn-action" onclick="startTimer()">Démarrer</button>
-                <button onclick="resetTimer()">Réinitialiser</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Onglet Réglages -->
-    <div id="tab-tuto" class="tab-content">
-        <div class="section-card">
-            <h3>🏖️ Vacances Personnalisées</h3>
-            <label style="font-size:0.8rem; font-weight:bold;">Début :</label>
-            <input type="date" id="customVacStart" onchange="saveCustomVacations()" style="width:100%; margin:4px 0 10px 0;">
-            <label style="font-size:0.8rem; font-weight:bold;">Fin :</label>
-            <input type="date" id="customVacEnd" onchange="saveCustomVacations()" style="width:100%; margin:4px 0 10px 0;">
-        </div>
-    </div>
-</div>
-
-<script>
-    const defaultTasks = [
-        { id: 1, title: 'Changer les draps Adulte', freq: 7, lastDone: null, cat: 'semaines', dayOffset: 0 },
-        { id: 2, title: 'Changer les draps Enfant', freq: 7, lastDone: null, cat: 'semaines', dayOffset: 1 },
-        { id: 3, title: 'Lavage des sols', freq: 7, lastDone: null, cat: 'semaines', dayOffset: 2 },
-        { id: 4, title: 'Nettoyer la machine à laver', freq: 30, lastDone: null, cat: 'mois', dayOffset: 3 },
-        { id: 5, title: 'Nettoyer le lave-vaisselle', freq: 30, lastDone: null, cat: 'mois', dayOffset: 4 },
-        { id: 6, title: 'Nettoyer le frigo', freq: 30, lastDone: null, cat: 'mois', dayOffset: 5 },
-        { id: 7, title: 'Détartrage cafetière', freq: 90, lastDone: null, cat: 'longterme', dayOffset: 0 },
-        { id: 8, title: 'Nettoyage des vitres', freq: 90, lastDone: null, cat: 'longterme', dayOffset: 1 },
-        { id: 9, title: 'Entretien de la VMC', freq: 365, lastDone: null, cat: 'longterme', dayOffset: 2 }
-    ];
-
-    let tasks = JSON.parse(localStorage.getItem('cleaning_tasks')) || defaultTasks;
-    let customVac = JSON.parse(localStorage.getItem('cleaning_custom_vac')) || { start: '', end: '' };
-
-    if (customVac.start) document.getElementById('customVacStart').value = customVac.start;
-    if (customVac.end) document.getElementById('customVacEnd').value = customVac.end;
-
-    function saveCustomVacations() {
-        customVac.start = document.getElementById('customVacStart').value;
-        customVac.end = document.getElementById('customVacEnd').value;
-        localStorage.setItem('cleaning_custom_vac', JSON.stringify(customVac));
-        render();
-    }
-
-    function saveTasks() {
-        localStorage.setItem('cleaning_tasks', JSON.stringify(tasks));
-        render();
-    }
-
-    function changeSeason(season) { 
-        document.body.className = season; 
-    }
-
-    function toggleAddForm() {
-        const form = document.getElementById('addForm');
-        form.style.display = (form.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    function addNewTask() {
-        const title = document.getElementById('newTaskTitle').value.trim();
-        const cat = document.getElementById('newTaskCat').value;
-        const freq = parseInt(document.getElementById('newTaskFreq').value) || 7;
-
-        if (!title) { alert("Veuillez entrer un nom."); return; }
-
-        tasks.push({
-            id: Date.now(),
-            title: title,
-            freq: freq,
-            lastDone: null,
-            cat: cat,
-            dayOffset: tasks.length % 7
-        });
-
-        saveTasks();
-        document.getElementById('newTaskTitle').value = '';
-        toggleAddForm();
-    }
-
-    function switchTab(tabName, btn) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + tabName).classList.add('active');
-        btn.classList.add('active');
-    }
-
-    function formatMobileDate(timeMs) {
-        if (!timeMs) return "Jamais";
-        const d = new Date(timeMs);
-        const jours = ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'];
-        const mois = ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'];
-        return `${jours[d.getDay()]} ${d.getDate()} ${mois[d.getMonth()]} ${d.getFullYear()}`;
-    }
-
-    function computeDueDateMs(task) {
-        let targetMs;
-        if (task.lastDone) {
-            targetMs = new Date(task.lastDone).getTime() + (task.freq * 86400000);
-        } else {
-            const d = new Date();
-            d.setDate(d.getDate() + 7);
-            targetMs = d.getTime();
-        }
-        return targetMs;
-    }
-
-    // Modal de confirmation fluide
-    function openModalConfirm(taskId) {
-        const task = tasks.find(t => t.id === taskId);
-        if (!task) return;
-
-        const nowMs = Date.now();
-        const nextMs = nowMs + (task.freq * 86400000);
-        const nextDateFormatted = formatMobileDate(nextMs);
-
-        document.getElementById('modalTitle').innerText = `Valider "${task.title}" ?`;
-        document.getElementById('modalSub').innerHTML = `En confirmant, cette tâche sera enregistrée comme faite aujourd'hui.<br><br>✨ <b>Prochaine échéance :</b> <span style="color:var(--accent-color); font-weight:bold;">${nextDateFormatted}</span>`;
-
-        const confirmBtn = document.getElementById('modalConfirmBtn');
-        confirmBtn.onclick = function() {
-            executeTaskValidation(taskId, nextDateFormatted);
-            closeModal();
-        };
-
-        document.getElementById('modalOverlay').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('modalOverlay').style.display = 'none';
-    }
-
-    // Variantes de félicitations tournants
-    const celebrationMessages = [
-        (title, date) => `<b>Bien joué Kalaggan !</b> "${title}" validée ! Prochaine échéance : <b>${date}</b> ✨`,
-        (title, date) => `<b>Tu es vraiment géniale !</b> "${title}" accomplie ! Prochaine échéance : <b>${date}</b> 🌟`,
-        (title, date) => `<b>Bien joué Conchita !</b> "${title}" torchée ! Prochaine échéance : <b>${date}</b> 🎉`
-    ];
-    let msgCounter = 0;
-
-    function executeTaskValidation(taskId, nextDateFormatted) {
-        const task = tasks.find(t => t.id === taskId);
-        if (!task) return;
-
-        const nowMs = Date.now();
-        task.lastDone = new Date(nowMs).toISOString();
-        saveTasks();
-
-        // Message & Danse Kalaggan
-        const getMsgFunc = celebrationMessages[msgCounter % celebrationMessages.length];
-        msgCounter++;
-
-        document.getElementById('kalagganMsg').innerHTML = getMsgFunc(task.title, nextDateFormatted);
-
-        const avatar = document.getElementById('kalagganAvatar');
-        avatar.classList.add('dance-anim');
-        setTimeout(() => {
-            avatar.classList.remove('dance-anim');
-        }, 3000);
-    }
-
-    function render() {
-        const listSemaines = document.getElementById('list-semaines');
-        const listMois = document.getElementById('list-mois');
-        const listLongterme = document.getElementById('list-longterme');
-        const listAgenda = document.getElementById('list-agenda');
-
-        listSemaines.innerHTML = ''; listMois.innerHTML = ''; listLongterme.innerHTML = ''; listAgenda.innerHTML = '';
-
-        tasks.forEach((task) => {
-            const lastDoneMs = task.lastDone ? new Date(task.lastDone).getTime() : null;
-            const dueTimeMs = computeDueDateMs(task);
-
-            const htmlTask = `
-                <div class="task-item">
-                    <div class="task-info">
-                        <span class="task-title">${task.title}</span>
-                        <span class="task-sub">🕒 Dernier fait : <b>${formatMobileDate(lastDoneMs)}</b></span>
-                        <span class="task-sub">📅 Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueTimeMs)}</span></span>
+        <!-- HEADER PRINCIPAL -->
+        <header class="glass-panel rounded-3xl shadow-2xl p-6 mb-6 transition-all duration-300">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-amber-700 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg text-2xl">
+                        🧹
                     </div>
-                    <div class="checkbox-custom" onclick="openModalConfirm(${task.id})"></div>
+                    <div>
+                        <h1 class="text-2xl font-extrabold bg-gradient-to-r from-amber-950 to-orange-800 bg-clip-text text-transparent">
+                            PLANNING MÉNAGE
+                        </h1>
+                        <p class="text-xs font-semibold text-stone-600">Assistant Kalaggan • Zone B & Congés</p>
+                    </div>
                 </div>
-            `;
 
-            if (task.cat === 'semaines') listSemaines.innerHTML += htmlTask;
-            else if (task.cat === 'mois') listMois.innerHTML += htmlTask;
-            else listLongterme.innerHTML += htmlTask;
+                <!-- Sélecteur d'ambiance avec Symboles & Couleurs -->
+                <div class="flex items-center gap-2 bg-stone-100 p-1.5 rounded-2xl border border-stone-200">
+                    <span class="text-xs font-semibold px-2 text-stone-600">Ambiance :</span>
+                    <select id="season-selector" onchange="changeSeason(this.value)" class="bg-white text-xs font-bold text-stone-700 py-1.5 px-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-amber-600 cursor-pointer shadow-sm">
+                        <option value="automne">🍂 Automne Chaleureux</option>
+                        <option value="hiver">❄️ Hiver Cocooning</option>
+                        <option value="printemps">🌸 Printemps Frais</option>
+                        <option value="ete">☀️ Été Ensoleillé</option>
+                        <option value="terracotta">🔥 Terracotta Brut</option>
+                    </select>
+                </div>
+            </div>
 
-            const htmlAgenda = `
-                <div class="task-item">
-                    <div class="task-info">
-                        <span class="task-title">${task.title}</span>
-                        <span class="task-sub">Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueTimeMs)}</span></span>
+            <!-- CARTE MASCOTTE KALAGGAN -->
+            <div class="bg-gradient-to-r from-amber-100/90 via-orange-100/80 to-amber-200/70 border border-amber-300/80 rounded-2xl p-4 shadow-inner flex items-start gap-4 mb-6 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div id="wizard-avatar" class="w-12 h-12 flex-shrink-0 bg-white rounded-2xl shadow-md flex items-center justify-center text-2xl floating-wizard border border-amber-300">
+                    🧙‍♂️
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-950">Kalaggan le Magicien</h3>
+                        <span id="zone-badge" class="text-[11px] bg-amber-300/80 text-amber-950 font-bold px-2.5 py-0.5 rounded-full border border-amber-400">
+                            🏫 Démarre étalé le Lundi 19/10/2026
+                        </span>
                     </div>
-                    <button class="btn-action" onclick="openModalConfirm(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
-                        Valider fait
+                    <p id="wizard-message" class="text-sm font-medium text-stone-800 leading-snug">
+                        Vos tâches débutent de façon non anxiogène dès le Lundi 19 Octobre 2026. Les tâches de plus d'1 mois (>30j) sont lissées à raison d'1 tâche tous les 2 jours max après les vacances Zone B ou vos absences !
+                    </p>
+                </div>
+            </div>
+
+            <!-- BARRE DE PROGRESSION -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-1.5">
+                    <span class="text-xs font-bold text-stone-700 uppercase tracking-wide">Avancement Global</span>
+                    <span id="progress-text" class="text-xs font-bold text-amber-900">100%</span>
+                </div>
+                <div class="w-full bg-stone-200/90 h-3 rounded-full overflow-hidden p-0.5 shadow-inner">
+                    <div id="progress-bar" class="bg-gradient-to-r from-amber-700 to-orange-600 h-full rounded-full transition-all duration-700 shadow-sm" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- NAVIGATION ONGLET -->
+            <div class="relative">
+                <div id="tabs-container" class="flex gap-2 overflow-x-auto custom-scrollbar pb-2 pt-1">
+                    <button onclick="switchTab('tasks')" id="tab-btn-tasks" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-gradient-to-r from-amber-700 to-orange-600 text-white shadow-amber-900/30">
+                        <span>🧹</span> Tâches
+                    </button>
+                    <button onclick="switchTab('planning')" id="tab-btn-planning" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200">
+                        <span>📅</span> Agenda & Étalement
+                    </button>
+                    <button onclick="switchTab('express')" id="tab-btn-express" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200">
+                        <span>⏱️</span> Express 15m
+                    </button>
+                    <button onclick="switchTab('settings')" id="tab-btn-settings" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200">
+                        <span>⚙️</span> Réglages & Vacances
                     </button>
                 </div>
-            `;
-            listAgenda.innerHTML += htmlAgenda;
-        });
-    }
+            </div>
+        </header>
 
-    let timerInterval = null, timeLeft = 15 * 60;
-    function startTimer() {
-        if (timerInterval) return;
-        timerInterval = setInterval(() => {
-            if (timeLeft <= 0) { clearInterval(timerInterval); timerInterval = null; alert("⏱️ Fin des 15 minutes !"); }
-            else { timeLeft--; updateTimerDisplay(); }
-        }, 1000);
-    }
-    function resetTimer() { clearInterval(timerInterval); timerInterval = null; timeLeft = 15 * 60; updateTimerDisplay(); }
-    function updateTimerDisplay() {
-        const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-        const s = (timeLeft % 60).toString().padStart(2, '0');
-        document.getElementById('timerDisplay').innerText = `${m}:${s}`;
-    }
+        <!-- BOUTON D'ACTION AJOUT -->
+        <div class="mb-6 flex flex-wrap gap-3 items-center justify-between">
+            <button onclick="openAddTaskModal()" class="flex-1 min-w-[200px] bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-teal-900/10 flex items-center justify-center gap-2 transition-all transform active:scale-98">
+                <span class="text-lg">➕</span> Ajouter une nouvelle tâche
+            </button>
+            <div class="flex gap-2">
+                <button onclick="exportData()" title="Sauvegarder JSON" class="bg-white/95 hover:bg-white text-stone-700 font-bold p-3.5 rounded-2xl shadow-md border border-stone-200 transition-all flex items-center justify-center">
+                    💾
+                </button>
+                <button onclick="triggerImport()" title="Restaurer JSON" class="bg-white/95 hover:bg-white text-stone-700 font-bold p-3.5 rounded-2xl shadow-md border border-stone-200 transition-all flex items-center justify-center">
+                    📂
+                </button>
+                <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
+            </div>
+        </div>
 
-    render();
-</script>
+        <main>
+            <!-- ONGLET 1 : TÂCHES -->
+            <div id="tab-tasks" class="space-y-6">
+                <div id="tasks-container">
+                    <!-- Blocs de tâches injectés dynamiquement -->
+                </div>
+            </div>
+
+            <!-- ONGLET 2 : AGENDA & ÉTALEMENT APRES VACANCES -->
+            <div id="tab-planning" class="hidden space-y-6">
+                <div class="glass-panel rounded-3xl shadow-xl p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-lg font-bold text-stone-800 flex items-center gap-2">
+                            <span>📅</span> Agenda global & Échéances lissées
+                        </h2>
+                        <span class="text-xs bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full border border-amber-300">
+                            >1 mois : 1 tâche / 2j max après vacances
+                        </span>
+                    </div>
+                    <p class="text-xs text-stone-500 mb-6">Toutes vos tâches classées chronologiquement. Les tâches trimestrielles/annuelles de plus d'1 mois sont suspendues pendant les vacances Zone B ou congés, puis étalées à la reprise.</p>
+                    <div id="planning-list" class="space-y-3">
+                        <!-- Rempli dynamiquement -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ONGLET 3 : MINUTEUR EXPRESS 15M -->
+            <div id="tab-express" class="hidden space-y-6">
+                <div class="glass-panel rounded-3xl shadow-xl p-6 text-center">
+                    <div class="w-20 h-20 bg-amber-100 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-4 shadow-inner">
+                        ⏱️
+                    </div>
+                    <h2 class="text-xl font-bold text-stone-800 mb-2">Chrono Express 15 min</h2>
+                    <p class="text-xs text-stone-500 max-w-md mx-auto mb-6">
+                        Envie d'un coup de propre rapide et immédiat ? Piochez une mission express de 15 minutes top chrono !
+                    </p>
+
+                    <div id="express-task-card" class="bg-stone-50 border border-stone-200 rounded-2xl p-6 mb-6 max-w-md mx-auto shadow-sm">
+                        <span id="express-category" class="text-[11px] font-bold uppercase tracking-wider bg-amber-200 text-amber-950 px-3 py-1 rounded-full">Cuisine</span>
+                        <h3 id="express-title" class="text-lg font-bold text-stone-800 mt-3 mb-1">Passer un coup d'éponge sur le plan de travail</h3>
+                        <p class="text-xs text-stone-500">Idéal pour un effet net instantané.</p>
+                    </div>
+
+                    <div class="flex justify-center gap-3">
+                        <button onclick="pickExpressTask()" class="bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-all text-xs">
+                            🎲 Autre mission express
+                        </button>
+                        <button onclick="completeExpressTask()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-all text-xs">
+                            ✨ C'est fait !
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ONGLET 4 : REGLAGES & VACANCES -->
+            <div id="tab-settings" class="hidden space-y-6">
+                <div class="glass-panel rounded-3xl shadow-xl p-6 space-y-6">
+                    <div>
+                        <h2 class="text-lg font-bold text-stone-800 mb-1 flex items-center gap-2">
+                            <span>🏫</span> Périodes d'Absence et Vacances Scolaires Zone B
+                        </h2>
+                        <p class="text-xs text-stone-500 mb-4">Pendant vos absences ou les vacances Zone B, les tâches de plus d'1 mois sont suspendues et étalées à la reprise (1 tous les 2j max). Les tâches ≤ 30 jours continuent normalement.</p>
+                        
+                        <!-- Calendrier Zone B récapitulatif -->
+                        <div class="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 mb-4 space-y-2 text-xs">
+                            <h4 class="font-bold text-amber-950 flex items-center gap-1.5">📌 Vacances Scolaires Zone B 2026-2027 (Référence) :</h4>
+                            <ul class="list-disc list-inside text-stone-700 space-y-1">
+                                <li><strong>Toussaint 2026 :</strong> 17 oct. 2026 au 2 nov. 2026</li>
+                                <li><strong>Noël 2026 :</strong> 19 déc. 2026 au 4 janv. 2027</li>
+                                <li><strong>Hiver 2027 :</strong> 20 fév. 2027 au 8 mars 2027</li>
+                                <li><strong>Printemps 2027 :</strong> 17 avr. 2027 au 3 mai 2027</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-stone-50 border border-stone-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div>
+                                <h4 class="text-sm font-bold text-stone-800" id="vacation-status-title">Mode Absence du Foyer / Congés</h4>
+                                <p class="text-xs text-stone-500" id="vacation-status-desc">Active la pause immédiate des tâches >30j pendant votre absence.</p>
+                            </div>
+                            <button onclick="toggleVacationMode()" id="vacation-toggle-btn" class="bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm">
+                                Activer le Mode Absence
+                            </button>
+                        </div>
+                    </div>
+
+                    <hr class="border-stone-200">
+
+                    <div>
+                        <h2 class="text-lg font-bold text-stone-800 mb-1 flex items-center gap-2">
+                            <span>🔄</span> Réinitialisation Globale
+                        </h2>
+                        <p class="text-xs text-stone-500 mb-4">Rétablir le planning d'origine débutant de façon étalée le Lundi 19 Octobre 2026.</p>
+                        <button onclick="resetToDefaultData()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold py-2.5 px-5 rounded-xl transition-all">
+                            ⚠️ Rétablir les données de départ
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- MODAL 1 : CONFIRMATION DE VALIDATION (CLIC EXACT + NOUVELLE DATE) -->
+    <div id="confirm-modal" class="fixed inset-0 bg-stone-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel rounded-3xl shadow-2xl max-w-md w-full p-6 border border-stone-200 transform transition-all text-center">
+            <div class="w-16 h-16 bg-amber-100 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-inner">
+                ✨
+            </div>
+            <h3 class="text-lg font-extrabold text-stone-900 mb-2">Valider cette tâche ?</h3>
+            <p id="confirm-modal-text" class="text-xs text-stone-600 mb-6 leading-relaxed">
+                <!-- Message dynamique avec date/heure exacte du clic -->
+            </p>
+            <div class="flex justify-center gap-3">
+                <button onclick="closeConfirmModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold px-5 py-2.5 rounded-xl text-xs transition-all">
+                    Annuler
+                </button>
+                <button id="confirm-action-btn" onclick="executeTaskValidation()" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all">
+                    Confirmer la validation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2 : MASCOTTE KALAGGAN (ANIMATION DANSE + PHRASES FÉTICHES) -->
+    <div id="mascot-modal" class="fixed inset-0 bg-stone-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel rounded-3xl shadow-2xl max-w-md w-full p-6 border border-amber-300 transform transition-all text-center relative overflow-hidden">
+            <div class="w-20 h-20 bg-gradient-to-tr from-amber-200 to-orange-200 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-4 shadow-md dancing-wizard border border-amber-300">
+                🧙‍♂️✨
+            </div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Kalaggan en fête !</h3>
+            <p id="mascot-congrats-text" class="text-sm font-bold text-stone-900 mb-6 leading-relaxed px-2">
+                <!-- Message tournant 3 phrases fétiches -->
+            </p>
+            <button onclick="closeMascotModal()" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white font-bold px-8 py-3 rounded-xl text-xs shadow-lg transition-all transform active:scale-95">
+                Célébrer 🎉
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 3 : AJOUT / EDIT DE TÂCHE -->
+    <div id="task-modal" class="fixed inset-0 bg-stone-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel rounded-3xl shadow-2xl max-w-lg w-full p-6 border border-stone-200 transform transition-all">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-lg font-bold text-stone-800">Ajouter une nouvelle tâche</h3>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-600 font-bold text-sm">✕</button>
+            </div>
+            
+            <form id="task-form" onsubmit="saveTaskForm(event)" class="space-y-4">
+                <input type="hidden" id="task-edit-id">
+                <div>
+                    <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Nom de la tâche</label>
+                    <input type="text" id="form-name" required placeholder="ex: Nettoyer le four" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Fréquence</label>
+                        <select id="form-freq-type" onchange="toggleCustomFreq()" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600">
+                            <option value="weekly">Toutes les semaines (7j)</option>
+                            <option value="biweekly">Toutes les 2 semaines (14j)</option>
+                            <option value="monthly">Tous les mois (30j)</option>
+                            <option value="quarterly">Trimestriel (90j)</option>
+                            <option value="custom">Personnalisée (jours)</option>
+                        </select>
+                    </div>
+                    <div id="custom-freq-box" class="hidden">
+                        <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Nombre de jours</label>
+                        <input type="number" id="form-custom-days" min="1" value="7" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Bloc / Catégorie</label>
+                    <select id="form-category" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600">
+                        <option value="Semaines">Semaines (≤ 30j - Actives vacances)</option>
+                        <option value="Mois">Mois (≤ 30j - Actives vacances)</option>
+                        <option value="Trimestriel / Annuel (>1 mois)">Trimestriel / Annuel (>1 mois - Suspendues vacances / lissées)</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold px-5 py-2.5 rounded-xl text-xs transition-all">Annuler</button>
+                    <button type="submit" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // CALENDRIER OFFICIEL VACANCES SCOLAIRES ZONE B 2026-2027
+        const ZONE_B_VACATIONS_2026 = [
+            { name: "Toussaint", start: new Date("2026-10-17T00:00:00"), end: new Date("2026-11-02T23:59:59") },
+            { name: "Noël", start: new Date("2026-12-19T00:00:00"), end: new Date("2027-01-04T23:59:59") },
+            { name: "Hiver", start: new Date("2027-02-20T00:00:00"), end: new Date("2027-03-08T23:59:59") },
+            { name: "Printemps", start: new Date("2027-04-17T00:00:00"), end: new Date("2027-05-03T23:59:59") }
+        ];
+
+        // BASE DE DEMARRAGE FIXEE STRICTEMENT AU LUNDI 19 OCTOBRE 2026 A 09H00
+        function getStartMondayDate(daysOffset = 0) {
+            const monday = new Date("2026-10-19T09:00:00");
+            monday.setDate(monday.getDate() + daysOffset);
+            return monday.toISOString();
+        }
+
+        // TÂCHES INITIALES : TOUTES ALIGNÉES SUR LE LUNDI 19 OCTOBRE 2026 COMME POINT DE DÉPART ZERO
+        const DEFAULT_TASKS = [
+            // Semaines & Quinzaines (Démarrage strict au Lundi 19/10)
+            { id: 1, name: "Changer les draps Adulte", lastDone: getStartMondayDate(0), frequencyDays: 7, category: "Semaines" },
+            { id: 2, name: "Changer les draps Enfant", lastDone: getStartMondayDate(0), frequencyDays: 7, category: "Semaines" },
+            { id: 3, name: "Lavage complet des sols", lastDone: getStartMondayDate(0), frequencyDays: 7, category: "Semaines" },
+            { id: 4, name: "Nettoyage filtre lave-linge", lastDone: getStartMondayDate(0), frequencyDays: 14, category: "Mois" },
+            
+            // Mois
+            { id: 5, name: "Détartrage cafetière & bouilloire", lastDone: getStartMondayDate(0), frequencyDays: 30, category: "Mois" },
+
+            // Trimestriel / Annuel (>1 mois) : Démarrage strict au Lundi 19/10 (lissage +2j automatique appliqué dans la vue)
+            { id: 6, name: "Nettoyage intérieur du four", lastDone: getStartMondayDate(0), frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" },
+            { id: 7, name: "Nettoyage des vitres du salon", lastDone: getStartMondayDate(0), frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" },
+            { id: 8, name: "Shampoinnage tapis & canapé", lastDone: getStartMondayDate(0), frequencyDays: 180, category: "Trimestriel / Annuel (>1 mois)" }
+        ];
+
+        let state = {
+            tasks: JSON.parse(localStorage.getItem('kalaggan_tasks')) || DEFAULT_TASKS,
+            manualVacation: JSON.parse(localStorage.getItem('kalaggan_vacation')) || false,
+            currentSeason: localStorage.getItem('kalaggan_season') || 'automne'
+        };
+
+        let pendingTaskIdForValidation = null;
+        let validationClickTimestamp = null;
+
+        const expressTasksList = [
+            { title: "Passer un coup d'éponge sur le plan de travail", category: "Cuisine" },
+            { title: "Ranger rapidement la table du salon", category: "Salon" },
+            { title: "Aérer toutes les chambres pendant 10 minutes", category: "Chambres" },
+            { title: "Nettoyer le miroir de la salle de bain", category: "Salle de bain" },
+            { title: "Sortir les poubelles et tri sélectif", category: "Entrée" },
+            { title: "Passer un coup de balai rapide dans l'entrée", category: "Entrée" }
+        ];
+
+        window.onload = function() {
+            const seasonSelect = document.getElementById('season-selector');
+            if (seasonSelect) seasonSelect.value = state.currentSeason;
+            applySeasonStyle(state.currentSeason);
+            updateUI();
+            pickExpressTask();
+        };
+
+        function saveState() {
+            localStorage.setItem('kalaggan_tasks', JSON.stringify(state.tasks));
+            localStorage.setItem('kalaggan_vacation', JSON.stringify(state.manualVacation));
+            localStorage.setItem('kalaggan_season', state.currentSeason);
+        }
+
+        function changeSeason(season) {
+            state.currentSeason = season;
+            applySeasonStyle(season);
+            saveState();
+            showToast("Nouvel arrière-plan saisonnier appliqué !", "success");
+        }
+
+        function applySeasonStyle(season) {
+            document.body.className = `min-h-screen text-stone-800 pb-16 theme-${season}`;
+        }
+
+        function isDateInZoneBVacation(date) {
+            return ZONE_B_VACATIONS_2026.some(vac => date >= vac.start && date <= vac.end);
+        }
+
+        // CALCUL DE DATE BASÉ SUR LA DATE DU CLIC / VALIDATION (RAPIDE OU ANTICIPÉ)
+        function calculateTaskDueDateFromTimestamp(lastDoneIso, frequencyDays) {
+            const lastDoneDate = new Date(lastDoneIso);
+            let dueDate = new Date(lastDoneDate.getTime() + frequencyDays * 86400000);
+
+            // Règle validée : Seules les tâches >30 jours sont reportées/suspendues si elles tombent pendant les vacances Zone B
+            if (frequencyDays > 30) {
+                for (let vac of ZONE_B_VACATIONS_2026) {
+                    if (dueDate >= vac.start && dueDate <= vac.end) {
+                        dueDate = new Date(vac.end.getTime() + 1000); // Lendemain de la fin des vacances
+                    }
+                }
+            }
+
+            return dueDate;
+        }
+
+        // ALGORITHME DE LISSAGE STRICT (>30j : 1 TÂCHE TOUS LES 2 JOURS MAX)
+        function getProcessedTasksWithStaggering() {
+            let processed = state.tasks.map(t => {
+                let dueDate = calculateTaskDueDateFromTimestamp(t.lastDone, t.frequencyDays);
+                return { ...t, computedDueDate: dueDate, isStaggered: false };
+            });
+
+            // Tri par date d'échéance brute
+            processed.sort((a, b) => a.computedDueDate - b.computedDueDate);
+
+            let lastAssignedDate = null;
+
+            processed.forEach(task => {
+                if (task.frequencyDays > 30) {
+                    if (lastAssignedDate && task.computedDueDate <= lastAssignedDate) {
+                        let newDate = new Date(lastAssignedDate.getTime() + 2 * 86400000); // +2 jours minimum
+                        task.computedDueDate = newDate;
+                        task.isStaggered = true;
+                    }
+                    lastAssignedDate = new Date(task.computedDueDate);
+                }
+            });
+
+            return processed;
+        }
+
+        function formatDate(date) {
+            return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function formatDateTime(date) {
+            return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function updateUI() {
+            renderTasksList();
+            updateProgressBar();
+            updateVacationUI();
+            saveState();
+        }
+
+        function renderTasksList() {
+            const container = document.getElementById('tasks-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const processedTasks = getProcessedTasksWithStaggering();
+
+            const categories = {};
+            processedTasks.forEach(task => {
+                if (!categories[task.category]) categories[task.category] = [];
+                categories[task.category].push(task);
+            });
+
+            const today = new Date();
+
+            for (const [catName, tasks] of Object.entries(categories)) {
+                let categoryHTML = `
+                    <div class="glass-panel rounded-3xl shadow-xl p-6 mb-6">
+                        <h2 class="text-base font-bold text-stone-800 mb-4 flex items-center justify-between">
+                            <span class="flex items-center gap-2">📂 ${catName}</span>
+                            ${catName.includes('>1 mois') ? '<span class="text-[11px] bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-300">Lissage +2j actif</span>' : ''}
+                        </h2>
+                        <div class="divide-y divide-stone-100">
+                `;
+
+                tasks.forEach(task => {
+                    const dueDate = task.computedDueDate;
+                    const diffTime = dueDate - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    let badgeColor = "bg-emerald-100 text-emerald-800 border-emerald-200";
+                    let statusText = `Prochaine échéance : ${formatDate(dueDate)}`;
+
+                    if (state.manualVacation) {
+                        badgeColor = "bg-sky-100 text-sky-800 border-sky-200";
+                        statusText = `Foyer Absent / Congés (Suspendue)`;
+                    } else if (task.frequencyDays > 30 && isDateInZoneBVacation(today)) {
+                        badgeColor = "bg-sky-100 text-sky-800 border-sky-200";
+                        statusText = `Pause Vacances Zone B (${formatDate(dueDate)})`;
+                    } else if (diffDays < 0) {
+                        badgeColor = "bg-rose-100 text-rose-800 border-rose-200";
+                        statusText = `En retard de ${Math.abs(diffDays)}j !`;
+                    } else if (diffDays === 0) {
+                        badgeColor = "bg-amber-100 text-amber-900 border-amber-300";
+                        statusText = `À faire aujourd'hui !`;
+                    } else if (task.isStaggered) {
+                        badgeColor = "bg-purple-100 text-purple-900 border-purple-300";
+                        statusText = `Étalée : ${formatDate(dueDate)}`;
+                    }
+
+                    categoryHTML += `
+                        <div class="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group">
+                            <div class="flex-1">
+                                <h3 class="text-sm font-bold text-stone-800 mb-1 group-hover:text-amber-700 transition-colors">${task.name}</h3>
+                                <div class="flex flex-wrap items-center gap-2.5 text-xs text-stone-500">
+                                    <span>⏱️ Dernier fait : ${formatDate(new Date(task.lastDone))}</span>
+                                    <span class="px-2.5 py-0.5 rounded-full font-semibold border ${badgeColor}">${statusText}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 self-end sm:self-center">
+                                <button onclick="editTask(${task.id})" title="Modifier" class="p-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-xl transition-all text-xs">✏️</button>
+                                <button onclick="deleteTask(${task.id})" title="Supprimer" class="p-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-all text-xs">🗑️</button>
+                                <button onclick="promptCompleteTask(${task.id})" class="bg-gradient-to-r from-amber-700 to-orange-600 hover:from-amber-800 hover:to-orange-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all flex items-center gap-1.5 transform active:scale-95">
+                                    <span>✓</span> Valider fait
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                categoryHTML += `</div></div>`;
+                container.innerHTML += categoryHTML;
+            }
+        }
+
+        function renderPlanningList() {
+            const container = document.getElementById('planning-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const sortedTasks = getProcessedTasksWithStaggering();
+
+            sortedTasks.forEach(task => {
+                container.innerHTML += `
+                    <div class="bg-stone-50 border border-stone-200 rounded-2xl p-4 flex items-center justify-between">
+                        <div>
+                            <h4 class="text-sm font-bold text-stone-800">${task.name}</h4>
+                            <p class="text-xs text-stone-500">Tous les ${task.frequencyDays} jours (${task.category})</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-bold ${task.isStaggered ? 'text-purple-900 bg-purple-100 border-purple-300' : 'text-amber-900 bg-amber-100 border-amber-200'} px-3 py-1 rounded-full border">
+                                ${formatDate(task.computedDueDate)} ${task.isStaggered ? '✨ Lissé +2j' : ''}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateProgressBar() {
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            if (!progressBar || !progressText) return;
+
+            if (state.tasks.length === 0) {
+                progressBar.style.width = '0%';
+                progressText.innerText = '0%';
+                return;
+            }
+
+            const today = new Date();
+            const processed = getProcessedTasksWithStaggering();
+            let upToDateCount = 0;
+
+            processed.forEach(task => {
+                if (task.computedDueDate >= today || state.manualVacation) {
+                    upToDateCount++;
+                }
+            });
+
+            const percent = Math.round((upToDateCount / state.tasks.length) * 100);
+            progressBar.style.width = `${percent}%`;
+            progressText.innerText = `${percent}%`;
+        }
+
+        // FLUX DE VALIDATION AVEC AFFICHAGE DE LA DATE ET DE L'HEURE EXACTE DU CLIC
+        function promptCompleteTask(id) {
+            pendingTaskIdForValidation = id;
+            validationClickTimestamp = new Date(); // Date et heure exactes du clic
+
+            const task = state.tasks.find(t => t.id === id);
+            if (!task) return;
+
+            const nextCalculatedDueDate = calculateTaskDueDateFromTimestamp(validationClickTimestamp.toISOString(), task.frequencyDays);
+            
+            const textEl = document.getElementById('confirm-modal-text');
+            if (textEl) {
+                textEl.innerHTML = `
+                    Tâche : <strong class="text-stone-900 font-bold">${task.name}</strong><br>
+                    Horodatage du clic : <strong class="text-stone-800">${formatDateTime(validationClickTimestamp)}</strong><br><br>
+                    En confirmant, la nouvelle échéance sera calculée au :<br>
+                    <strong class="text-amber-800 text-sm font-extrabold bg-amber-100 px-3 py-1 rounded-lg border border-amber-300 inline-block mt-2">
+                        📅 ${formatDate(nextCalculatedDueDate)}
+                    </strong>
+                `;
+            }
+
+            const modal = document.getElementById('confirm-modal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            pendingTaskIdForValidation = null;
+            validationClickTimestamp = null;
+            const modal = document.getElementById('confirm-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function executeTaskValidation() {
+            if (!pendingTaskIdForValidation || !validationClickTimestamp) return;
+            
+            const task = state.tasks.find(t => t.id === pendingTaskIdForValidation);
+            if (!task) return;
+
+            task.lastDone = validationClickTimestamp.toISOString();
+
+            closeConfirmModal();
+            updateUI();
+
+            showMascotModal(task);
+        }
+
+        function showMascotModal(task) {
+            const dueDate = calculateTaskDueDateFromTimestamp(task.lastDone, task.frequencyDays);
+            const formattedNextDate = formatDate(dueDate);
+
+            const mascotPhrases = [
+                `« Bien joué Kalaggan ! ${task.name} faite ! Prochaine échéance : ${formattedNextDate} ✨ »`,
+                `« Tu es vraiment géniale ! ${task.name} accomplie ! Prochaine échéance : ${formattedNextDate} 🌟 »`,
+                `« Bien joué Conchita ! ${task.name} torchée ! Prochaine échéance : ${formattedNextDate} 🎉 »`
+            ];
+
+            const selectedPhrase = mascotPhrases[Math.floor(Math.random() * mascotPhrases.length)];
+
+            const congratsEl = document.getElementById('mascot-congrats-text');
+            if (congratsEl) congratsEl.innerText = selectedPhrase;
+
+            const mascotModal = document.getElementById('mascot-modal');
+            if (mascotModal) mascotModal.classList.remove('hidden');
+        }
+
+        function closeMascotModal() {
+            const mascotModal = document.getElementById('mascot-modal');
+            if (mascotModal) mascotModal.classList.add('hidden');
+            showToast("Tâche validée avec succès !", "success");
+        }
+
+        function switchTab(tabId) {
+            ['tasks', 'planning', 'express', 'settings'].forEach(id => {
+                const tabEl = document.getElementById(`tab-${id}`);
+                const btnEl = document.getElementById(`tab-btn-${id}`);
+                if (tabEl) tabEl.classList.add('hidden');
+                if (btnEl) btnEl.className = "flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200";
+            });
+
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            const targetBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (targetTab) targetTab.classList.remove('hidden');
+            if (targetBtn) targetBtn.className = "flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-gradient-to-r from-amber-700 to-orange-600 text-white shadow-amber-900/30";
+
+            if (tabId === 'planning') renderPlanningList();
+        }
+
+        function deleteTask(id) {
+            if (confirm("Supprimer cette tâche du planning ?")) {
+                state.tasks = state.tasks.filter(t => t.id !== id);
+                updateUI();
+                showToast("Tâche supprimée.", "info");
+            }
+        }
+
+        function openAddTaskModal() {
+            document.getElementById('modal-title').innerText = "Ajouter une nouvelle tâche";
+            document.getElementById('task-edit-id').value = "";
+            document.getElementById('form-name').value = "";
+            document.getElementById('form-freq-type').value = "weekly";
+            document.getElementById('form-custom-days').value = "7";
+            document.getElementById('custom-freq-box').classList.add('hidden');
+            document.getElementById('task-modal').classList.remove('hidden');
+        }
+
+        function editTask(id) {
+            const task = state.tasks.find(t => t.id === id);
+            if (!task) return;
+
+            document.getElementById('modal-title').innerText = "Modifier la tâche";
+            document.getElementById('task-edit-id').value = task.id;
+            document.getElementById('form-name').value = task.name;
+            document.getElementById('form-category').value = task.category;
+
+            let freqType = "custom";
+            let days = task.frequencyDays;
+            if (days === 7) freqType = "weekly";
+            else if (days === 14) freqType = "biweekly";
+            else if (days === 30) freqType = "monthly";
+            else if (days === 90) freqType = "quarterly";
+
+            document.getElementById('form-freq-type').value = freqType;
+            document.getElementById('form-custom-days').value = days;
+            if (freqType === "custom") {
+                document.getElementById('custom-freq-box').classList.remove('hidden');
+            } else {
+                document.getElementById('custom-freq-box').classList.add('hidden');
+            }
+
+            document.getElementById('task-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('task-modal').classList.add('hidden');
+        }
+
+        function toggleCustomFreq() {
+            const type = document.getElementById('form-freq-type').value;
+            const customBox = document.getElementById('custom-freq-box');
+            if (type === "custom") {
+                customBox.classList.remove('hidden');
+            } else {
+                customBox.classList.add('hidden');
+                if (type === "weekly") document.getElementById('form-custom-days').value = 7;
+                if (type === "biweekly") document.getElementById('form-custom-days').value = 14;
+                if (type === "monthly") document.getElementById('form-custom-days').value = 30;
+                if (type === "quarterly") document.getElementById('form-custom-days').value = 90;
+            }
+        }
+
+        function saveTaskForm(e) {
+            e.preventDefault();
+            const editId = document.getElementById('task-edit-id').value;
+            const name = document.getElementById('form-name').value;
+            const category = document.getElementById('form-category').value;
+            const freqType = document.getElementById('form-freq-type').value;
+            
+            let days = 7;
+            if (freqType === "weekly") days = 7;
+            else if (freqType === "biweekly") days = 14;
+            else if (freqType === "monthly") days = 30;
+            else if (freqType === "quarterly") days = 90;
+            else days = parseInt(document.getElementById('form-custom-days').value) || 7;
+
+            if (editId) {
+                const task = state.tasks.find(t => t.id == editId);
+                if (task) {
+                    task.name = name;
+                    task.category = category;
+                    task.frequencyDays = days;
+                }
+                showToast("Tâche mise à jour !", "success");
+            } else {
+                const newTask = {
+                    id: Date.now(),
+                    name,
+                    lastDone: getStartMondayDate(0),
+                    frequencyDays: days,
+                    category
+                };
+                state.tasks.push(newTask);
+                showToast("Nouvelle tâche ajoutée !", "success");
+            }
+
+            closeModal();
+            updateUI();
+        }
+
+        function pickExpressTask() {
+            const task = expressTasksList[Math.floor(Math.random() * expressTasksList.length)];
+            const titleEl = document.getElementById('express-title');
+            const catEl = document.getElementById('express-category');
+            if (titleEl) titleEl.innerText = task.title;
+            if (catEl) catEl.innerText = task.category;
+        }
+
+        function completeExpressTask() {
+            showToast("Mission express réussie !", "success");
+            pickExpressTask();
+        }
+
+        function toggleVacationMode() {
+            state.manualVacation = !state.manualVacation;
+            updateVacationUI();
+            saveState();
+            updateUI();
+        }
+
+        function updateVacationUI() {
+            const titleEl = document.getElementById('vacation-status-title');
+            const descEl = document.getElementById('vacation-status-desc');
+            const btnEl = document.getElementById('vacation-toggle-btn');
+            if (!titleEl || !descEl || !btnEl) return;
+
+            if (state.manualVacation) {
+                titleEl.innerText = "Mode Absence du foyer activé 🏖️";
+                descEl.innerText = "Toutes les tâches >30j sont temporairement suspendues.";
+                btnEl.innerText = "Désactiver l'absence";
+                btnEl.className = "bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm";
+            } else {
+                titleEl.innerText = "Mode Absence du Foyer / Congés";
+                descEl.innerText = "Active la pause immédiate des tâches >30j pendant votre absence.";
+                btnEl.innerText = "Activer le Mode Absence";
+                btnEl.className = "bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm";
+            }
+        }
+
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", "kalaggan_planning_backup.json");
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            showToast("Sauvegarde exportée !", "success");
+        }
+
+        function triggerImport() {
+            const fileInput = document.getElementById('import-file');
+            if (fileInput) fileInput.click();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.tasks) {
+                        state = imported;
+                        applySeasonStyle(state.currentSeason || 'automne');
+                        updateUI();
+                        showToast("Données restaurées !", "success");
+                    }
+                } catch(err) {
+                    showToast("Erreur dans le fichier.", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetToDefaultData() {
+            if (confirm("Rétablir les tâches par défaut ?")) {
+                state.tasks = [...DEFAULT_TASKS];
+                state.manualVacation = false;
+                updateUI();
+                showToast("Données réinitialisées.", "info");
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            
+            let bg = "bg-amber-950 text-white border border-amber-600/50";
+            if (type === 'error') bg = "bg-rose-950 text-white border border-rose-600/50";
+
+            toast.className = `pointer-events-auto px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold transition-all transform translate-y-2 opacity-0 flex items-center gap-2 ${bg}`;
+            toast.innerHTML = `<span>${type === 'success' ? '✨' : 'ℹ️'}</span> ${message}`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
 </body>
 </html>
