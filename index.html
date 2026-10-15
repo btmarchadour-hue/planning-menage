@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planning Ménage 🧹</title>
+    <title>Planning Ménage 🧹 v3</title>
     
     <!-- Icônes PWA -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
@@ -29,7 +29,7 @@
 
     <style>
         :root {
-            --card-bg: rgba(255, 255, 255, 0.92);
+            --card-bg: rgba(255, 255, 255, 0.93);
             --accent-color: #e76f51;
             --text-color: #2b2b2b;
             --border-radius: 18px;
@@ -123,7 +123,7 @@
             margin-bottom: 16px;
         }
 
-        /* Mascotte Kalaggan */
+        /* Mascotte Kalaggan Dansante */
         .kalaggan-box {
             display: flex;
             align-items: center;
@@ -139,16 +139,15 @@
         .kalaggan-avatar {
             font-size: 2.3rem;
             display: inline-block;
-            transition: transform 0.3s ease;
         }
 
         .dance-anim {
-            animation: dance 0.5s ease infinite alternate;
+            animation: dance 0.4s ease infinite alternate;
         }
 
         @keyframes dance {
-            0% { transform: translateY(0) rotate(-12deg) scale(1); }
-            100% { transform: translateY(-8px) rotate(12deg) scale(1.15); }
+            0% { transform: translateY(0) rotate(-15deg) scale(1); }
+            100% { transform: translateY(-8px) rotate(15deg) scale(1.2); }
         }
 
         .kalaggan-text {
@@ -206,7 +205,7 @@
             display: inline-block;
         }
 
-        /* Bouton Cercle de validation (Reste toujours blanc et vierge) */
+        /* Cercle de validation (Reste toujours blanc et vide après validation) */
         .checkbox-custom {
             width: 38px;
             height: 38px;
@@ -221,7 +220,7 @@
             transition: transform 0.15s ease, background 0.15s ease;
         }
         .checkbox-custom:active { 
-            transform: scale(0.82); 
+            transform: scale(0.8); 
             background: var(--accent-color);
         }
 
@@ -281,11 +280,11 @@
             </select>
         </div>
 
-        <!-- Mascotte Kalaggan -->
+        <!-- Mascotte Kalaggan Dansante -->
         <div class="kalaggan-box">
             <div id="kalagganAvatar" class="kalaggan-avatar">🧙‍♂️</div>
             <div class="kalaggan-text" id="kalagganMsg">
-                <b>Bien joué !</b> Cliquez sur le cercle d'une tâche pour la valider : la date se met à jour et le cercle reste prêt !
+                <b>Bien joué !</b> Cliquez sur le cercle d'une tâche pour l'valider, afficher la confirmation et voir la nouvelle date !
             </div>
         </div>
 
@@ -533,38 +532,45 @@
         return { timeMs: targetMs, isVac: isVac, vacName: vacName };
     }
 
-    // Messages de félicitations tournants
-    const messagesCelebration = [
+    // Variantes de messages avec rotation et danse
+    const celebrationMessages = [
         (title, date) => `<b>Bien joué Kalaggan !</b> "${title}" validée ! Prochaine échéance : <b>${date}</b> ✨`,
         (title, date) => `<b>Tu es vraiment géniale !</b> "${title}" accomplie ! Prochaine échéance : <b>${date}</b> 🌟`,
-        (title, date) => `<b>Bien joué Conchita !</b> "${title}" propre en grand ! Prochaine échéance : <b>${date}</b> 🎉`
+        (title, date) => `<b>Bien joué Conchita !</b> "${title}" torchée ! Prochaine échéance : <b>${date}</b> 🎉`
     ];
-    let counterMsg = 0;
+    let msgCounter = 0;
 
-    // VALIDATION DIRECTE AU CLIC (100% Fonctionnelle sur mobile)
-    function validateTaskDirect(taskId) {
+    // VALIDATION AVEC BOÎTE DE CONFIRMATION NATIVE ET CHANGEMENT DE DATE DIRECT
+    function validateTaskWithConfirm(taskId) {
         const task = tasks.find(t => t.id === taskId);
         if (!task) return;
 
+        // Précalcul de la prochaine date pour l'afficher dans la confirmation
         const nowMs = Date.now();
-        task.lastDone = new Date(nowMs).toISOString();
-        saveTasks();
-
         const nextMs = nowMs + (task.freq * 86400000);
         const nextDateFormatted = formatMobileDate(nextMs);
 
-        // Mise à jour du message Kalaggan
-        const getMsgFunc = messagesCelebration[counterMsg % messagesCelebration.length];
-        counterMsg++;
+        // Pop-up de confirmation native (marche à 100% sur mobile et web)
+        const userConfirmed = confirm(`Valider la réalisation de "${task.title}" ?\n\n✨ Prochaine échéance : ${nextDateFormatted}`);
+        
+        if (userConfirmed) {
+            // Enregistrement de la date de réalisation
+            task.lastDone = new Date(nowMs).toISOString();
+            saveTasks(); // Sauvegarde et rafraîchissement complet
 
-        document.getElementById('kalagganMsg').innerHTML = getMsgFunc(task.title, nextDateFormatted);
+            // Sélection du message tournant
+            const getMsgFunc = celebrationMessages[msgCounter % celebrationMessages.length];
+            msgCounter++;
 
-        // Animation de danse du petit bonhomme Kalaggan 🧙‍♂️💃
-        const avatar = document.getElementById('kalagganAvatar');
-        avatar.classList.add('dance-anim');
-        setTimeout(() => {
-            avatar.classList.remove('dance-anim');
-        }, 2500);
+            document.getElementById('kalagganMsg').innerHTML = getMsgFunc(task.title, nextDateFormatted);
+
+            // Animation de danse de Kalaggan 🧙‍♂️💃
+            const avatar = document.getElementById('kalagganAvatar');
+            avatar.classList.add('dance-anim');
+            setTimeout(() => {
+                avatar.classList.remove('dance-anim');
+            }, 3000);
+        }
     }
 
     function render() {
@@ -582,7 +588,7 @@
             const dueInfo = computeDueDateMs(task, vacTaskCounter);
             if (dueInfo.isVac) vacTaskCounter++;
 
-            // Cercle VIERGE / BLANC au clic direct sans bug
+            // Le cercle reste toujours blanc et vierge, prêt pour le prochain clic
             const htmlTask = `
                 <div class="task-item">
                     <div class="task-info">
@@ -590,7 +596,7 @@
                         <span class="task-sub">🕒 Dernier fait : <b>${formatMobileDate(lastDoneMs)}</b></span>
                         <span class="task-sub">📅 Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
                     </div>
-                    <div class="checkbox-custom" onclick="validateTaskDirect(${task.id})"></div>
+                    <div class="checkbox-custom" onclick="validateTaskWithConfirm(${task.id})"></div>
                 </div>
             `;
 
@@ -606,7 +612,7 @@
                         <span class="task-sub">Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
                         ${dueInfo.isVac ? `<span class="badge-vacances">🏖️ Reporté après ${dueInfo.vacName} (1j/2)</span>` : ''}
                     </div>
-                    <button class="btn-action" onclick="validateTaskDirect(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
+                    <button class="btn-action" onclick="validateTaskWithConfirm(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
                         Valider fait
                     </button>
                 </div>
