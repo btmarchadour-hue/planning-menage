@@ -35,7 +35,7 @@
             --border-radius: 18px;
         }
 
-        /* Thèmes Saisons avec Motifs Très Tranchés et Colorés */
+        /* Thèmes Saisons avec Motifs Tranchés */
         body.automne { 
             background: #3e1f14 linear-gradient(135deg, #2c140a 0%, #542b1a 50%, #2c140a 100%);
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 100 100'%3E%3Cg transform='rotate(15 50 50)'%3E%3Cpath d='M20 20 Q 35 5 50 20 Q 35 35 20 20 Z' fill='%23ff7b00' opacity='0.85'/%3E%3Cpath d='M20 20 L20 38' stroke='%23d00000' stroke-width='2'/%3E%3Ccircle cx='75' cy='30' r='8' fill='%23ffb703' opacity='0.9'/%3E%3Cpath d='M75 22 L75 16' stroke='%238b4513' stroke-width='3'/%3E%3Cpath d='M25 80 C 15 65 40 55 50 75 Z' fill='%23e63946' opacity='0.85'/%3E%3C/g%3E%3C/svg%3E");
@@ -123,7 +123,7 @@
             margin-bottom: 16px;
         }
 
-        /* Mascotte Kalaggan dansante */
+        /* Mascotte Kalaggan */
         .kalaggan-box {
             display: flex;
             align-items: center;
@@ -139,16 +139,16 @@
         .kalaggan-avatar {
             font-size: 2.3rem;
             display: inline-block;
+            transition: transform 0.3s ease;
         }
 
-        .dancing {
-            animation: dance 0.6s ease infinite alternate;
+        .dance-anim {
+            animation: dance 0.5s ease infinite alternate;
         }
 
         @keyframes dance {
-            0% { transform: translateY(0) rotate(-10deg) scale(1); }
-            50% { transform: translateY(-8px) rotate(0deg) scale(1.1); }
-            100% { transform: translateY(0) rotate(10deg) scale(1); }
+            0% { transform: translateY(0) rotate(-12deg) scale(1); }
+            100% { transform: translateY(-8px) rotate(12deg) scale(1.15); }
         }
 
         .kalaggan-text {
@@ -206,20 +206,24 @@
             display: inline-block;
         }
 
+        /* Bouton Cercle de validation (Reste toujours blanc et vierge) */
         .checkbox-custom {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: 3px solid var(--accent-color);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            transition: transform 0.15s ease;
+            background: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+            transition: transform 0.15s ease, background 0.15s ease;
         }
-        .checkbox-custom:active { transform: scale(0.85); }
+        .checkbox-custom:active { 
+            transform: scale(0.82); 
+            background: var(--accent-color);
+        }
 
         .tabs {
             display: flex;
@@ -261,47 +265,9 @@
             gap: 10px;
         }
         .add-form input, .add-form select { width: 100%; box-sizing: border-box; }
-
-        /* Modal de confirmation personnalisée */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            box-sizing: border-box;
-        }
-        .modal-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-        .modal-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 12px; }
-        .modal-sub { font-size: 0.9rem; color: #555; margin-bottom: 20px; line-height: 1.4; }
     </style>
 </head>
 <body class="automne">
-
-<!-- Fenêtre Modal de confirmation -->
-<div id="modalOverlay" class="modal-overlay">
-    <div class="modal-card">
-        <div style="font-size: 2.5rem; margin-bottom: 8px;">🧙‍♂️</div>
-        <div id="modalTitle" class="modal-title">Valider la tâche ?</div>
-        <div id="modalSub" class="modal-sub"></div>
-        <div style="display: flex; gap: 10px; justify-content: center;">
-            <button id="modalConfirmBtn" class="btn-action" style="flex: 1; padding: 10px;">Valider</button>
-            <button onclick="closeModal()" style="flex: 1; padding: 10px;">Annuler</button>
-        </div>
-    </div>
-</div>
 
 <div class="container">
     <div class="header-card">
@@ -315,11 +281,11 @@
             </select>
         </div>
 
-        <!-- Mascotte Kalaggan Dansante -->
+        <!-- Mascotte Kalaggan -->
         <div class="kalaggan-box">
             <div id="kalagganAvatar" class="kalaggan-avatar">🧙‍♂️</div>
             <div class="kalaggan-text" id="kalagganMsg">
-                <b>Bien joué !</b> Cliquez sur le cercle d'une tâche pour la valider et calculer sa nouvelle échéance !
+                <b>Bien joué !</b> Cliquez sur le cercle d'une tâche pour la valider : la date se met à jour et le cercle reste prêt !
             </div>
         </div>
 
@@ -567,60 +533,38 @@
         return { timeMs: targetMs, isVac: isVac, vacName: vacName };
     }
 
-    function promptValidation(taskId) {
+    // Messages de félicitations tournants
+    const messagesCelebration = [
+        (title, date) => `<b>Bien joué Kalaggan !</b> "${title}" validée ! Prochaine échéance : <b>${date}</b> ✨`,
+        (title, date) => `<b>Tu es vraiment géniale !</b> "${title}" accomplie ! Prochaine échéance : <b>${date}</b> 🌟`,
+        (title, date) => `<b>Bien joué Conchita !</b> "${title}" propre en grand ! Prochaine échéance : <b>${date}</b> 🎉`
+    ];
+    let counterMsg = 0;
+
+    // VALIDATION DIRECTE AU CLIC (100% Fonctionnelle sur mobile)
+    function validateTaskDirect(taskId) {
         const task = tasks.find(t => t.id === taskId);
         if (!task) return;
 
         const nowMs = Date.now();
+        task.lastDone = new Date(nowMs).toISOString();
+        saveTasks();
+
         const nextMs = nowMs + (task.freq * 86400000);
         const nextDateFormatted = formatMobileDate(nextMs);
 
-        document.getElementById('modalTitle').innerText = `Valider "${task.title}" ?`;
-        document.getElementById('modalSub').innerHTML = `En confirmant, cette tâche sera enregistrée comme faite aujourd'hui.<br><br>✨ <b>Prochaine échéance :</b> <span style="color:var(--accent-color); font-weight:bold;">${nextDateFormatted}</span>`;
+        // Mise à jour du message Kalaggan
+        const getMsgFunc = messagesCelebration[counterMsg % messagesCelebration.length];
+        counterMsg++;
 
-        const confirmBtn = document.getElementById('modalConfirmBtn');
-        confirmBtn.onclick = function() {
-            executeTaskValidation(taskId, nextDateFormatted);
-            closeModal();
-        };
+        document.getElementById('kalagganMsg').innerHTML = getMsgFunc(task.title, nextDateFormatted);
 
-        document.getElementById('modalOverlay').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('modalOverlay').style.display = 'none';
-    }
-
-    // Variantes de félicitations avec Kalaggan dansant 🧙‍♂️💃
-    const celebrationMessages = [
-        (title, date) => `<b>Bien joué Kalaggan !</b> "${title}" validée. Prochaine échéance : <b>${date}</b> ✨`,
-        (title, date) => `<b>Tu es vraiment géniale !</b> "${title}" est faite ! Prochaine échéance : <b>${date}</b> 🌟`,
-        (title, date) => `<b>Bien joué Conchita !</b> "${title}" torchée ! Prochaine échéance : <b>${date}</b> 🎉`
-    ];
-    let msgIndex = 0;
-
-    function executeTaskValidation(taskId, nextDateFormatted) {
-        const task = tasks.find(t => t.id === taskId);
-        if (!task) return;
-
-        task.lastDone = new Date().toISOString();
-        saveTasks();
-
-        // Sélection de la phrase tournante
-        const getMsg = celebrationMessages[msgIndex % celebrationMessages.length];
-        msgIndex++;
-
-        // Affichage du message et déclenchement de la danse
-        const msgBox = document.getElementById('kalagganMsg');
+        // Animation de danse du petit bonhomme Kalaggan 🧙‍♂️💃
         const avatar = document.getElementById('kalagganAvatar');
-
-        msgBox.innerHTML = getMsg(task.title, nextDateFormatted);
-        avatar.classList.add('dancing');
-
-        // Arrêt de l'animation de danse après 3 secondes
+        avatar.classList.add('dance-anim');
         setTimeout(() => {
-            avatar.classList.remove('dancing');
-        }, 3000);
+            avatar.classList.remove('dance-anim');
+        }, 2500);
     }
 
     function render() {
@@ -638,6 +582,7 @@
             const dueInfo = computeDueDateMs(task, vacTaskCounter);
             if (dueInfo.isVac) vacTaskCounter++;
 
+            // Cercle VIERGE / BLANC au clic direct sans bug
             const htmlTask = `
                 <div class="task-item">
                     <div class="task-info">
@@ -645,7 +590,7 @@
                         <span class="task-sub">🕒 Dernier fait : <b>${formatMobileDate(lastDoneMs)}</b></span>
                         <span class="task-sub">📅 Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
                     </div>
-                    <div class="checkbox-custom" onclick="promptValidation(${task.id})"></div>
+                    <div class="checkbox-custom" onclick="validateTaskDirect(${task.id})"></div>
                 </div>
             `;
 
@@ -661,7 +606,7 @@
                         <span class="task-sub">Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
                         ${dueInfo.isVac ? `<span class="badge-vacances">🏖️ Reporté après ${dueInfo.vacName} (1j/2)</span>` : ''}
                     </div>
-                    <button class="btn-action" onclick="promptValidation(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
+                    <button class="btn-action" onclick="validateTaskDirect(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
                         Valider fait
                     </button>
                 </div>
