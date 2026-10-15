@@ -3,30 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planning Ménage 🧹 v3</title>
+    <title>Planning Ménage 🧹</title>
     
-    <!-- Icônes PWA -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
-
-    <!-- Manifeste PWA -->
-    <link rel="manifest" href="data:application/json,{
-        'name': 'Planning Ménage',
-        'short_name': 'Ménage',
-        'start_url': '.',
-        'display': 'standalone',
-        'theme_color': '#3d2314',
-        'background_color': '#f8f6f0',
-        'icons': [
-            {
-                'src': 'data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🧹</text></svg>',
-                'sizes': '512x512',
-                'type': 'image/svg+xml',
-                'purpose': 'any maskable'
-            }
-        ]
-    }">
-
     <style>
         :root {
             --card-bg: rgba(255, 255, 255, 0.93);
@@ -35,25 +13,20 @@
             --border-radius: 18px;
         }
 
-        /* Thèmes Saisons avec Motifs Tranchés */
         body.automne { 
             background: #3e1f14 linear-gradient(135deg, #2c140a 0%, #542b1a 50%, #2c140a 100%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 100 100'%3E%3Cg transform='rotate(15 50 50)'%3E%3Cpath d='M20 20 Q 35 5 50 20 Q 35 35 20 20 Z' fill='%23ff7b00' opacity='0.85'/%3E%3Cpath d='M20 20 L20 38' stroke='%23d00000' stroke-width='2'/%3E%3Ccircle cx='75' cy='30' r='8' fill='%23ffb703' opacity='0.9'/%3E%3Cpath d='M75 22 L75 16' stroke='%238b4513' stroke-width='3'/%3E%3Cpath d='M25 80 C 15 65 40 55 50 75 Z' fill='%23e63946' opacity='0.85'/%3E%3C/g%3E%3C/svg%3E");
             --accent-color: #e76f51;
         }
         body.printemps { 
             background: #14382c linear-gradient(135deg, #0d261e 0%, #1e4d3d 50%, #0d261e 100%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 100 100'%3E%3Ccircle cx='30' cy='30' r='7' fill='%23ffb703' opacity='0.9'/%3E%3Ccircle cx='23' cy='30' r='5' fill='%23ffb3c1' opacity='0.9'/%3E%3Ccircle cx='37' cy='30' r='5' fill='%23ffb3c1' opacity='0.9'/%3E%3Ccircle cx='30' cy='23' r='5' fill='%23ffb3c1' opacity='0.9'/%3E%3Ccircle cx='30' cy='37' r='5' fill='%23ffb3c1' opacity='0.9'/%3E%3Cpath d='M70 70 C 60 55 85 45 90 65' fill='none' stroke='%2300b4d8' stroke-width='4' stroke-linecap='round' opacity='0.85'/%3E%3Cpath d='M85 60 L 95 65 L 88 72 Z' fill='%2300b4d8' opacity='0.85'/%3E%3C/svg%3E");
             --accent-color: #e07a5f;
         }
         body.ete { 
             background: #004250 linear-gradient(135deg, #002b36 0%, #005f73 50%, #002b36 100%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130' viewBox='0 0 100 100'%3E%3Ccircle cx='30' cy='30' r='14' fill='%23ffb703' opacity='0.95'/%3E%3Cpath d='M30 8 L30 2 M30 52 L30 58 M8 30 L2 30 M52 30 L58 30 M14 14 L10 10 M46 46 L50 50 M14 46 L10 50 M46 14 L50 10' stroke='%23fb8500' stroke-width='4' stroke-linecap='round' opacity='0.9'/%3E%3Cpath d='M75 85 C 65 70 85 60 85 85 Z' fill='%232a9d8f' opacity='0.85'/%3E%3Cpath d='M65 85 L 85 85' stroke='%23e76f51' stroke-width='4' opacity='0.85'/%3E%3C/svg%3E");
             --accent-color: #f4a261;
         }
         body.hiver { 
             background: #111d2d linear-gradient(135deg, #0a111a 0%, #1b2a3f 50%, #0a111a 100%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 100 100'%3E%3Cpath d='M30 15 L30 45 M15 30 L45 30 M20 20 L40 40 M20 40 L40 20' stroke='%2300b4d8' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/%3E%3Cpolygon points='75,65 65,85 85,85' fill='%232a9d8f' opacity='0.85'/%3E%3Cpolygon points='75,55 68,70 82,70' fill='%232a9d8f' opacity='0.85'/%3E%3Crect x='73' y='85' width='4' height='6' fill='%23e76f51' opacity='0.85'/%3E%3C/svg%3E");
             --accent-color: #48cae4;
         }
 
@@ -63,7 +36,6 @@
             margin: 0;
             padding: 16px;
             min-height: 100vh;
-            transition: background 0.5s ease;
         }
 
         .container {
@@ -76,12 +48,9 @@
 
         .header-card, .section-card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-radius: var(--border-radius);
             padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-            border: 1px solid rgba(255,255,255,0.5);
         }
 
         .header-top {
@@ -123,7 +92,6 @@
             margin-bottom: 16px;
         }
 
-        /* Mascotte Kalaggan Dansante */
         .kalaggan-box {
             display: flex;
             align-items: center;
@@ -156,7 +124,6 @@
             line-height: 1.3;
         }
 
-        /* Jauge */
         .gauge-container { margin-top: 10px; }
         .gauge-header {
             display: flex;
@@ -170,7 +137,6 @@
             height: 14px;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
         .progress-bar-fill {
             background: var(--accent-color);
@@ -194,18 +160,6 @@
         .task-sub { font-size: 0.8rem; color: #555; }
         .date-highlight { color: var(--accent-color); font-weight: bold; }
 
-        .badge-vacances {
-            background: var(--accent-color);
-            color: white;
-            font-size: 0.72rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: bold;
-            margin-top: 4px;
-            display: inline-block;
-        }
-
-        /* Cercle de validation (Reste toujours blanc et vide après validation) */
         .checkbox-custom {
             width: 38px;
             height: 38px;
@@ -217,7 +171,7 @@
             justify-content: center;
             background: #ffffff;
             box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-            transition: transform 0.15s ease, background 0.15s ease;
+            transition: transform 0.15s ease;
         }
         .checkbox-custom:active { 
             transform: scale(0.8); 
@@ -280,11 +234,11 @@
             </select>
         </div>
 
-        <!-- Mascotte Kalaggan Dansante -->
+        <!-- Mascotte Kalaggan -->
         <div class="kalaggan-box">
             <div id="kalagganAvatar" class="kalaggan-avatar">🧙‍♂️</div>
             <div class="kalaggan-text" id="kalagganMsg">
-                <b>Bien joué !</b> Cliquez sur le cercle d'une tâche pour l'valider, afficher la confirmation et voir la nouvelle date !
+                <b>Bien joué !</b> Clique sur le cercle d'une tâche pour valider.
             </div>
         </div>
 
@@ -319,7 +273,7 @@
                 <option value="mois">Mois (30 jours)</option>
                 <option value="longterme">Trimestriel / Annuel (> 30 jours)</option>
             </select>
-            <input type="number" id="newTaskFreq" placeholder="Fréquence en jours (ex: 7, 30, 90)" value="7">
+            <input type="number" id="newTaskFreq" placeholder="Fréquence en jours" value="7">
             <div style="display:flex; gap:8px;">
                 <button class="btn-action" onclick="addNewTask()" style="flex:1;">Valider</button>
                 <button onclick="toggleAddForm()" style="flex:1;">Annuler</button>
@@ -337,7 +291,7 @@
         </div>
         <br>
         <div class="section-card">
-            <h3>🌿 TRIMESTRIEL & ANNUEL (> 1 mois)</h3>
+            <h3>🌿 TRIMESTRIEL & ANNUEL</h3>
             <div id="list-longterme"></div>
         </div>
     </div>
@@ -345,11 +299,7 @@
     <!-- Onglet Agenda -->
     <div id="tab-agenda" class="tab-content">
         <div class="section-card">
-            <h3>📅 Planning Intelligent & Repos</h3>
-            <p style="font-size:0.85rem; color:#666;">
-                • Max 1 tâche de rattrapage tous les 2 jours.<br>
-                • Gel automatique pendant les vacances.
-            </p>
+            <h3>📅 Planning Intelligent</h3>
             <div id="list-agenda"></div>
         </div>
     </div>
@@ -358,7 +308,6 @@
     <div id="tab-express" class="tab-content">
         <div class="section-card" style="text-align: center;">
             <h3>⏱️ Session Express 15 Minutes</h3>
-            <p>Un coup de propre rapide !</p>
             <div class="timer-display" id="timerDisplay">15:00</div>
             <div class="flex-buttons">
                 <button class="btn-action" onclick="startTimer()">Démarrer</button>
@@ -370,28 +319,11 @@
     <!-- Onglet Réglages -->
     <div id="tab-tuto" class="tab-content">
         <div class="section-card">
-            <h3>🏖️ Vos Propres Vacances / Congés Famille</h3>
-            <p style="font-size:0.82rem; color:#666;">
-                Gel et report automatique de toutes les tâches à la rentrée (étalées 1j/2).
-            </p>
-            <label style="font-size:0.8rem; font-weight:bold;">Début des vacances :</label>
+            <h3>🏖️ Vacances Personnalisées</h3>
+            <label style="font-size:0.8rem; font-weight:bold;">Début :</label>
             <input type="date" id="customVacStart" onchange="saveCustomVacations()" style="width:100%; margin:4px 0 10px 0;">
-            <label style="font-size:0.8rem; font-weight:bold;">Fin des vacances (Rentrée) :</label>
+            <label style="font-size:0.8rem; font-weight:bold;">Fin :</label>
             <input type="date" id="customVacEnd" onchange="saveCustomVacations()" style="width:100%; margin:4px 0 10px 0;">
-        </div>
-        <br>
-        <div class="section-card">
-            <h3>🔔 Notifications</h3>
-            <button class="btn-action" onclick="requestNotificationPermission()">Activer les notifications</button>
-        </div>
-        <br>
-        <div class="section-card">
-            <h3>⚙️ Sauvegarde & Restauration</h3>
-            <div class="flex-buttons" style="justify-content: flex-start;">
-                <button onclick="exportData()" class="btn-action">💾 Exporter</button>
-                <input type="file" id="importFile" onchange="importData(event)" style="display:none">
-                <button onclick="document.getElementById('importFile').click()">📂 Importer</button>
-            </div>
         </div>
     </div>
 </div>
@@ -407,14 +339,6 @@
         { id: 7, title: 'Détartrage cafetière', freq: 90, lastDone: null, cat: 'longterme', dayOffset: 0 },
         { id: 8, title: 'Nettoyage des vitres', freq: 90, lastDone: null, cat: 'longterme', dayOffset: 1 },
         { id: 9, title: 'Entretien de la VMC', freq: 365, lastDone: null, cat: 'longterme', dayOffset: 2 }
-    ];
-
-    const zoneBVacations = [
-        { name: "Toussaint", start: 1792195200000, end: 1793577600000 },
-        { name: "Noël", start: 1797638400000, end: 1799020800000 },
-        { name: "Hiver", start: 1801872000000, end: 1803254400000 },
-        { name: "Printemps", start: 1806710400000, end: 1808179200000 },
-        { name: "Été", start: 1814572800000, end: 1819756800000 }
     ];
 
     let tasks = JSON.parse(localStorage.getItem('cleaning_tasks')) || defaultTasks;
@@ -472,15 +396,6 @@
         btn.classList.add('active');
     }
 
-    function getNextMondayTime() {
-        const d = new Date();
-        const day = d.getDay();
-        const diff = day === 0 ? 1 : (8 - day);
-        d.setDate(d.getDate() + diff);
-        d.setHours(0,0,0,0);
-        return d.getTime();
-    }
-
     function formatMobileDate(timeMs) {
         if (!timeMs) return "Jamais";
         const d = new Date(timeMs);
@@ -489,50 +404,19 @@
         return `${jours[d.getDay()]} ${d.getDate()} ${mois[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    function computeDueDateMs(task, taskIndex) {
+    function computeDueDateMs(task) {
         let targetMs;
         if (task.lastDone) {
             targetMs = new Date(task.lastDone).getTime() + (task.freq * 86400000);
         } else {
-            targetMs = getNextMondayTime() + (task.dayOffset * 86400000);
+            const d = new Date();
+            d.setDate(d.getDate() + 7);
+            targetMs = d.getTime();
         }
-
-        let isVac = false;
-        let vacName = "";
-
-        if (customVac.start && customVac.end) {
-            const cStartMs = new Date(customVac.start).getTime();
-            const cEndMs = new Date(customVac.end).getTime();
-            if (targetMs >= cStartMs && targetMs <= cEndMs) {
-                isVac = true;
-                vacName = "Vacances Famille";
-                const rentreeDate = new Date(cEndMs + 86400000);
-                const day = rentreeDate.getDay();
-                if (day !== 1) rentreeDate.setDate(rentreeDate.getDate() + (day === 0 ? 1 : 8 - day));
-                rentreeDate.setHours(0,0,0,0);
-                targetMs = rentreeDate.getTime() + (taskIndex * 2 * 86400000);
-            }
-        }
-
-        if (!isVac && task.freq > 30) {
-            for (let vac of zoneBVacations) {
-                if (targetMs >= vac.start && targetMs <= vac.end) {
-                    isVac = true;
-                    vacName = vac.name;
-                    const rentreeDate = new Date(vac.end + 86400000);
-                    const day = rentreeDate.getDay();
-                    if (day !== 1) rentreeDate.setDate(rentreeDate.getDate() + (day === 0 ? 1 : 8 - day));
-                    rentreeDate.setHours(0,0,0,0);
-                    targetMs = rentreeDate.getTime() + (taskIndex * 2 * 86400000);
-                    break;
-                }
-            }
-        }
-
-        return { timeMs: targetMs, isVac: isVac, vacName: vacName };
+        return targetMs;
     }
 
-    // Variantes de messages avec rotation et danse
+    // Messages de félicitations tournants
     const celebrationMessages = [
         (title, date) => `<b>Bien joué Kalaggan !</b> "${title}" validée ! Prochaine échéance : <b>${date}</b> ✨`,
         (title, date) => `<b>Tu es vraiment géniale !</b> "${title}" accomplie ! Prochaine échéance : <b>${date}</b> 🌟`,
@@ -540,31 +424,28 @@
     ];
     let msgCounter = 0;
 
-    // VALIDATION AVEC BOÎTE DE CONFIRMATION NATIVE ET CHANGEMENT DE DATE DIRECT
-    function validateTaskWithConfirm(taskId) {
+    // VALIDATION DIRECTE AVEC CONFIRMATION NATIVE
+    function validateTask(taskId) {
         const task = tasks.find(t => t.id === taskId);
         if (!task) return;
 
-        // Précalcul de la prochaine date pour l'afficher dans la confirmation
         const nowMs = Date.now();
         const nextMs = nowMs + (task.freq * 86400000);
         const nextDateFormatted = formatMobileDate(nextMs);
 
-        // Pop-up de confirmation native (marche à 100% sur mobile et web)
+        // Boîte de confirmation native incontournable
         const userConfirmed = confirm(`Valider la réalisation de "${task.title}" ?\n\n✨ Prochaine échéance : ${nextDateFormatted}`);
         
         if (userConfirmed) {
-            // Enregistrement de la date de réalisation
             task.lastDone = new Date(nowMs).toISOString();
-            saveTasks(); // Sauvegarde et rafraîchissement complet
+            saveTasks();
 
-            // Sélection du message tournant
+            // Affichage du message de félicitation et animation de danse
             const getMsgFunc = celebrationMessages[msgCounter % celebrationMessages.length];
             msgCounter++;
 
             document.getElementById('kalagganMsg').innerHTML = getMsgFunc(task.title, nextDateFormatted);
 
-            // Animation de danse de Kalaggan 🧙‍♂️💃
             const avatar = document.getElementById('kalagganAvatar');
             avatar.classList.add('dance-anim');
             setTimeout(() => {
@@ -581,22 +462,18 @@
 
         listSemaines.innerHTML = ''; listMois.innerHTML = ''; listLongterme.innerHTML = ''; listAgenda.innerHTML = '';
 
-        let vacTaskCounter = 0;
-
         tasks.forEach((task) => {
             const lastDoneMs = task.lastDone ? new Date(task.lastDone).getTime() : null;
-            const dueInfo = computeDueDateMs(task, vacTaskCounter);
-            if (dueInfo.isVac) vacTaskCounter++;
+            const dueTimeMs = computeDueDateMs(task);
 
-            // Le cercle reste toujours blanc et vierge, prêt pour le prochain clic
             const htmlTask = `
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-title">${task.title}</span>
                         <span class="task-sub">🕒 Dernier fait : <b>${formatMobileDate(lastDoneMs)}</b></span>
-                        <span class="task-sub">📅 Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
+                        <span class="task-sub">📅 Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueTimeMs)}</span></span>
                     </div>
-                    <div class="checkbox-custom" onclick="validateTaskWithConfirm(${task.id})"></div>
+                    <div class="checkbox-custom" onclick="validateTask(${task.id})"></div>
                 </div>
             `;
 
@@ -608,23 +485,17 @@
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-title">${task.title}</span>
-                        <span class="task-sub">Dernier : ${formatMobileDate(lastDoneMs)}</span>
-                        <span class="task-sub">Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueInfo.timeMs)}</span></span>
-                        ${dueInfo.isVac ? `<span class="badge-vacances">🏖️ Reporté après ${dueInfo.vacName} (1j/2)</span>` : ''}
+                        <span class="task-sub">Prochaine échéance : <span class="date-highlight">${formatMobileDate(dueTimeMs)}</span></span>
                     </div>
-                    <button class="btn-action" onclick="validateTaskWithConfirm(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
+                    <button class="btn-action" onclick="validateTask(${task.id})" style="padding: 4px 10px; font-size: 0.8rem;">
                         Valider fait
                     </button>
                 </div>
             `;
             listAgenda.innerHTML += htmlAgenda;
         });
-
-        document.getElementById('harmonyFill').style.width = '100%';
-        document.getElementById('harmonyPercent').innerText = '100%';
     }
 
-    // Minuteur 15 min
     let timerInterval = null, timeLeft = 15 * 60;
     function startTimer() {
         if (timerInterval) return;
@@ -638,28 +509,6 @@
         const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
         const s = (timeLeft % 60).toString().padStart(2, '0');
         document.getElementById('timerDisplay').innerText = `${m}:${s}`;
-    }
-
-    function requestNotificationPermission() {
-        if ('Notification' in window) {
-            Notification.requestPermission().then(p => {
-                if (p === 'granted') new Notification("Planning 🧹", { body: "Rappels activés !" });
-            });
-        }
-    }
-
-    function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks));
-        const a = document.createElement('a'); a.href = dataStr; a.download = "planning_menage.json"; a.click();
-    }
-
-    function importData(event) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try { tasks = JSON.parse(e.target.result); saveTasks(); alert("Restauré !"); }
-            catch(err) { alert("Fichier invalide."); }
-        };
-        reader.readAsText(event.target.files[0]);
     }
 
     render();
