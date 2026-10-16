@@ -422,18 +422,19 @@
             { name: "Printemps", start: new Date("2027-04-17T00:00:00"), end: new Date("2027-05-03T23:59:59") }
         ];
 
-        const APP_VERSION = "1.0.4";
+        const APP_VERSION = "1.0.5";
 
-        // TÂCHES AVEC VOS DATES EN DUR EXACTES COMME POINTS DE DÉPART
+        // TÂCHES AVEC VOS DATES CIBLES EXACTES COMME PROCHAINES ÉCHÉANCES
+        // lastDone est calculé comme (Date Cible - Fréquence) pour afficher exactement vos dates !
         const DEFAULT_TASKS = [
-            { id: 1, name: "Changer les draps Adulte", lastDone: "2026-10-19T09:00:00", frequencyDays: 7, category: "Semaines" },
-            { id: 2, name: "Changer les draps Enfant", lastDone: "2026-10-21T09:00:00", frequencyDays: 7, category: "Semaines" },
-            { id: 3, name: "Lavage complet des sols", lastDone: "2026-10-22T09:00:00", frequencyDays: 7, category: "Semaines" },
-            { id: 4, name: "Nettoyage filtre lave-linge", lastDone: "2026-10-25T09:00:00", frequencyDays: 14, category: "Mois" },
-            { id: 5, name: "Détartrage cafetière & bouilloire", lastDone: "2026-10-27T09:00:00", frequencyDays: 30, category: "Mois" },
-            { id: 6, name: "Nettoyage intérieur du four", lastDone: "2026-10-30T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" },
-            { id: 7, name: "Nettoyage des vitres du salon", lastDone: "2026-11-03T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" },
-            { id: 8, name: "Shampoinnage tapis & canapé", lastDone: "2026-12-10T09:00:00", frequencyDays: 180, category: "Trimestriel / Annuel (>1 mois)" }
+            { id: 1, name: "Changer les draps Adulte", lastDone: "2026-10-12T09:00:00", frequencyDays: 7, category: "Semaines" }, // Échéance: 19/10/2026
+            { id: 2, name: "Changer les draps Enfant", lastDone: "2026-10-14T09:00:00", frequencyDays: 7, category: "Semaines" }, // Échéance: 21/10/2026
+            { id: 3, name: "Lavage complet des sols", lastDone: "2026-10-15T09:00:00", frequencyDays: 7, category: "Semaines" }, // Échéance: 22/10/2026
+            { id: 4, name: "Nettoyage filtre lave-linge", lastDone: "2026-10-11T09:00:00", frequencyDays: 14, category: "Mois" }, // Échéance: 25/10/2026
+            { id: 5, name: "Détartrage cafetière & bouilloire", lastDone: "2026-09-27T09:00:00", frequencyDays: 30, category: "Mois" }, // Échéance: 27/10/2026
+            { id: 6, name: "Nettoyage intérieur du four", lastDone: "2026-08-01T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" }, // Échéance: 30/10/2026
+            { id: 7, name: "Nettoyage des vitres du salon", lastDone: "2026-08-05T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" }, // Échéance: 03/11/2026
+            { id: 8, name: "Shampoinnage tapis & canapé", lastDone: "2026-06-13T09:00:00", frequencyDays: 180, category: "Trimestriel / Annuel (>1 mois)" } // Échéance: 10/12/2026
         ];
 
         let state = loadInitialState();
