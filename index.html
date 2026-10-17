@@ -162,6 +162,25 @@
                 </div>
             </div>
 
+            <!-- BOUTON & STATUS NOTIFICATIONS 9H -->
+            <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-xl">🔔</span>
+                    <div>
+                        <span class="font-extrabold text-stone-900">Notification quotidienne à 9h00</span>
+                        <p class="text-[11px] text-stone-500" id="notification-status-text">Recevez un rappel de vos tâches du jour chaque matin à 9h.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="requestNotificationPermission()" id="notification-btn" class="bg-amber-700 hover:bg-amber-800 text-white font-bold py-1.5 px-3 rounded-xl transition-all shadow-sm text-xs">
+                        Activer l'alerte 9h
+                    </button>
+                    <button onclick="downloadCalendarICS()" title="Ajouter à Google Calendar / Apple Calendar" class="bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 font-bold py-1.5 px-3 rounded-xl transition-all shadow-sm text-xs flex items-center gap-1">
+                        <span>📅</span> iCal / Google
+                    </button>
+                </div>
+            </div>
+
             <!-- CARTE MASCOTTE KALAGGAN -->
             <div class="bg-gradient-to-r from-amber-100/90 via-orange-100/80 to-amber-200/70 border border-amber-300/80 rounded-2xl p-4 shadow-inner flex items-start gap-4 mb-6 relative overflow-hidden">
                 <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -479,7 +498,103 @@
             applySeasonStyle(state.currentSeason);
             updateUI();
             pickExpressTask();
+            checkNotificationStatus();
+            setupDailyAlarm();
         };
+
+        function checkNotificationStatus() {
+            const btn = document.getElementById('notification-btn');
+            const statusText = document.getElementById('notification-status-text');
+            if (!btn || !statusText) return;
+
+            if (!("Notification" in window)) {
+                statusText.innerText = "Notifications non supportées sur ce navigateur. Utilisez le bouton iCal.";
+                btn.style.display = "none";
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                statusText.innerText = "Rappel quotidien à 9h00 activé sur cet appareil !";
+                btn.innerText = "🔔 Rappel 9h Actif";
+                btn.className = "bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-xl shadow-sm text-xs cursor-default";
+                btn.onclick = null;
+            } else if (Notification.permission === "denied") {
+                statusText.innerText = "Notifications bloquées par votre navigateur. Autorisez-les dans vos réglages.";
+                btn.innerText = "Bloqué";
+                btn.className = "bg-stone-300 text-stone-600 font-bold py-1.5 px-3 rounded-xl text-xs cursor-not-allowed";
+            }
+        }
+
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) return;
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") {
+                    showToast("Notifications de 9h00 activées !", "success");
+                    checkNotificationStatus();
+                    triggerMorningNotification(true);
+                } else {
+                    showToast("Permission refusée.", "error");
+                    checkNotificationStatus();
+                }
+            });
+        }
+
+        function triggerMorningNotification(isTest = false) {
+            if (Notification.permission !== "granted") return;
+
+            const processed = getProcessedTasksWithStaggering();
+            const today = new Date();
+            const dueToday = processed.filter(t => {
+                const dueDate = new Date(t.computedDueDate);
+                return dueDate.toDateString() === today.toDateString() || (dueDate < today && !state.manualVacation);
+            });
+
+            let title = isTest ? "🔔 Test d'alerte Kalaggan (9h00)" : "🧹 Planning Kalaggan - 9h00 !";
+            let body = dueToday.length > 0 
+                ? `Vous avez ${dueToday.length} tâche(s) au programme aujourd'hui (${dueToday.map(t => t.name).slice(0,2).join(', ')}...)`
+                : "Toutes vos tâches sont à jour pour aujourd'hui ! Bonne journée ✨";
+
+            new Notification(title, {
+                body: body,
+                icon: "🧹"
+            });
+        }
+
+        function setupDailyAlarm() {
+            // Vérifie régulièrement l'heure pour déclencher à 9h00 pile
+            setInterval(() => {
+                const now = new Date();
+                if (now.getHours() === 9 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                    triggerMorningNotification();
+                }
+            }, 1000);
+        }
+
+        function downloadCalendarICS() {
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Kalaggan//Planning Menage//FR
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+SUMMARY:🧹 Ménage Kalaggan - Vérifier les tâches du jour
+DESCRIPTION:Consultez votre assistant Kalaggan pour voir vos tâches de ménage du jour.
+RRULE:FREQ=DAILY;BYHOUR=9;BYMINUTE=0
+DTSTART:20261018T090000Z
+DURATION:PT15M
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', 'rappel_menage_kalaggan_9h.ics');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            showToast("Fichier iCal téléchargé ! Ajoutez-le à votre agenda.", "success");
+        }
 
         function saveState() {
             localStorage.setItem('kalaggan_tasks', JSON.stringify(state.tasks));
