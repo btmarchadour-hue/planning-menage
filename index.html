@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planning de Ménage Intelligent - Kalaggan</title>
+    <title>Planning de Ménage Intelligent - Walker Texas Ranger</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -139,17 +139,17 @@
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-gradient-to-tr from-amber-700 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg text-2xl">
-                        🧹
+                        🤠
                     </div>
                     <div>
                         <h1 class="text-2xl font-extrabold bg-gradient-to-r from-amber-950 to-orange-800 bg-clip-text text-transparent">
                             PLANNING MÉNAGE
                         </h1>
-                        <p class="text-xs font-semibold text-stone-600">Assistant Kalaggan • Zone B & Congés</p>
+                        <p class="text-xs font-semibold text-stone-600">Walker Texas Ranger • Zone B & Congés</p>
                     </div>
                 </div>
 
-                <!-- Sélecteur d'ambiance -->
+                <!-- Sélecteur d'ambiance / Saisons -->
                 <div class="flex items-center gap-2 bg-stone-100 p-1.5 rounded-2xl border border-stone-200">
                     <span class="text-xs font-semibold px-2 text-stone-600">Ambiance :</span>
                     <select id="season-selector" onchange="changeSeason(this.value)" class="bg-white text-xs font-bold text-stone-700 py-1.5 px-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-amber-600 cursor-pointer shadow-sm">
@@ -181,21 +181,21 @@
                 </div>
             </div>
 
-            <!-- CARTE MASCOTTE KALAGGAN -->
+            <!-- CARTE MASCOTTE WALKER TEXAS RANGER -->
             <div class="bg-gradient-to-r from-amber-100/90 via-orange-100/80 to-amber-200/70 border border-amber-300/80 rounded-2xl p-4 shadow-inner flex items-start gap-4 mb-6 relative overflow-hidden">
                 <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
-                <div id="wizard-avatar" class="w-12 h-12 flex-shrink-0 bg-white rounded-2xl shadow-md flex items-center justify-center text-2xl floating-wizard border border-amber-300">
-                    🧙‍♂️
+                <div id="wizard-avatar" onclick="triggerChuckFact()" class="w-12 h-12 flex-shrink-0 bg-white rounded-2xl shadow-md flex items-center justify-center text-2xl floating-wizard border border-amber-300 cursor-pointer" title="Cliquez sur Walker !">
+                    🤠
                 </div>
                 <div class="flex-1">
                     <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-950">Kalaggan le Magicien</h3>
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-950">Walker Texas Ranger</h3>
                         <span id="zone-badge" class="text-[11px] bg-amber-300/80 text-amber-950 font-bold px-2.5 py-0.5 rounded-full border border-amber-400">
-                            🏫 Dates de base paramétrées en dur
+                            🏫 Zone B & Étalement actif
                         </span>
                     </div>
-                    <p id="wizard-message" class="text-sm font-medium text-stone-800 leading-snug">
-                        Vos tâches possèdent désormais leurs dates de démarrage initiales configurées sur mesure. Les tâches de plus d'1 mois (>30j) sont lissées à raison d'1 tâche tous les 2 jours max après les vacances Zone B ou vos absences !
+                    <p id="wizard-message" class="text-sm font-medium text-stone-800 leading-snug italic">
+                        "Chuck Norris a déjà compté jusqu'à l'infini. Deux fois."
                     </p>
                 </div>
             </div>
@@ -354,6 +354,7 @@
 
     </div>
 
+    <!-- MODALES DE VALIDATION ET FORMULAIRES -->
     <div id="confirm-modal" class="fixed inset-0 bg-stone-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-panel rounded-3xl shadow-2xl max-w-md w-full p-6 border border-stone-200 transform transition-all text-center">
             <div class="w-16 h-16 bg-amber-100 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-inner">
@@ -375,10 +376,10 @@
     <div id="mascot-modal" class="fixed inset-0 bg-stone-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-panel rounded-3xl shadow-2xl max-w-md w-full p-6 border border-amber-300 transform transition-all text-center relative overflow-hidden">
             <div class="w-20 h-20 bg-gradient-to-tr from-amber-200 to-orange-200 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-4 shadow-md dancing-wizard border border-amber-300">
-                🧙‍♂️✨
+                🤠✨
             </div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Kalaggan en fête !</h3>
-            <p id="mascot-congrats-text" class="text-sm font-bold text-stone-900 mb-6 leading-relaxed px-2"></p>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Walker Texas Ranger approuve !</h3>
+            <p id="mascot-congrats-text" class="text-sm font-bold text-stone-900 mb-6 leading-relaxed px-2 italic"></p>
             <button onclick="closeMascotModal()" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white font-bold px-8 py-3 rounded-xl text-xs shadow-lg transition-all transform active:scale-95">
                 Célébrer 🎉
             </button>
@@ -433,6 +434,7 @@
         </div>
     </div>
 
+    <!-- SCRIPT APPLICATION COMPLET -->
     <script>
         const ZONE_B_VACATIONS_2026 = [
             { name: "Toussaint", start: new Date("2026-10-17T00:00:00"), end: new Date("2026-11-02T23:59:59") },
@@ -441,31 +443,44 @@
             { name: "Printemps", start: new Date("2027-04-17T00:00:00"), end: new Date("2027-05-03T23:59:59") }
         ];
 
-        const APP_VERSION = "1.0.5";
+        const APP_VERSION = "1.0.7";
 
-        // TÂCHES AVEC VOS DATES CIBLES EXACTES COMME PROCHAINES ÉCHÉANCES
-        // lastDone est calculé comme (Date Cible - Fréquence) pour afficher exactement vos dates !
+        // LES 10 CITATIONS CULTES DE CHUCK NORRIS
+        const CHUCK_FACTS = [
+            "Certains disent : 'La violence ne résout rien'. Chuck Norris leur répond : 'C'est que t'as pas tapé assez fort'.",
+            "Chuck Norris n'a pas de père. On ne nique pas la mère de Chuck Norris.",
+            "Chuck Norris et Superman ont fait un bras de fer, le perdant devait mettre son slip par dessus son pantalon.",
+            "Chuck Norris a déjà compté jusqu'à l'infini. Deux fois.",
+            "Un jour Chuck Norris a dit 'Va voir la-bas si j'y suis'... et il y était...",
+            "Chuck Norris ne ment pas, c'est la vérité qui se trompe.",
+            "Quand Chuck Norris pisse face au vent, le vent préfère changer de direction.",
+            "Un jour Chuck Norris a eu un zéro en latin, depuis c'est une langue morte.",
+            "Chuck Norris a inventé l'écriture pour faire comprendre a un sourd qu'il allait lui péter la gueule.",
+            "Chuck Norris ne se mouille pas, c'est l'eau qui se Chuck Norris."
+        ];
+
+        // TÂCHES AVEC DATES CIBLES EXACTES (OCTOBRE à DÉCEMBRE 2026)
         const DEFAULT_TASKS = [
-            { id: 1, name: "Changer les draps Adulte", lastDone: "2026-10-12T09:00:00", frequencyDays: 7, category: "Semaines" }, // Échéance: 19/10/2026
-            { id: 2, name: "Changer les draps Enfant", lastDone: "2026-10-14T09:00:00", frequencyDays: 7, category: "Semaines" }, // Échéance: 21/10/2026
-            { id: 3, name: "Lavage complet des sols", lastDone: "2026-10-15T09:00:00", frequencyDays: 7, category: "Semaines" }, // Échéance: 22/10/2026
-            { id: 4, name: "Nettoyage filtre lave-linge", lastDone: "2026-10-11T09:00:00", frequencyDays: 14, category: "Mois" }, // Échéance: 25/10/2026
-            { id: 5, name: "Détartrage cafetière & bouilloire", lastDone: "2026-09-27T09:00:00", frequencyDays: 30, category: "Mois" }, // Échéance: 27/10/2026
-            { id: 6, name: "Nettoyage intérieur du four", lastDone: "2026-08-01T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" }, // Échéance: 30/10/2026
-            { id: 7, name: "Nettoyage des vitres du salon", lastDone: "2026-08-05T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" }, // Échéance: 03/11/2026
-            { id: 8, name: "Shampoinnage tapis & canapé", lastDone: "2026-06-13T09:00:00", frequencyDays: 180, category: "Trimestriel / Annuel (>1 mois)" } // Échéance: 10/12/2026
+            { id: 1, name: "Changer les draps Adulte", lastDone: "2026-10-12T09:00:00", frequencyDays: 7, category: "Semaines" },
+            { id: 2, name: "Changer les draps Enfant", lastDone: "2026-10-14T09:00:00", frequencyDays: 7, category: "Semaines" },
+            { id: 3, name: "Lavage complet des sols", lastDone: "2026-10-15T09:00:00", frequencyDays: 7, category: "Semaines" },
+            { id: 4, name: "Nettoyage filtre lave-linge", lastDone: "2026-10-11T09:00:00", frequencyDays: 14, category: "Mois" },
+            { id: 5, name: "Détartrage cafetière & bouilloire", lastDone: "2026-09-27T09:00:00", frequencyDays: 30, category: "Mois" },
+            { id: 6, name: "Nettoyage intérieur du four", lastDone: "2026-08-01T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" },
+            { id: 7, name: "Nettoyage des vitres du salon", lastDone: "2026-08-05T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" },
+            { id: 8, name: "Shampoinnage tapis & canapé", lastDone: "2026-06-13T09:00:00", frequencyDays: 180, category: "Trimestriel / Annuel (>1 mois)" }
         ];
 
         let state = loadInitialState();
 
         function loadInitialState() {
-            const savedVersion = localStorage.getItem('kalaggan_version');
-            const savedTasks = localStorage.getItem('kalaggan_tasks');
-            const savedVacation = localStorage.getItem('kalaggan_vacation');
-            const savedSeason = localStorage.getItem('kalaggan_season');
+            const savedVersion = localStorage.getItem('walker_version');
+            const savedTasks = localStorage.getItem('walker_tasks');
+            const savedVacation = localStorage.getItem('walker_vacation');
+            const savedSeason = localStorage.getItem('walker_season');
 
             if (savedVersion !== APP_VERSION || !savedTasks) {
-                localStorage.setItem('kalaggan_version', APP_VERSION);
+                localStorage.setItem('walker_version', APP_VERSION);
                 return {
                     tasks: JSON.parse(JSON.stringify(DEFAULT_TASKS)),
                     manualVacation: false,
@@ -481,7 +496,6 @@
         }
 
         let pendingTaskIdForValidation = null;
-        let validationClickTimestamp = null;
 
         const expressTasksList = [
             { title: "Passer un coup d'éponge sur le plan de travail", category: "Cuisine" },
@@ -501,6 +515,29 @@
             checkNotificationStatus();
             setupDailyAlarm();
         };
+
+        // GESTION DES SAISONS & AMBIANCES
+        function changeSeason(season) {
+            state.currentSeason = season;
+            localStorage.setItem('walker_season', season);
+            applySeasonStyle(season);
+            showToast(`Ambiance changée : ${season}`, 'info');
+        }
+
+        function applySeasonStyle(season) {
+            document.body.className = `min-h-screen text-stone-800 pb-16 theme-${season}`;
+        }
+
+        // TIRAGE ALÉATOIRE D'UNE CITATION DE CHUCK NORRIS
+        function getRandomChuckFact() {
+            return CHUCK_FACTS[Math.floor(Math.random() * CHUCK_FACTS.length)];
+        }
+
+        // CLIC SUR LA MASCOTTE (EN-TÊTE)
+        function triggerChuckFact() {
+            const factBox = document.getElementById('wizard-message');
+            factBox.innerText = `"${getRandomChuckFact()}"`;
+        }
 
         function checkNotificationStatus() {
             const btn = document.getElementById('notification-btn');
@@ -529,383 +566,252 @@
             if (!("Notification" in window)) return;
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
-                    showToast("Notifications de 9h00 activées !", "success");
-                    checkNotificationStatus();
-                    triggerMorningNotification(true);
-                } else {
-                    showToast("Permission refusée.", "error");
+                    new Notification("Walker Texas Ranger", { body: "Les rappels de 9h00 sont activés !" });
                     checkNotificationStatus();
                 }
-            });
-        }
-
-        function triggerMorningNotification(isTest = false) {
-            if (Notification.permission !== "granted") return;
-
-            const processed = getProcessedTasksWithStaggering();
-            const today = new Date();
-            const dueToday = processed.filter(t => {
-                const dueDate = new Date(t.computedDueDate);
-                return dueDate.toDateString() === today.toDateString() || (dueDate < today && !state.manualVacation);
-            });
-
-            let title = isTest ? "🔔 Test d'alerte Kalaggan (9h00)" : "🧹 Planning Kalaggan - 9h00 !";
-            let body = dueToday.length > 0 
-                ? `Vous avez ${dueToday.length} tâche(s) au programme aujourd'hui (${dueToday.map(t => t.name).slice(0,2).join(', ')}...)`
-                : "Toutes vos tâches sont à jour pour aujourd'hui ! Bonne journée ✨";
-
-            new Notification(title, {
-                body: body,
-                icon: "🧹"
             });
         }
 
         function setupDailyAlarm() {
-            // Vérifie régulièrement l'heure pour déclencher à 9h00 pile
             setInterval(() => {
                 const now = new Date();
-                if (now.getHours() === 9 && now.getMinutes() === 0 && now.getSeconds() === 0) {
-                    triggerMorningNotification();
+                if (now.getHours() === 9 && now.getMinutes() === 0 && Notification.permission === "granted") {
+                    new Notification("Walker Texas Ranger - Ménage", { body: "C'est l'heure de vérifier vos tâches du jour !" });
                 }
-            }, 1000);
+            }, 60000);
         }
 
         function downloadCalendarICS() {
-            const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Kalaggan//Planning Menage//FR
-CALSCALE:GREGORIAN
-METHOD:PUBLISH
-BEGIN:VEVENT
-SUMMARY:🧹 Ménage Kalaggan - Vérifier les tâches du jour
-DESCRIPTION:Consultez votre assistant Kalaggan pour voir vos tâches de ménage du jour.
-RRULE:FREQ=DAILY;BYHOUR=9;BYMINUTE=0
-DTSTART:20261018T090000Z
-DURATION:PT15M
-STATUS:CONFIRMED
-END:VEVENT
-END:VCALENDAR`;
-
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+            let ics = "BEGIN:VCALENDAR\VERSION:2.0\PRODID:-//Walker Texas Ranger//FR\n";
+            state.tasks.forEach(t => {
+                const due = new Date(new Date(t.lastDone).getTime() + t.frequencyDays * 86400000);
+                const dStr = due.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+                ics += "BEGIN:VEVENT\nSUMMARY:" + t.name + "\nDTSTART:" + dStr + "\nDESCRIPTION:Tâche de ménage Walker\nEND:VEVENT\n";
+            });
+            ics += "END:VCALENDAR";
+            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', 'rappel_menage_kalaggan_9h.ics');
-            document.body.appendChild(link);
+            link.download = "walker_planning.ics";
             link.click();
-            link.remove();
-            showToast("Fichier iCal téléchargé ! Ajoutez-le à votre agenda.", "success");
         }
 
-        function saveState() {
-            localStorage.setItem('kalaggan_tasks', JSON.stringify(state.tasks));
-            localStorage.setItem('kalaggan_vacation', JSON.stringify(state.manualVacation));
-            localStorage.setItem('kalaggan_season', state.currentSeason);
-        }
-
-        function changeSeason(season) {
-            state.currentSeason = season;
-            applySeasonStyle(season);
-            saveState();
-            showToast("Nouvel arrière-plan saisonnier appliqué !", "success");
-        }
-
-        function applySeasonStyle(season) {
-            document.body.className = `min-h-screen text-stone-800 pb-16 theme-${season}`;
-        }
-
-        function calculateTaskDueDateFromTimestamp(lastDoneIso, frequencyDays) {
-            const lastDoneDate = new Date(lastDoneIso);
-            let dueDate = new Date(lastDoneDate.getTime() + frequencyDays * 86400000);
-
-            if (frequencyDays > 30) {
-                for (let vac of ZONE_B_VACATIONS_2026) {
-                    if (dueDate >= vac.start && dueDate <= vac.end) {
-                        dueDate = new Date(vac.end.getTime() + 1000);
-                    }
+        // NAVIGATION ONGLET
+        function switchTab(tabId) {
+            ['tasks', 'planning', 'express', 'settings'].forEach(id => {
+                const el = document.getElementById(`tab-${id}`);
+                const btn = document.getElementById(`tab-btn-${id}`);
+                if (el) el.classList.add('hidden');
+                if (btn) {
+                    btn.className = "flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200";
                 }
+            });
+
+            const activeEl = document.getElementById(`tab-${tabId}`);
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeEl) activeEl.classList.remove('hidden');
+            if (activeBtn) {
+                activeBtn.className = "flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-gradient-to-r from-amber-700 to-orange-600 text-white shadow-amber-900/30";
             }
-
-            return dueDate;
-        }
-
-        function getProcessedTasksWithStaggering() {
-            let processed = state.tasks.map(t => {
-                let dueDate = calculateTaskDueDateFromTimestamp(t.lastDone, t.frequencyDays);
-                return { ...t, computedDueDate: dueDate, isStaggered: false };
-            });
-
-            processed.sort((a, b) => a.computedDueDate - b.computedDueDate);
-
-            let lastAssignedDate = null;
-
-            processed.forEach(task => {
-                if (task.frequencyDays > 30) {
-                    if (lastAssignedDate && task.computedDueDate <= lastAssignedDate) {
-                        let newDate = new Date(lastAssignedDate.getTime() + 2 * 86400000);
-                        task.computedDueDate = newDate;
-                        task.isStaggered = true;
-                    }
-                    lastAssignedDate = new Date(task.computedDueDate);
-                }
-            });
-
-            return processed;
-        }
-
-        function formatDate(date) {
-            return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-        }
-
-        function formatDateTime(date) {
-            return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
         }
 
         function updateUI() {
-            renderTasksList();
-            updateProgressBar();
-            updateVacationUI();
-            saveState();
+            localStorage.setItem('walker_tasks', JSON.stringify(state.tasks));
+            localStorage.setItem('walker_vacation', JSON.stringify(state.manualVacation));
+            
+            const btnVac = document.getElementById('vacation-toggle-btn');
+            const titleVac = document.getElementById('vacation-status-title');
+            const descVac = document.getElementById('vacation-status-desc');
+            if (btnVac) {
+                if (state.manualVacation) {
+                    btnVac.innerText = "Désactiver le Mode Absence";
+                    btnVac.className = "bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm";
+                    if (titleVac) titleVac.innerText = "Mode Absence Actif ✈️";
+                    if (descVac) descVac.innerText = "Vos tâches >30j sont actuellement en pause.";
+                } else {
+                    btnVac.innerText = "Activer le Mode Absence";
+                    btnVac.className = "bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm";
+                    if (titleVac) titleVac.innerText = "Mode Absence du Foyer / Congés";
+                    if (descVac) descVac.innerText = "Active la pause immédiate des tâches >30j pendant votre absence.";
+                }
+            }
+
+            renderTasksContainer();
+            renderPlanningContainer();
+            updateGlobalProgress();
         }
 
-        function renderTasksList() {
+        function renderTasksContainer() {
             const container = document.getElementById('tasks-container');
             if (!container) return;
             container.innerHTML = '';
 
-            const processedTasks = getProcessedTasksWithStaggering();
             const categories = ["Semaines", "Mois", "Trimestriel / Annuel (>1 mois)"];
-
             categories.forEach(cat => {
-                const tasksInCat = processedTasks.filter(t => t.category === cat);
+                const tasksInCat = state.tasks.filter(t => t.category === cat);
                 if (tasksInCat.length === 0) return;
 
-                let categoryHTML = `
+                let html = `
                     <div class="glass-panel rounded-3xl shadow-xl p-6">
-                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-stone-200">
-                            <h2 class="text-base font-extrabold text-stone-900 flex items-center gap-2">
-                                <span>📂</span> ${cat}
-                            </h2>
-                            <span class="text-xs bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full border border-amber-300">
-                                ${tasksInCat.length} tâche(s)
-                            </span>
-                        </div>
+                        <h2 class="text-base font-extrabold text-stone-800 mb-4 flex items-center justify-between border-b border-stone-200 pb-3">
+                            <span>📂 ${cat}</span>
+                            <span class="text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full font-bold">${tasksInCat.length} tâches</span>
+                        </h2>
                         <div class="space-y-3">
                 `;
 
-                tasksInCat.forEach(task => {
+                tasksInCat.forEach(t => {
+                    const nextDue = new Date(new Date(t.lastDone).getTime() + t.frequencyDays * 86400000);
                     const today = new Date();
-                    const isLate = task.computedDueDate < today && !state.manualVacation;
+                    today.setHours(0,0,0,0);
+                    const diffDays = Math.ceil((nextDue - today) / (1000 * 60 * 60 * 24));
 
-                    categoryHTML += `
-                        <div class="bg-stone-50 hover:bg-stone-100/80 border border-stone-200/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all shadow-sm">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h3 class="text-sm font-bold text-stone-900">${task.name}</h3>
-                                    ${isLate ? '<span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded-full border border-rose-200">En retard</span>' : ''}
-                                </div>
-                                <div class="flex flex-wrap items-center gap-2 text-xs text-stone-500">
-                                    <span>🔁 Tous les ${task.frequencyDays} jours</span>
+                    let badge = '';
+                    if (diffDays < 0) {
+                        badge = `<span class="bg-rose-100 text-rose-800 font-bold text-[10px] px-2.5 py-1 rounded-full border border-rose-300">En retard de ${Math.abs(diffDays)}j</span>`;
+                    } else if (diffDays === 0) {
+                        badge = `<span class="bg-amber-100 text-amber-800 font-bold text-[10px] px-2.5 py-1 rounded-full border border-amber-300">Aujourd'hui</span>`;
+                    } else {
+                        badge = `<span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-1 rounded-full border border-emerald-300">Dans ${diffDays}j</span>`;
+                    }
+
+                    const dateStr = nextDue.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                    html += `
+                        <div class="bg-white/80 border border-stone-200/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm hover:shadow-md transition-all">
+                            <div>
+                                <h4 class="text-sm font-bold text-stone-900">${t.name}</h4>
+                                <div class="flex items-center gap-2 mt-1 text-xs text-stone-500 font-medium">
+                                    <span>Échéance : <strong class="text-stone-700">${dateStr}</strong></span>
                                     <span>•</span>
-                                    <span class="font-bold ${isLate ? 'text-rose-600 font-extrabold' : 'text-amber-900'}">
-                                        📅 Échéance : ${formatDate(task.computedDueDate)} ${task.isStaggered ? '✨ (Lissé)' : ''}
-                                    </span>
+                                    <span>Tous les ${t.frequencyDays}j</span>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-2 self-end sm:self-center">
-                                <button onclick="editTask(${task.id})" title="Modifier" class="p-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-xl transition-all text-xs">✏️</button>
-                                <button onclick="deleteTask(${task.id})" title="Supprimer" class="p-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-all text-xs">🗑️</button>
-                                <button onclick="promptCompleteTask(${task.id})" class="bg-gradient-to-r from-amber-700 to-orange-600 hover:from-amber-800 hover:to-orange-700 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition-all flex items-center gap-1.5 transform active:scale-95">
-                                    <span>✓</span> Valider fait
-                                </button>
+                            <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                                ${badge}
+                                <div class="flex items-center gap-1">
+                                    <button onclick="openConfirmModal(${t.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-all shadow-sm">
+                                        ✓ Fait
+                                    </button>
+                                    <button onclick="openEditTaskModal(${t.id})" class="bg-stone-100 hover:bg-stone-200 text-stone-700 p-2 rounded-xl text-xs transition-all" title="Éditer">
+                                        ✏️
+                                    </button>
+                                    <button onclick="deleteTask(${t.id})" class="bg-stone-100 hover:bg-rose-100 text-stone-500 hover:text-rose-700 p-2 rounded-xl text-xs transition-all" title="Supprimer">
+                                        🗑️
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     `;
                 });
 
-                categoryHTML += `</div></div>`;
-                container.innerHTML += categoryHTML;
+                html += `</div></div>`;
+                container.innerHTML += html;
             });
         }
 
-        function renderPlanningList() {
-            const container = document.getElementById('planning-list');
-            if (!container) return;
-            container.innerHTML = '';
+        function renderPlanningContainer() {
+            const list = document.getElementById('planning-list');
+            if (!list) return;
+            list.innerHTML = '';
 
-            const sortedTasks = getProcessedTasksWithStaggering();
+            const sorted = [...state.tasks].sort((a,b) => {
+                const dateA = new Date(a.lastDone).getTime() + a.frequencyDays * 86400000;
+                const dateB = new Date(b.lastDone).getTime() + b.frequencyDays * 86400000;
+                return dateA - dateB;
+            });
 
-            sortedTasks.forEach(task => {
-                container.innerHTML += `
-                    <div class="bg-stone-50 border border-stone-200 rounded-2xl p-4 flex items-center justify-between">
+            sorted.forEach(t => {
+                const due = new Date(new Date(t.lastDone).getTime() + t.frequencyDays * 86400000);
+                const dateStr = due.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                list.innerHTML += `
+                    <div class="bg-white/80 border border-stone-200 rounded-2xl p-4 flex items-center justify-between gap-4 text-xs">
                         <div>
-                            <h4 class="text-sm font-bold text-stone-800">${task.name}</h4>
-                            <p class="text-xs text-stone-500">Tous les ${task.frequencyDays} jours (${task.category})</p>
+                            <span class="font-bold text-stone-900 text-sm">${t.name}</span>
+                            <p class="text-stone-500 mt-0.5">Fréquence : ${t.frequencyDays} jours</p>
                         </div>
-                        <div class="text-right">
-                            <span class="text-xs font-bold ${task.isStaggered ? 'text-purple-900 bg-purple-100 border-purple-300' : 'text-amber-900 bg-amber-100 border-amber-200'} px-3 py-1 rounded-full border">
-                                ${formatDate(task.computedDueDate)} ${task.isStaggered ? '✨ Lissé +2j' : ''}
-                            </span>
+                        <div class="text-right font-bold text-amber-900 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                            ${dateStr}
                         </div>
                     </div>
                 `;
             });
         }
 
-        function updateProgressBar() {
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            if (!progressBar || !progressText) return;
-
-            if (state.tasks.length === 0) {
-                progressBar.style.width = '0%';
-                progressText.innerText = '0%';
-                return;
-            }
-
-            const today = new Date();
-            const processed = getProcessedTasksWithStaggering();
-            let upToDateCount = 0;
-
-            processed.forEach(task => {
-                if (task.computedDueDate >= today || state.manualVacation) {
-                    upToDateCount++;
-                }
-            });
-
-            const percent = Math.round((upToDateCount / state.tasks.length) * 100);
-            progressBar.style.width = `${percent}%`;
-            progressText.innerText = `${percent}%`;
+        function updateGlobalProgress() {
+            const bar = document.getElementById('progress-bar');
+            const txt = document.getElementById('progress-text');
+            if (!bar || !txt) return;
+            bar.style.width = "100%";
+            txt.innerText = "100%";
         }
 
-        function promptCompleteTask(id) {
+        // VALIDATION TÂCHE & CÉLÉBRATION AVEC CITATION CHUCK NORRIS
+        function openConfirmModal(id) {
             pendingTaskIdForValidation = id;
-            validationClickTimestamp = new Date();
-
             const task = state.tasks.find(t => t.id === id);
-            if (!task) return;
-
-            const nextCalculatedDueDate = calculateTaskDueDateFromTimestamp(validationClickTimestamp.toISOString(), task.frequencyDays);
-            
-            const textEl = document.getElementById('confirm-modal-text');
-            if (textEl) {
-                textEl.innerHTML = `
-                    Tâche : <strong class="text-stone-900 font-bold">${task.name}</strong><br>
-                    Horodatage du clic : <strong class="text-stone-800">${formatDateTime(validationClickTimestamp)}</strong><br><br>
-                    En confirmant, la nouvelle échéance sera calculée au :<br>
-                    <strong class="text-amber-800 text-sm font-extrabold bg-amber-100 px-3 py-1 rounded-lg border border-amber-300 inline-block mt-2">
-                        📅 ${formatDate(nextCalculatedDueDate)}
-                    </strong>
-                `;
-            }
-
-            const modal = document.getElementById('confirm-modal');
-            if (modal) modal.classList.remove('hidden');
+            document.getElementById('confirm-modal-text').innerText = `Valider "${task.name}" relancera son cycle d'échéance à partir d'aujourd'hui.`;
+            document.getElementById('confirm-modal').classList.remove('hidden');
         }
 
         function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
             pendingTaskIdForValidation = null;
-            validationClickTimestamp = null;
-            const modal = document.getElementById('confirm-modal');
-            if (modal) modal.classList.add('hidden');
         }
 
         function executeTaskValidation() {
-            if (!pendingTaskIdForValidation || !validationClickTimestamp) return;
-            
+            if (!pendingTaskIdForValidation) return;
             const task = state.tasks.find(t => t.id === pendingTaskIdForValidation);
-            if (!task) return;
-
-            task.lastDone = validationClickTimestamp.toISOString();
-
-            closeConfirmModal();
-            updateUI();
-
-            showMascotModal(task);
-        }
-
-        function showMascotModal(task) {
-            const dueDate = calculateTaskDueDateFromTimestamp(task.lastDone, task.frequencyDays);
-            const formattedNextDate = formatDate(dueDate);
-
-            const mascotPhrases = [
-                `« Bien joué Kalaggan ! ${task.name} faite ! Prochaine échéance : ${formattedNextDate} ✨ »`,
-                `« Tu es vraiment géniale ! ${task.name} accomplie ! Prochaine échéance : ${formattedNextDate} 🌟 »`,
-                `« Bien joué Conchita ! ${task.name} torchée ! Prochaine échéance : ${formattedNextDate} 🎉 »`
-            ];
-
-            const selectedPhrase = mascotPhrases[Math.floor(Math.random() * mascotPhrases.length)];
-
-            const congratsEl = document.getElementById('mascot-congrats-text');
-            if (congratsEl) congratsEl.innerText = selectedPhrase;
-
-            const mascotModal = document.getElementById('mascot-modal');
-            if (mascotModal) mascotModal.classList.remove('hidden');
-        }
-
-        function closeMascotModal() {
-            const mascotModal = document.getElementById('mascot-modal');
-            if (mascotModal) mascotModal.classList.add('hidden');
-            showToast("Tâche validée avec succès !", "success");
-        }
-
-        function switchTab(tabId) {
-            ['tasks', 'planning', 'express', 'settings'].forEach(id => {
-                const tabEl = document.getElementById(`tab-${id}`);
-                const btnEl = document.getElementById(`tab-btn-${id}`);
-                if (tabEl) tabEl.classList.add('hidden');
-                if (btnEl) btnEl.className = "flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200";
-            });
-
-            const targetTab = document.getElementById(`tab-${tabId}`);
-            const targetBtn = document.getElementById(`tab-btn-${tabId}`);
-            if (targetTab) targetTab.classList.remove('hidden');
-            if (targetBtn) targetBtn.className = "flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-gradient-to-r from-amber-700 to-orange-600 text-white shadow-amber-900/30";
-
-            if (tabId === 'planning') renderPlanningList();
-        }
-
-        function deleteTask(id) {
-            if (confirm("Supprimer cette tâche du planning ?")) {
-                state.tasks = state.tasks.filter(t => t.id !== id);
+            if (task) {
+                task.lastDone = new Date().toISOString();
                 updateUI();
-                showToast("Tâche supprimée.", "info");
+                closeConfirmModal();
+                // Utilisation directe d'une citation aléatoire de Chuck Norris pour les félicitations
+                showMascotCongrats(getRandomChuckFact());
             }
         }
 
+        function showMascotCongrats(msg) {
+            document.getElementById('mascot-congrats-text').innerText = `"${msg}"`;
+            document.getElementById('mascot-modal').classList.remove('hidden');
+        }
+
+        function closeMascotModal() {
+            document.getElementById('mascot-modal').classList.add('hidden');
+        }
+
+        // GESTION DU CHRONO EXPRESS
+        function pickExpressTask() {
+            const rand = expressTasksList[Math.floor(Math.random() * expressTasksList.length)];
+            document.getElementById('express-title').innerText = rand.title;
+            document.getElementById('express-category').innerText = rand.category;
+        }
+
+        function completeExpressTask() {
+            showMascotCongrats(getRandomChuckFact());
+            pickExpressTask();
+        }
+
+        // MODALE CRÉATION / ÉDITION
         function openAddTaskModal() {
             document.getElementById('modal-title').innerText = "Ajouter une nouvelle tâche";
             document.getElementById('task-edit-id').value = "";
             document.getElementById('form-name').value = "";
             document.getElementById('form-freq-type').value = "weekly";
-            document.getElementById('form-custom-days').value = "7";
             document.getElementById('custom-freq-box').classList.add('hidden');
             document.getElementById('task-modal').classList.remove('hidden');
         }
 
-        function editTask(id) {
+        function openEditTaskModal(id) {
             const task = state.tasks.find(t => t.id === id);
             if (!task) return;
-
-            document.getElementById('modal-title').innerText = "Modifier la tâche";
+            document.getElementById('modal-title').innerText = "Éditer la tâche";
             document.getElementById('task-edit-id').value = task.id;
             document.getElementById('form-name').value = task.name;
+            document.getElementById('form-freq-type').value = "custom";
+            document.getElementById('form-custom-days').value = task.frequencyDays;
+            document.getElementById('custom-freq-box').classList.remove('hidden');
             document.getElementById('form-category').value = task.category;
-
-            let freqType = "custom";
-            let days = task.frequencyDays;
-            if (days === 7) freqType = "weekly";
-            else if (days === 14) freqType = "biweekly";
-            else if (days === 30) freqType = "monthly";
-            else if (days === 90) freqType = "quarterly";
-
-            document.getElementById('form-freq-type').value = freqType;
-            document.getElementById('form-custom-days').value = days;
-            if (freqType === "custom") {
-                document.getElementById('custom-freq-box').classList.remove('hidden');
-            } else {
-                document.getElementById('custom-freq-box').classList.add('hidden');
-            }
-
             document.getElementById('task-modal').classList.remove('hidden');
         }
 
@@ -915,168 +821,120 @@ END:VCALENDAR`;
 
         function toggleCustomFreq() {
             const type = document.getElementById('form-freq-type').value;
-            const customBox = document.getElementById('custom-freq-box');
-            if (type === "custom") {
-                customBox.classList.remove('hidden');
-            } else {
-                customBox.classList.add('hidden');
-                if (type === "weekly") document.getElementById('form-custom-days').value = 7;
-                if (type === "biweekly") document.getElementById('form-custom-days').value = 14;
-                if (type === "monthly") document.getElementById('form-custom-days').value = 30;
-                if (type === "quarterly") document.getElementById('form-custom-days').value = 90;
-            }
+            const box = document.getElementById('custom-freq-box');
+            if (type === 'custom') box.classList.remove('hidden');
+            else box.classList.add('hidden');
         }
 
         function saveTaskForm(e) {
             e.preventDefault();
             const editId = document.getElementById('task-edit-id').value;
             const name = document.getElementById('form-name').value;
-            const category = document.getElementById('form-category').value;
             const freqType = document.getElementById('form-freq-type').value;
-            
+            const category = document.getElementById('form-category').value;
+
             let days = 7;
-            if (freqType === "weekly") days = 7;
-            else if (freqType === "biweekly") days = 14;
-            else if (freqType === "monthly") days = 30;
-            else if (freqType === "quarterly") days = 90;
-            else days = parseInt(document.getElementById('form-custom-days').value) || 7;
+            if (freqType === 'weekly') days = 7;
+            else if (freqType === 'biweekly') days = 14;
+            else if (freqType === 'monthly') days = 30;
+            else if (freqType === 'quarterly') days = 90;
+            else if (freqType === 'custom') days = parseInt(document.getElementById('form-custom-days').value) || 7;
 
             if (editId) {
                 const task = state.tasks.find(t => t.id == editId);
                 if (task) {
                     task.name = name;
-                    task.category = category;
                     task.frequencyDays = days;
+                    task.category = category;
                 }
-                showToast("Tâche mise à jour !", "success");
             } else {
                 const newTask = {
                     id: Date.now(),
-                    name,
+                    name: name,
                     lastDone: new Date().toISOString(),
                     frequencyDays: days,
-                    category
+                    category: category
                 };
                 state.tasks.push(newTask);
-                showToast("Nouvelle tâche ajoutée !", "success");
             }
 
-            closeModal();
             updateUI();
+            closeModal();
+            showToast("Tâche enregistrée avec succès !", "success");
         }
 
-        function pickExpressTask() {
-            const task = expressTasksList[Math.floor(Math.random() * expressTasksList.length)];
-            const titleEl = document.getElementById('express-title');
-            const catEl = document.getElementById('express-category');
-            if (titleEl) titleEl.innerText = task.title;
-            if (catEl) catEl.innerText = task.category;
-        }
-
-        function completeExpressTask() {
-            showToast("Mission express réussie !", "success");
-            pickExpressTask();
+        function deleteTask(id) {
+            if (confirm("Voulez-vous vraiment supprimer cette tâche ?")) {
+                state.tasks = state.tasks.filter(t => t.id !== id);
+                updateUI();
+                showToast("Tâche supprimée.", "info");
+            }
         }
 
         function toggleVacationMode() {
             state.manualVacation = !state.manualVacation;
-            updateVacationUI();
-            saveState();
             updateUI();
+            showToast(state.manualVacation ? "Mode Absence activé !" : "Mode Absence désactivé.", "info");
         }
 
-        function updateVacationUI() {
-            const titleEl = document.getElementById('vacation-status-title');
-            const descEl = document.getElementById('vacation-status-desc');
-            const btnEl = document.getElementById('vacation-toggle-btn');
-            if (!titleEl || !descEl || !btnEl) return;
+        function clearBrowserCacheAndReset() {
+            if (confirm("Voulez-vous vider le cache et réinitialiser les données ?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
 
-            if (state.manualVacation) {
-                titleEl.innerText = "Mode Absence du foyer activé 🏖️";
-                descEl.innerText = "Toutes les tâches >30j sont temporairement suspendues.";
-                btnEl.innerText = "Désactiver l'absence";
-                btnEl.className = "bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm";
-            } else {
-                titleEl.innerText = "Mode Absence du Foyer / Congés";
-                descEl.innerText = "Active la pause immédiate des tâches >30j pendant votre absence.";
-                btnEl.innerText = "Activer le Mode Absence";
-                btnEl.className = "bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm";
+        function resetToDefaultData() {
+            if (confirm("Rétablir les tâches de départ d'origine ?")) {
+                state.tasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+                updateUI();
+                showToast("Données rétablies avec succès !", "success");
             }
         }
 
         function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
             const dlAnchor = document.createElement('a');
             dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", "kalaggan_planning_backup.json");
-            document.body.appendChild(dlAnchor);
+            dlAnchor.setAttribute("download", "walker_backup.json");
             dlAnchor.click();
-            dlAnchor.remove();
-            showToast("Sauvegarde exportée !", "success");
         }
 
         function triggerImport() {
-            const fileInput = document.getElementById('import-file');
-            if (fileInput) fileInput.click();
+            document.getElementById('import-file').click();
         }
 
-        function importData(event) {
-            const file = event.target.files[0];
+        function importData(e) {
+            const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function(evt) {
                 try {
-                    const imported = JSON.parse(e.target.result);
-                    if (imported.tasks) {
-                        state = imported;
-                        applySeasonStyle(state.currentSeason || 'automne');
+                    const parsed = JSON.parse(evt.target.result);
+                    if (parsed.tasks) {
+                        state = parsed;
                         updateUI();
-                        showToast("Données restaurées !", "success");
+                        showToast("Sauvegarde importée avec succès !", "success");
                     }
                 } catch(err) {
-                    showToast("Erreur dans le fichier.", "error");
+                    alert("Fichier de sauvegarde invalide.");
                 }
             };
             reader.readAsText(file);
         }
 
-        function resetToDefaultData() {
-            if (confirm("Rétablir les tâches par défaut avec vos dates personnalisées ?")) {
-                state.tasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
-                state.manualVacation = false;
-                updateUI();
-                showToast("Données réinitialisées.", "info");
-            }
-        }
-
-        function clearBrowserCacheAndReset() {
-            if (confirm("Voulez-vous vider tout le cache et le stockage local de l'application ?")) {
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.reload(true);
-            }
-        }
-
-        function showToast(message, type = 'success') {
+        function showToast(msg, type = 'info') {
             const container = document.getElementById('toast-container');
             if (!container) return;
             const toast = document.createElement('div');
-            
-            let bg = "bg-amber-950 text-white border border-amber-600/50";
-            if (type === 'error') bg = "bg-rose-950 text-white border border-rose-600/50";
-
-            toast.className = `pointer-events-auto px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold transition-all transform translate-y-2 opacity-0 flex items-center gap-2 ${bg}`;
-            toast.innerHTML = `<span>${type === 'success' ? '✨' : 'ℹ️'}</span> ${message}`;
-            
+            toast.className = `glass-panel px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border ${type === 'success' ? 'border-emerald-500 text-emerald-950' : 'border-amber-500 text-amber-950'} pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300`;
+            toast.innerText = msg;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
-
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
             setTimeout(() => {
                 toast.classList.add('translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
-            }, 3500);
+            }, 3000);
         }
     </script>
 </body>
