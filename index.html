@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Planning de Ménage Intelligent - Walker Texas Ranger</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -238,10 +240,10 @@
                 <span class="text-lg">➕</span> Ajouter une nouvelle tâche
             </button>
             <div class="flex gap-2">
-                <button onclick="exportData()" title="Sauvegarder JSON" class="bg-white/95 hover:bg-white text-stone-700 font-bold p-3.5 rounded-2xl shadow-md border border-stone-200 transition-all flex items-center justify-center">
+                <button onclick="exportData()" title="Sauvegarder JSON sur mon téléphone" class="bg-white/95 hover:bg-white text-stone-700 font-bold p-3.5 rounded-2xl shadow-md border border-stone-200 transition-all flex items-center justify-center">
                     💾
                 </button>
-                <button onclick="triggerImport()" title="Restaurer JSON" class="bg-white/95 hover:bg-white text-stone-700 font-bold p-3.5 rounded-2xl shadow-md border border-stone-200 transition-all flex items-center justify-center">
+                <button onclick="triggerImport()" title="Restaurer sauvegarde JSON" class="bg-white/95 hover:bg-white text-stone-700 font-bold p-3.5 rounded-2xl shadow-md border border-stone-200 transition-all flex items-center justify-center">
                     📂
                 </button>
                 <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
@@ -359,7 +361,7 @@
         <footer class="mt-12 border-t border-white/20 pt-6 text-stone-300 text-xs leading-relaxed">
             <div class="glass-panel rounded-3xl p-6 space-y-4 text-stone-700">
                 <h3 class="font-bold text-sm text-stone-900 flex items-center gap-2">
-                    <span>📜</span> Consignes de Conception & Documentation Technique de l'Application
+                    <span>📜</span> Consignes de Conception & Documentation Technique
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px]">
                     <div class="space-y-2">
@@ -374,11 +376,11 @@
                         <p>Rappel Web Notification programmé chaque matin à 9h00 (avec vérification continue d'autorisation et testeur direct). Exportation universelle du calendrier en format standard <code>.ics</code> (compatible iCal, Google Calendar, Outlook).</p>
                         
                         <p class="font-bold text-amber-900 pt-2">4. Persistance & Architecture :</p>
-                        <p>Fonctionnement 100% hors-ligne via <code>localStorage</code>. Sauvegarde et restauration manuelles au format JSON et gestion dynamique des 5 ambiances saisonnières.</p>
+                        <p>Fonctionnement 100% hors-ligne via <code>localStorage</code> persistant. Sauvegarde et restauration manuelles au format JSON et gestion dynamique des 5 ambiances saisonnières.</p>
                     </div>
                 </div>
                 <div class="text-[10px] text-stone-500 border-t border-stone-200 pt-3 text-center">
-                    Projet Walker Texas Ranger PWA • Version 1.0.8 • Académie de Rennes (Zone B)
+                    Projet Walker Texas Ranger PWA • Version 2.0 (Mémoire Blindée) • Bretagne (Zone B)
                 </div>
             </div>
         </footer>
@@ -465,18 +467,8 @@
         </div>
     </div>
 
-    <!-- SCRIPT APPLICATION COMPLET -->
+    <!-- SCRIPT APPLICATION MÉMOIRE STABLE -->
     <script>
-        const ZONE_B_VACATIONS_2026 = [
-            { name: "Toussaint", start: new Date("2026-10-17T00:00:00"), end: new Date("2026-11-02T23:59:59") },
-            { name: "Noël", start: new Date("2026-12-19T00:00:00"), end: new Date("2027-01-04T23:59:59") },
-            { name: "Hiver", start: new Date("2027-02-20T00:00:00"), end: new Date("2027-03-08T23:59:59") },
-            { name: "Printemps", start: new Date("2027-04-17T00:00:00"), end: new Date("2027-05-03T23:59:59") }
-        ];
-
-        const APP_VERSION = "1.0.8";
-
-        // LES 10 CITATIONS CULTES DE CHUCK NORRIS
         const CHUCK_FACTS = [
             "Certains disent : 'La violence ne résout rien'. Chuck Norris leur répond : 'C'est que t'as pas tapé assez fort'.",
             "Chuck Norris n'a pas de père. On ne nique pas la mère de Chuck Norris.",
@@ -490,7 +482,6 @@
             "Chuck Norris ne se mouille pas, c'est l'eau qui se Chuck Norris."
         ];
 
-        // TÂCHES AVEC DATES CIBLES EXACTES (OCTOBRE à DÉCEMBRE 2026)
         const DEFAULT_TASKS = [
             { id: 1, name: "Changer les draps Adulte", lastDone: "2026-10-12T09:00:00", frequencyDays: 7, category: "Semaines" },
             { id: 2, name: "Changer les draps Enfant", lastDone: "2026-10-14T09:00:00", frequencyDays: 7, category: "Semaines" },
@@ -504,25 +495,28 @@
 
         let state = loadInitialState();
 
+        // CHARGEMENT QUI NE PERD JAMAIS LES MODIFICATIONS UTILISATEUR
         function loadInitialState() {
-            const savedVersion = localStorage.getItem('walker_version');
-            const savedTasks = localStorage.getItem('walker_tasks');
-            const savedVacation = localStorage.getItem('walker_vacation');
-            const savedSeason = localStorage.getItem('walker_season');
+            const savedTasks = localStorage.getItem('walker_tasks_v2');
+            const savedVacation = localStorage.getItem('walker_vacation_v2');
+            const savedSeason = localStorage.getItem('walker_season_v2');
 
-            if (savedVersion !== APP_VERSION || !savedTasks) {
-                localStorage.setItem('walker_version', APP_VERSION);
-                return {
-                    tasks: JSON.parse(JSON.stringify(DEFAULT_TASKS)),
-                    manualVacation: false,
-                    currentSeason: 'automne'
-                };
+            if (savedTasks) {
+                try {
+                    return {
+                        tasks: JSON.parse(savedTasks),
+                        manualVacation: JSON.parse(savedVacation) || false,
+                        currentSeason: savedSeason || 'automne'
+                    };
+                } catch(e) {
+                    console.error("Erreur de lecture du cache, chargement défaut");
+                }
             }
 
             return {
-                tasks: JSON.parse(savedTasks),
-                manualVacation: JSON.parse(savedVacation) || false,
-                currentSeason: savedSeason || 'automne'
+                tasks: JSON.parse(JSON.stringify(DEFAULT_TASKS)),
+                manualVacation: false,
+                currentSeason: 'automne'
             };
         }
 
@@ -547,10 +541,9 @@
             setupDailyAlarm();
         };
 
-        // GESTION DES SAISONS & AMBIANCES
         function changeSeason(season) {
             state.currentSeason = season;
-            localStorage.setItem('walker_season', season);
+            localStorage.setItem('walker_season_v2', season);
             applySeasonStyle(season);
             showToast(`Ambiance changée : ${season}`, 'info');
         }
@@ -559,7 +552,6 @@
             document.body.className = `min-h-screen text-stone-800 pb-12 theme-${season}`;
         }
 
-        // CITATIONS CHUCK NORRIS
         function getRandomChuckFact() {
             return CHUCK_FACTS[Math.floor(Math.random() * CHUCK_FACTS.length)];
         }
@@ -569,14 +561,13 @@
             factBox.innerText = `"${getRandomChuckFact()}"`;
         }
 
-        // NOTIFICATIONS ET DIAGNOSTIC / TEST
         function checkNotificationStatus() {
             const btn = document.getElementById('notification-btn');
             const statusText = document.getElementById('notification-status-text');
             if (!btn || !statusText) return;
 
             if (!("Notification" in window)) {
-                statusText.innerText = "Notifications Web non gérées sur ce navigateur/appareil. Utilisez l'export iCal.";
+                statusText.innerText = "Utilisez le bouton 📅 iCal pour ajouter les rappels à l'agenda de votre téléphone.";
                 btn.style.display = "none";
                 return;
             }
@@ -586,7 +577,7 @@
                 btn.innerText = "🔔 Rappel 9h Actif";
                 btn.className = "bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-xl shadow-sm text-xs cursor-default";
             } else if (Notification.permission === "denied") {
-                statusText.innerText = "Notifications bloquées. Veuillez autoriser les notifications dans les paramètres de votre navigateur.";
+                statusText.innerText = "Notifications bloquées. Utilisez le bouton 📅 iCal ci-contre pour votre agenda.";
                 btn.innerText = "Bloqué";
                 btn.className = "bg-stone-300 text-stone-600 font-bold py-1.5 px-3 rounded-xl text-xs cursor-not-allowed";
             }
@@ -594,30 +585,24 @@
 
         function requestNotificationPermission() {
             if (!("Notification" in window)) {
-                alert("Votre navigateur ne prend pas en charge l'API Notification.");
+                alert("Votre navigateur ne gère pas les notifications. Utilisez le bouton iCal !");
                 return;
             }
             Notification.requestPermission().then(permission => {
                 checkNotificationStatus();
                 if (permission === "granted") {
                     testImmediateNotification();
-                } else {
-                    alert("Autorisation refusée. Veuillez activer les notifications dans la barre d'adresse.");
                 }
             });
         }
 
         function testImmediateNotification() {
-            if (!("Notification" in window)) {
-                alert("API Notification non prise en charge.");
-                return;
-            }
-            if (Notification.permission === "granted") {
+            if ("Notification" in window && Notification.permission === "granted") {
                 new Notification("Walker Texas Ranger", {
-                    body: "Test réussi ! Le rappel de 9h00 fonctionnera parfaitement sur cet appareil.",
+                    body: "Test réussi ! Walker veillera sur vos tâches.",
                     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='65' x='15' font-size='60'>🤠</text></svg>"
                 });
-                showToast("Notification de test envoyée !", "success");
+                showToast("Notification envoyée !", "success");
             } else {
                 requestNotificationPermission();
             }
@@ -626,7 +611,7 @@
         function setupDailyAlarm() {
             setInterval(() => {
                 const now = new Date();
-                if (now.getHours() === 9 && now.getMinutes() === 0 && Notification.permission === "granted") {
+                if (now.getHours() === 9 && now.getMinutes() === 0 && ("Notification" in window) && Notification.permission === "granted") {
                     new Notification("Walker Texas Ranger - Ménage", { 
                         body: "C'est l'heure de vérifier vos tâches de ménage du jour !",
                         icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='65' x='15' font-size='60'>🤠</text></svg>"
@@ -650,7 +635,6 @@
             link.click();
         }
 
-        // NAVIGATION ONGLET
         function switchTab(tabId) {
             ['tasks', 'planning', 'express', 'settings'].forEach(id => {
                 const el = document.getElementById(`tab-${id}`);
@@ -669,9 +653,11 @@
             }
         }
 
+        // SAUVEGARDE EN TEMPS RÉEL PERMANENTE
         function updateUI() {
-            localStorage.setItem('walker_tasks', JSON.stringify(state.tasks));
-            localStorage.setItem('walker_vacation', JSON.stringify(state.manualVacation));
+            localStorage.setItem('walker_tasks_v2', JSON.stringify(state.tasks));
+            localStorage.setItem('walker_vacation_v2', JSON.stringify(state.manualVacation));
+            localStorage.setItem('walker_season_v2', state.currentSeason);
             
             const btnVac = document.getElementById('vacation-toggle-btn');
             const titleVac = document.getElementById('vacation-status-title');
@@ -800,7 +786,6 @@
             txt.innerText = "100%";
         }
 
-        // VALIDATION TÂCHE & CÉLÉBRATION AVEC CITATION CHUCK NORRIS
         function openConfirmModal(id) {
             pendingTaskIdForValidation = id;
             const task = state.tasks.find(t => t.id === id);
@@ -833,7 +818,6 @@
             document.getElementById('mascot-modal').classList.add('hidden');
         }
 
-        // GESTION DU CHRONO EXPRESS
         function pickExpressTask() {
             const rand = expressTasksList[Math.floor(Math.random() * expressTasksList.length)];
             document.getElementById('express-title').innerText = rand.title;
@@ -845,7 +829,6 @@
             pickExpressTask();
         }
 
-        // MODALE CRÉATION / ÉDITION
         function openAddTaskModal() {
             document.getElementById('modal-title').innerText = "Ajouter une nouvelle tâche";
             document.getElementById('task-edit-id').value = "";
@@ -913,7 +896,7 @@
 
             updateUI();
             closeModal();
-            showToast("Tâche enregistrée avec succès !", "success");
+            showToast("Tâche enregistrée dans la mémoire !", "success");
         }
 
         function deleteTask(id) {
@@ -931,8 +914,10 @@
         }
 
         function clearBrowserCacheAndReset() {
-            if (confirm("Voulez-vous vider le cache et réinitialiser les données ?")) {
-                localStorage.clear();
+            if (confirm("Voulez-vous vider la mémoire locale et recharger ?")) {
+                localStorage.removeItem('walker_tasks_v2');
+                localStorage.removeItem('walker_vacation_v2');
+                localStorage.removeItem('walker_season_v2');
                 location.reload();
             }
         }
@@ -945,12 +930,14 @@
             }
         }
 
+        // SAUVEGARDE SUR TÉLÉPHONE (JSON)
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
             const dlAnchor = document.createElement('a');
             dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", "walker_backup.json");
+            dlAnchor.setAttribute("download", "sauvegarde_walker_menage.json");
             dlAnchor.click();
+            showToast("Fichier de sauvegarde téléchargé !", "success");
         }
 
         function triggerImport() {
@@ -967,7 +954,7 @@
                     if (parsed.tasks) {
                         state = parsed;
                         updateUI();
-                        showToast("Sauvegarde importée avec succès !", "success");
+                        showToast("Vos tâches ont été restaurées !", "success");
                     }
                 } catch(err) {
                     alert("Fichier de sauvegarde invalide.");
