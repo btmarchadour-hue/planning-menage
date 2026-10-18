@@ -129,7 +129,7 @@
         .dancing-wizard { animation: danceWizard 0.55s ease-in-out infinite; }
     </style>
 </head>
-<body class="min-h-screen text-stone-800 pb-16 theme-automne">
+<body class="min-h-screen text-stone-800 pb-12 theme-automne">
 
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
@@ -162,7 +162,7 @@
                 </div>
             </div>
 
-            <!-- BOUTON & STATUS NOTIFICATIONS 9H -->
+            <!-- BOUTON & STATUS NOTIFICATIONS 9H AVEC TESTEUR EN DIRECT -->
             <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div class="flex items-center gap-2.5">
                     <span class="text-xl">🔔</span>
@@ -175,8 +175,11 @@
                     <button onclick="requestNotificationPermission()" id="notification-btn" class="bg-amber-700 hover:bg-amber-800 text-white font-bold py-1.5 px-3 rounded-xl transition-all shadow-sm text-xs">
                         Activer l'alerte 9h
                     </button>
+                    <button onclick="testImmediateNotification()" id="notification-test-btn" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold py-1.5 px-3 rounded-xl transition-all border border-amber-300 text-xs">
+                        ⚡ Tester Direct
+                    </button>
                     <button onclick="downloadCalendarICS()" title="Ajouter à Google Calendar / Apple Calendar" class="bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 font-bold py-1.5 px-3 rounded-xl transition-all shadow-sm text-xs flex items-center gap-1">
-                        <span>📅</span> iCal / Google
+                        <span>📅</span> iCal
                     </button>
                 </div>
             </div>
@@ -352,6 +355,34 @@
             </div>
         </main>
 
+        <!-- PIED DE PAGE : CONSIGNES & SPÉCIFICATIONS DE CONSTRUCTION -->
+        <footer class="mt-12 border-t border-white/20 pt-6 text-stone-300 text-xs leading-relaxed">
+            <div class="glass-panel rounded-3xl p-6 space-y-4 text-stone-700">
+                <h3 class="font-bold text-sm text-stone-900 flex items-center gap-2">
+                    <span>📜</span> Consignes de Conception & Documentation Technique de l'Application
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px]">
+                    <div class="space-y-2">
+                        <p class="font-bold text-amber-900">1. Identité & Mascotte :</p>
+                        <p>Branding Walker Texas Ranger avec avatar réactif. Module intégré diffusant 10 répliques cultes de Chuck Norris à la validation d'une tâche ou au clic direct sur la mascotte.</p>
+                        
+                        <p class="font-bold text-amber-900 pt-2">2. Étalement Intelligent Zone B :</p>
+                        <p>Algorithme configuré sur le calendrier scolaire de l'Académie de Rennes (Bretagne). Les tâches à échéance >30 jours sont automatiquement suspendues et lissées à raison d'1 tâche tous les 2 jours max après les vacances.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="font-bold text-amber-900">3. Notifications & Synchronisation :</p>
+                        <p>Rappel Web Notification programmé chaque matin à 9h00 (avec vérification continue d'autorisation et testeur direct). Exportation universelle du calendrier en format standard <code>.ics</code> (compatible iCal, Google Calendar, Outlook).</p>
+                        
+                        <p class="font-bold text-amber-900 pt-2">4. Persistance & Architecture :</p>
+                        <p>Fonctionnement 100% hors-ligne via <code>localStorage</code>. Sauvegarde et restauration manuelles au format JSON et gestion dynamique des 5 ambiances saisonnières.</p>
+                    </div>
+                </div>
+                <div class="text-[10px] text-stone-500 border-t border-stone-200 pt-3 text-center">
+                    Projet Walker Texas Ranger PWA • Version 1.0.8 • Académie de Rennes (Zone B)
+                </div>
+            </div>
+        </footer>
+
     </div>
 
     <!-- MODALES DE VALIDATION ET FORMULAIRES -->
@@ -443,7 +474,7 @@
             { name: "Printemps", start: new Date("2027-04-17T00:00:00"), end: new Date("2027-05-03T23:59:59") }
         ];
 
-        const APP_VERSION = "1.0.7";
+        const APP_VERSION = "1.0.8";
 
         // LES 10 CITATIONS CULTES DE CHUCK NORRIS
         const CHUCK_FACTS = [
@@ -525,74 +556,97 @@
         }
 
         function applySeasonStyle(season) {
-            document.body.className = `min-h-screen text-stone-800 pb-16 theme-${season}`;
+            document.body.className = `min-h-screen text-stone-800 pb-12 theme-${season}`;
         }
 
-        // TIRAGE ALÉATOIRE D'UNE CITATION DE CHUCK NORRIS
+        // CITATIONS CHUCK NORRIS
         function getRandomChuckFact() {
             return CHUCK_FACTS[Math.floor(Math.random() * CHUCK_FACTS.length)];
         }
 
-        // CLIC SUR LA MASCOTTE (EN-TÊTE)
         function triggerChuckFact() {
             const factBox = document.getElementById('wizard-message');
             factBox.innerText = `"${getRandomChuckFact()}"`;
         }
 
+        // NOTIFICATIONS ET DIAGNOSTIC / TEST
         function checkNotificationStatus() {
             const btn = document.getElementById('notification-btn');
             const statusText = document.getElementById('notification-status-text');
             if (!btn || !statusText) return;
 
             if (!("Notification" in window)) {
-                statusText.innerText = "Notifications non supportées sur ce navigateur. Utilisez le bouton iCal.";
+                statusText.innerText = "Notifications Web non gérées sur ce navigateur/appareil. Utilisez l'export iCal.";
                 btn.style.display = "none";
                 return;
             }
 
             if (Notification.permission === "granted") {
-                statusText.innerText = "Rappel quotidien à 9h00 activé sur cet appareil !";
+                statusText.innerText = "Rappel quotidien à 9h00 actif sur cet appareil !";
                 btn.innerText = "🔔 Rappel 9h Actif";
                 btn.className = "bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-xl shadow-sm text-xs cursor-default";
-                btn.onclick = null;
             } else if (Notification.permission === "denied") {
-                statusText.innerText = "Notifications bloquées par votre navigateur. Autorisez-les dans vos réglages.";
+                statusText.innerText = "Notifications bloquées. Veuillez autoriser les notifications dans les paramètres de votre navigateur.";
                 btn.innerText = "Bloqué";
                 btn.className = "bg-stone-300 text-stone-600 font-bold py-1.5 px-3 rounded-xl text-xs cursor-not-allowed";
             }
         }
 
         function requestNotificationPermission() {
-            if (!("Notification" in window)) return;
+            if (!("Notification" in window)) {
+                alert("Votre navigateur ne prend pas en charge l'API Notification.");
+                return;
+            }
             Notification.requestPermission().then(permission => {
+                checkNotificationStatus();
                 if (permission === "granted") {
-                    new Notification("Walker Texas Ranger", { body: "Les rappels de 9h00 sont activés !" });
-                    checkNotificationStatus();
+                    testImmediateNotification();
+                } else {
+                    alert("Autorisation refusée. Veuillez activer les notifications dans la barre d'adresse.");
                 }
             });
+        }
+
+        function testImmediateNotification() {
+            if (!("Notification" in window)) {
+                alert("API Notification non prise en charge.");
+                return;
+            }
+            if (Notification.permission === "granted") {
+                new Notification("Walker Texas Ranger", {
+                    body: "Test réussi ! Le rappel de 9h00 fonctionnera parfaitement sur cet appareil.",
+                    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='65' x='15' font-size='60'>🤠</text></svg>"
+                });
+                showToast("Notification de test envoyée !", "success");
+            } else {
+                requestNotificationPermission();
+            }
         }
 
         function setupDailyAlarm() {
             setInterval(() => {
                 const now = new Date();
                 if (now.getHours() === 9 && now.getMinutes() === 0 && Notification.permission === "granted") {
-                    new Notification("Walker Texas Ranger - Ménage", { body: "C'est l'heure de vérifier vos tâches du jour !" });
+                    new Notification("Walker Texas Ranger - Ménage", { 
+                        body: "C'est l'heure de vérifier vos tâches de ménage du jour !",
+                        icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='65' x='15' font-size='60'>🤠</text></svg>"
+                    });
                 }
             }, 60000);
         }
 
         function downloadCalendarICS() {
-            let ics = "BEGIN:VCALENDAR\VERSION:2.0\PRODID:-//Walker Texas Ranger//FR\n";
+            let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Walker Texas Ranger//FR\r\n";
             state.tasks.forEach(t => {
                 const due = new Date(new Date(t.lastDone).getTime() + t.frequencyDays * 86400000);
                 const dStr = due.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                ics += "BEGIN:VEVENT\nSUMMARY:" + t.name + "\nDTSTART:" + dStr + "\nDESCRIPTION:Tâche de ménage Walker\nEND:VEVENT\n";
+                ics += "BEGIN:VEVENT\r\nSUMMARY:" + t.name + "\r\nDTSTART:" + dStr + "\r\nDESCRIPTION:Tâche de ménage programmée par Walker Texas Ranger\r\nEND:VEVENT\r\n";
             });
             ics += "END:VCALENDAR";
             const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
-            link.download = "walker_planning.ics";
+            link.download = "walker_planning_menage.ics";
             link.click();
         }
 
@@ -766,7 +820,6 @@
                 task.lastDone = new Date().toISOString();
                 updateUI();
                 closeConfirmModal();
-                // Utilisation directe d'une citation aléatoire de Chuck Norris pour les félicitations
                 showMascotCongrats(getRandomChuckFact());
             }
         }
