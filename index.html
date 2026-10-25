@@ -1,981 +1,418 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Planning de Ménage Intelligent - Walker Texas Ranger</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-attachment: fixed;
-            position: relative;
-            overflow-x: hidden;
-            transition: background 0.5s ease;
-        }
-
-        /* Motifs et Arrière-plans dynamiques par Saison / Thème */
-        body.theme-automne {
-            background: linear-gradient(135deg, #2C1307 0%, #4D210D 35%, #7A3515 70%, #A84E1D 100%);
-        }
-        body.theme-automne::before {
-            content: "🍂 🍁 🌾 🍂 🍁 🌾 🍂 🍁";
-            position: fixed;
-            top: -20px; left: -20px; width: 120%; height: 120%;
-            font-size: 32px;
-            opacity: 0.18;
-            letter-spacing: 35px;
-            line-height: 65px;
-            pointer-events: none;
-            z-index: -1;
-            word-break: break-all;
-        }
-
-        body.theme-hiver {
-            background: linear-gradient(135deg, #0F172A 0%, #1E293B 35%, #334155 70%, #475569 100%);
-        }
-        body.theme-hiver::before {
-            content: "❄️ 🌨️ ⛄ ❄️ 🌨️ ⛄ ❄️ 🌨️";
-            position: fixed;
-            top: -20px; left: -20px; width: 120%; height: 120%;
-            font-size: 32px;
-            opacity: 0.18;
-            letter-spacing: 35px;
-            line-height: 65px;
-            pointer-events: none;
-            z-index: -1;
-            word-break: break-all;
-        }
-
-        body.theme-printemps {
-            background: linear-gradient(135deg, #143823 0%, #1F5234 35%, #2E7D4E 70%, #43A047 100%);
-        }
-        body.theme-printemps::before {
-            content: "🌸 🌷 🦋 🌿 🌸 🌷 🦋 🌿";
-            position: fixed;
-            top: -20px; left: -20px; width: 120%; height: 120%;
-            font-size: 32px;
-            opacity: 0.18;
-            letter-spacing: 35px;
-            line-height: 65px;
-            pointer-events: none;
-            z-index: -1;
-            word-break: break-all;
-        }
-
-        body.theme-ete {
-            background: linear-gradient(135deg, #612009 0%, #80280B 35%, #A8360E 70%, #D94814 100%);
-        }
-        body.theme-ete::before {
-            content: "☀️ 🍉 🌊 🌴 ☀️ 🍉 🌊 🌴";
-            position: fixed;
-            top: -20px; left: -20px; width: 120%; height: 120%;
-            font-size: 32px;
-            opacity: 0.18;
-            letter-spacing: 35px;
-            line-height: 65px;
-            pointer-events: none;
-            z-index: -1;
-            word-break: break-all;
-        }
-
-        body.theme-terracotta {
-            background: linear-gradient(135deg, #210D05 0%, #3B1709 35%, #63260E 70%, #823211 100%);
-        }
-        body.theme-terracotta::before {
-            content: "🔥 🧱 🏺 🪵 🔥 🧱 🏺 🪵";
-            position: fixed;
-            top: -20px; left: -20px; width: 120%; height: 120%;
-            font-size: 32px;
-            opacity: 0.18;
-            letter-spacing: 35px;
-            line-height: 65px;
-            pointer-events: none;
-            z-index: -1;
-            word-break: break-all;
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 6px; width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05);
-            border-radius: 9999px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(194, 94, 34, 0.4);
-            border-radius: 9999px;
-        }
-
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(3deg); }
-        }
-        .floating-wizard { animation: floatSlow 3.5s ease-in-out infinite; }
-
-        @keyframes danceWizard {
-            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-            25% { transform: translateY(-14px) rotate(-8deg) scale(1.15); }
-            50% { transform: translateY(0) rotate(0deg) scale(1); }
-            75% { transform: translateY(-14px) rotate(8deg) scale(1.15); }
-        }
-        .dancing-wizard { animation: danceWizard 0.55s ease-in-out infinite; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ma Maison Joyeuse</title>
+<meta name="theme-color" content="#ff8fb1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" id="mf">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff0f5;--card:#fff;--ac:#ff6f9c;--ac2:#ffd9e6;--tx:#4d2a3b;--mu:#a47b8c;--ok:#5fcf9a}
+[data-th=printemps]{--bg:#f1faea;--ac:#e8679f;--ac2:#dff3d2;--tx:#2f4a2b;--mu:#7a9a74;--ok:#3aa76d}
+[data-th=ete]{--bg:#fff6dc;--ac:#ff8f2e;--ac2:#ffe3b0;--tx:#4a3420;--mu:#a2845f;--ok:#1fb5a5}
+[data-th=automne]{--bg:#fff1e1;--ac:#d4701f;--ac2:#fbdab8;--tx:#4a2f1f;--mu:#a58468;--ok:#7f9a3a}
+[data-th=hiver]{--bg:#eaf3ff;--ac:#4a8fe0;--ac2:#d3e6fb;--tx:#23374f;--mu:#6f88a6;--ok:#3bb7c9}
+[data-th=noel]{--bg:#eef8f0;--ac:#d6303f;--ac2:#fbd9dc;--tx:#2a3d31;--mu:#6c8b76;--ok:#238a52}
+[data-th=paques]{--bg:#fffbe0;--ac:#f2a516;--ac2:#e4f5c4;--tx:#4a4326;--mu:#9a9266;--ok:#e667a2}
+[data-th=halloween]{--bg:#fff0de;--ac:#ff7515;--ac2:#e6d9f8;--tx:#3a2347;--mu:#8e739c;--ok:#7a4fc4}
+html{background-color:var(--bg);min-height:100%}
+body{background:none}
+html,body{color:var(--tx);font-family:Nunito,system-ui,sans-serif;-webkit-tap-highlight-color:transparent;transition:background .3s}
+h1,h2,.fr{font-family:Fredoka,Nunito,sans-serif}
+body{padding-top:env(safe-area-inset-top)}
+.card{background:var(--card);border-radius:22px;box-shadow:0 6px 18px -8px color-mix(in srgb,var(--ac) 45%,transparent)}
+.chip{border-radius:999px;padding:.45rem .95rem;font-weight:800;font-size:.9rem;background:var(--card);color:var(--mu);transition:.15s}
+.chip.on{background:var(--ac);color:#fff}
+.btn{width:46px;height:46px;border-radius:50%;border:3px solid var(--ac);color:transparent;display:grid;place-items:center;font-size:1.3rem;flex:none;transition:.15s}
+.btn:active{transform:scale(.88)}
+.btn.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.bubble{width:150px;height:150px;border-radius:50% 46% 54% 50%/52% 50% 50% 48%;background:conic-gradient(var(--ac) calc(var(--p)*1%),var(--ac2) 0);display:grid;place-items:center;flex:none}
+.bubble>div{width:118px;height:118px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center}
+.cf{position:fixed;top:-30px;font-size:1.6rem;pointer-events:none;z-index:60;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.2}}
+.toast{position:fixed;left:12px;right:12px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:50;animation:pop .35s cubic-bezier(.3,1.5,.5,1)}
+@keyframes pop{from{transform:translateY(40px) scale(.9);opacity:0}}
+.sheet{position:fixed;inset:0;background:#0006;z-index:70;display:flex;align-items:flex-end}
+.sheet>div{background:var(--bg);width:100%;max-height:88vh;overflow:auto;border-radius:28px 28px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom))}
+input{width:100%;border-radius:14px;padding:.65rem .85rem;background:var(--card);border:2px solid var(--ac2);outline:none}
+input:focus{border-color:var(--ac)}
+.fab{position:fixed;right:max(18px,calc(50vw - 206px));bottom:calc(88px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:50%;background:var(--ac);color:#fff;font:600 2.1rem/1 Fredoka,sans-serif;display:grid;place-items:center;z-index:40;box-shadow:0 10px 22px -6px var(--ac)}
+.fab:active{transform:scale(.9)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+<style>
+/* Utilitaires embarqués (plus de CDN Tailwind : fichier autonome, plus léger, utilisable hors-ligne) */
+*,::before,::after{box-sizing:border-box;border:0 solid}
+body,h1,h2,p{margin:0}
+h1,h2{font-size:inherit;font-weight:inherit}
+body{line-height:1.5}
+button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:inherit}
+.fixed{position:fixed}.bottom-0{bottom:0}.left-0{left:0}.right-0{right:0}
+.flex{display:flex}.grid{display:grid}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}
+.flex-1{flex:1 1 0%}.flex-none{flex:none}.min-w-0{min-width:0}
+.items-center{align-items:center}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.place-items-center{place-items:center}
+.grid-cols-7{grid-template-columns:repeat(7,minmax(0,1fr))}
+.gap-0\.5{gap:.125rem}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-y-1{row-gap:.25rem}
+.space-y-2>*+*{margin-top:.5rem}.space-y-3>*+*{margin-top:.75rem}
+.max-w-md{max-width:28rem}.mx-auto{margin-left:auto;margin-right:auto}.min-h-screen{min-height:100vh}.w-full{width:100%}
+.w-1\.5{width:.375rem}.w-10{width:2.5rem}.w-11{width:2.75rem}
+.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-12{height:3rem}
+.p-1\.5{padding:.375rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}
+.px-1{padding-left:.25rem;padding-right:.25rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}
+.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}
+.pt-2{padding-top:.5rem}.pt-5{padding-top:1.25rem}.pb-40{padding-bottom:10rem}
+.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}
+.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.ml-1{margin-left:.25rem}
+.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}
+.text-xs{font-size:.75rem;line-height:1rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-base{font-size:1rem;line-height:1.5rem}
+.text-lg{font-size:1.125rem;line-height:1.75rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-2xl{font-size:1.5rem;line-height:2rem}
+.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}
+.leading-none{line-height:1}.leading-tight{line-height:1.25}.leading-snug{line-height:1.375}
+.font-bold{font-weight:700}.font-extrabold{font-weight:800}.text-center{text-align:center}
+.capitalize{text-transform:capitalize}.line-through{text-decoration-line:line-through}
+.opacity-70{opacity:.7}.opacity-80{opacity:.8}.opacity-95{opacity:.95}
+</style>
 </head>
-<body class="min-h-screen text-stone-800 pb-12 theme-automne">
-
-    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
-
-    <div class="max-w-4xl mx-auto px-4 py-6">
-
-        <header class="glass-panel rounded-3xl shadow-2xl p-6 mb-6 transition-all duration-300">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-gradient-to-tr from-amber-700 to-orange-600 rounded-2xl flex items-center justify-center text-white shadow-lg text-2xl">
-                        🤠
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-extrabold bg-gradient-to-r from-amber-950 to-orange-800 bg-clip-text text-transparent">
-                            PLANNING MÉNAGE
-                        </h1>
-                        <p class="text-xs font-semibold text-stone-600">Walker Texas Ranger • Zone B & Congés</p>
-                    </div>
-                </div>
-
-                <!-- Sélecteur d'ambiance / Saisons -->
-                <div class="flex items-center gap-2 bg-stone-100 p-1.5 rounded-2xl border border-stone-200">
-                    <span class="text-xs font-semibold px-2 text-stone-600">Ambiance :</span>
-                    <select id="season-selector" onchange="changeSeason(this.value)" class="bg-white text-xs font-bold text-stone-700 py-1.5 px-3 rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-amber-600 cursor-pointer shadow-sm">
-                        <option value="automne">🍂 Automne Chaleureux</option>
-                        <option value="hiver">❄️ Hiver Cocooning</option>
-                        <option value="printemps">🌸 Printemps Frais</option>
-                        <option value="ete">☀️ Été Ensoleillé</option>
-                        <option value="terracotta">🔥 Terracotta Brut</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- BOUTON & STATUS NOTIFICATIONS 9H AVEC TESTEUR EN DIRECT -->
-            <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3 mb-6 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div class="flex items-center gap-2.5">
-                    <span class="text-xl">🔔</span>
-                    <div>
-                        <span class="font-extrabold text-stone-900">Notification quotidienne à 9h00</span>
-                        <p class="text-[11px] text-stone-500" id="notification-status-text">Recevez un rappel de vos tâches du jour chaque matin à 9h.</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="requestNotificationPermission()" id="notification-btn" class="bg-amber-700 hover:bg-amber-800 text-white font-bold py-1.5 px-3 rounded-xl transition-all shadow-sm text-xs">
-                        Activer l'alerte 9h
-                    </button>
-                    <button onclick="testImmediateNotification()" id="notification-test-btn" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold py-1.5 px-3 rounded-xl transition-all border border-amber-300 text-xs">
-                        ⚡ Tester Direct
-                    </button>
-                    <button onclick="downloadCalendarICS()" title="Ajouter à Google Calendar / Apple Calendar" class="bg-white hover:bg-stone-50 text-stone-700 border border-stone-200 font-bold py-1.5 px-3 rounded-xl transition-all shadow-sm text-xs flex items-center gap-1">
-                        <span>📅</span> iCal
-                    </button>
-                </div>
-            </div>
-
-            <!-- CARTE MASCOTTE WALKER TEXAS RANGER -->
-            <div class="bg-gradient-to-r from-amber-100/90 via-orange-100/80 to-amber-200/70 border border-amber-300/80 rounded-2xl p-4 shadow-inner flex items-start gap-4 mb-6 relative overflow-hidden">
-                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
-                <div id="wizard-avatar" onclick="triggerChuckFact()" class="w-12 h-12 flex-shrink-0 bg-white rounded-2xl shadow-md flex items-center justify-center text-2xl floating-wizard border border-amber-300 cursor-pointer" title="Cliquez sur Walker !">
-                    🤠
-                </div>
-                <div class="flex-1">
-                    <div class="flex items-center justify-between mb-1">
-                        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-950">Walker Texas Ranger</h3>
-                        <span id="zone-badge" class="text-[11px] bg-amber-300/80 text-amber-950 font-bold px-2.5 py-0.5 rounded-full border border-amber-400">
-                            🏫 Zone B & Étalement actif
-                        </span>
-                    </div>
-                    <p id="wizard-message" class="text-sm font-medium text-stone-800 leading-snug italic">
-                        "Chuck Norris a déjà compté jusqu'à l'infini. Deux fois."
-                    </p>
-                </div>
-            </div>
-
-            <!-- BARRE DE PROGRESSION -->
-            <div class="mb-6">
-                <div class="flex justify-between items-center mb-1.5">
-                    <span class="text-xs font-bold text-stone-700 uppercase tracking-wide">Avancement Global</span>
-                    <span id="progress-text" class="text-xs font-bold text-amber-900">100%</span>
-                </div>
-                <div class="w-full bg-stone-200/90 h-3 rounded-full overflow-hidden p-0.5 shadow-inner">
-                    <div id="progress-bar" class="bg-gradient-to-r from-amber-700 to-orange-600 h-full rounded-full transition-all duration-700 shadow-sm" style="width: 100%;"></div>
-                </div>
-            </div>
-
-            <!-- NAVIGATION ONGLET -->
-            <div class="relative">
-                <div id="tabs-container" class="flex gap-2 overflow-x-auto custom-scrollbar pb-2 pt-1">
-                    <button onclick="switchTab('tasks')" id="tab-btn-tasks" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-gradient-to-r from-amber-700 to-orange-600 text-white shadow-amber-900/30">
-                        <span>🧹</span> Tâches
-                    </button>
-                    <button onclick="switchTab('planning')" id="tab-btn-planning" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200">
-                        <span>📅</span> Agenda & Étalement
-                    </button>
-                    <button onclick="switchTab('express')" id="tab-btn-express" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200">
-                        <span>⏱️</span> Express 15m
-                    </button>
-                    <button onclick="switchTab('settings')" id="tab-btn-settings" class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200">
-                        <span>⚙️</span> Réglages & Vacances
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <div class="mb-6 flex flex-wrap gap-3 items-center justify-between">
-            <button onclick="openAddTaskModal()" class="flex-1 min-w-[200px] bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-teal-900/10 flex items-center justify-center gap-2 transition-all transform active:scale-98">
-                <span class="text-lg">➕</span> Ajouter une nouvelle tâche
-            </button>
-            <div class="flex gap-2">
-                <button onclick="exportData()" title="Sauvegarder JSON sur mon téléphone" class="bg-white/95 hover:bg-white text-stone-700 font-bold p-3.5 rounded-2xl shadow-md border border-stone-200 transition-all flex items-center justify-center">
-                    💾
-                </button>
-                <button onclick="triggerImport()" title="Restaurer sauvegarde JSON" class="bg-white/95 hover:bg-white text-stone-700 font-bold p-3.5 rounded-2xl shadow-md border border-stone-200 transition-all flex items-center justify-center">
-                    📂
-                </button>
-                <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
-            </div>
-        </div>
-
-        <main>
-            <div id="tab-tasks" class="space-y-6">
-                <div id="tasks-container" class="space-y-6">
-                    <!-- Blocs de tâches injectés dynamiquement -->
-                </div>
-            </div>
-
-            <div id="tab-planning" class="hidden space-y-6">
-                <div class="glass-panel rounded-3xl shadow-xl p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h2 class="text-lg font-bold text-stone-800 flex items-center gap-2">
-                            <span>📅</span> Agenda global & Échéances lissées
-                        </h2>
-                        <span class="text-xs bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full border border-amber-300">
-                            >1 mois : 1 tâche / 2j max après vacances
-                        </span>
-                    </div>
-                    <p class="text-xs text-stone-500 mb-6">Toutes vos tâches classées chronologiquement selon vos dates personnalisées en dur.</p>
-                    <div id="planning-list" class="space-y-3">
-                        <!-- Rempli dynamiquement -->
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-express" class="hidden space-y-6">
-                <div class="glass-panel rounded-3xl shadow-xl p-6 text-center">
-                    <div class="w-20 h-20 bg-amber-100 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-4 shadow-inner">
-                        ⏱️
-                    </div>
-                    <h2 class="text-xl font-bold text-stone-800 mb-2">Chrono Express 15 min</h2>
-                    <p class="text-xs text-stone-500 max-w-md mx-auto mb-6">
-                        Envie d'un coup de propre rapide et immédiat ? Piochez une mission express de 15 minutes top chrono !
-                    </p>
-
-                    <div id="express-task-card" class="bg-stone-50 border border-stone-200 rounded-2xl p-6 mb-6 max-w-md mx-auto shadow-sm">
-                        <span id="express-category" class="text-[11px] font-bold uppercase tracking-wider bg-amber-200 text-amber-950 px-3 py-1 rounded-full">Cuisine</span>
-                        <h3 id="express-title" class="text-lg font-bold text-stone-800 mt-3 mb-1">Passer un coup d'éponge sur le plan de travail</h3>
-                        <p class="text-xs text-stone-500">Idéal pour un effet net instantané.</p>
-                    </div>
-
-                    <div class="flex justify-center gap-3">
-                        <button onclick="pickExpressTask()" class="bg-amber-700 hover:bg-amber-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-all text-xs">
-                            🎲 Autre mission express
-                        </button>
-                        <button onclick="completeExpressTask()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transition-all text-xs">
-                            ✨ C'est fait !
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-settings" class="hidden space-y-6">
-                <div class="glass-panel rounded-3xl shadow-xl p-6 space-y-6">
-                    <div>
-                        <h2 class="text-lg font-bold text-stone-800 mb-1 flex items-center gap-2">
-                            <span>🏫</span> Périodes d'Absence et Vacances Scolaires Zone B
-                        </h2>
-                        <p class="text-xs text-stone-500 mb-4">Pendant vos absences ou les vacances Zone B, les tâches de plus d'1 mois sont suspendues et étalées à la reprise.</p>
-                        
-                        <div class="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 mb-4 space-y-2 text-xs">
-                            <h4 class="font-bold text-amber-950 flex items-center gap-1.5">📌 Vacances Scolaires Zone B 2026-2027 (Référence) :</h4>
-                            <ul class="list-disc list-inside text-stone-700 space-y-1">
-                                <li><strong>Toussaint 2026 :</strong> 17 oct. 2026 au 2 nov. 2026</li>
-                                <li><strong>Noël 2026 :</strong> 19 déc. 2026 au 4 janv. 2027</li>
-                                <li><strong>Hiver 2027 :</strong> 20 fév. 2027 au 8 mars 2027</li>
-                                <li><strong>Printemps 2027 :</strong> 17 avr. 2027 au 3 mai 2027</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-stone-50 border border-stone-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                            <div>
-                                <h4 class="text-sm font-bold text-stone-800" id="vacation-status-title">Mode Absence du Foyer / Congés</h4>
-                                <p class="text-xs text-stone-500" id="vacation-status-desc">Active la pause immédiate des tâches >30j pendant votre absence.</p>
-                            </div>
-                            <button onclick="toggleVacationMode()" id="vacation-toggle-btn" class="bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm">
-                                Activer le Mode Absence
-                            </button>
-                        </div>
-                    </div>
-
-                    <hr class="border-stone-200">
-
-                    <div>
-                        <h2 class="text-lg font-bold text-stone-800 mb-1 flex items-center gap-2">
-                            <span>🧹</span> Gestion du Cache & Stockage Navigateur
-                        </h2>
-                        <p class="text-xs text-stone-500 mb-4">Vider le stockage local pour purger le cache persistant.</p>
-                        <button onclick="clearBrowserCacheAndReset()" class="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-bold py-2.5 px-5 rounded-xl transition-all flex items-center gap-2">
-                            <span>🗑️</span> Vider le cache & Recharger l'application
-                        </button>
-                    </div>
-
-                    <hr class="border-stone-200">
-
-                    <div>
-                        <h2 class="text-lg font-bold text-stone-800 mb-1 flex items-center gap-2">
-                            <span>🔄</span> Réinitialisation Globale
-                        </h2>
-                        <p class="text-xs text-stone-500 mb-4">Rétablir les 8 tâches d'origine avec vos dates personnalisées en dur.</p>
-                        <button onclick="resetToDefaultData()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold py-2.5 px-5 rounded-xl transition-all">
-                            ⚠️ Rétablir les données de départ personnalisées
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- PIED DE PAGE : CONSIGNES & SPÉCIFICATIONS DE CONSTRUCTION -->
-        <footer class="mt-12 border-t border-white/20 pt-6 text-stone-300 text-xs leading-relaxed">
-            <div class="glass-panel rounded-3xl p-6 space-y-4 text-stone-700">
-                <h3 class="font-bold text-sm text-stone-900 flex items-center gap-2">
-                    <span>📜</span> Consignes de Conception & Documentation Technique
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px]">
-                    <div class="space-y-2">
-                        <p class="font-bold text-amber-900">1. Identité & Mascotte :</p>
-                        <p>Branding Walker Texas Ranger avec avatar réactif. Module intégré diffusant 10 répliques cultes de Chuck Norris à la validation d'une tâche ou au clic direct sur la mascotte.</p>
-                        
-                        <p class="font-bold text-amber-900 pt-2">2. Étalement Intelligent Zone B :</p>
-                        <p>Algorithme configuré sur le calendrier scolaire de l'Académie de Rennes (Bretagne). Les tâches à échéance >30 jours sont automatiquement suspendues et lissées à raison d'1 tâche tous les 2 jours max après les vacances.</p>
-                    </div>
-                    <div class="space-y-2">
-                        <p class="font-bold text-amber-900">3. Notifications & Synchronisation :</p>
-                        <p>Rappel Web Notification programmé chaque matin à 9h00 (avec vérification continue d'autorisation et testeur direct). Exportation universelle du calendrier en format standard <code>.ics</code> (compatible iCal, Google Calendar, Outlook).</p>
-                        
-                        <p class="font-bold text-amber-900 pt-2">4. Persistance & Architecture :</p>
-                        <p>Fonctionnement 100% hors-ligne via <code>localStorage</code> persistant. Sauvegarde et restauration manuelles au format JSON et gestion dynamique des 5 ambiances saisonnières.</p>
-                    </div>
-                </div>
-                <div class="text-[10px] text-stone-500 border-t border-stone-200 pt-3 text-center">
-                    Projet Walker Texas Ranger PWA • Version 2.0 (Mémoire Blindée) • Bretagne (Zone B)
-                </div>
-            </div>
-        </footer>
-
-    </div>
-
-    <!-- MODALES DE VALIDATION ET FORMULAIRES -->
-    <div id="confirm-modal" class="fixed inset-0 bg-stone-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-panel rounded-3xl shadow-2xl max-w-md w-full p-6 border border-stone-200 transform transition-all text-center">
-            <div class="w-16 h-16 bg-amber-100 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-inner">
-                ✨
-            </div>
-            <h3 class="text-lg font-extrabold text-stone-900 mb-2">Valider cette tâche ?</h3>
-            <p id="confirm-modal-text" class="text-xs text-stone-600 mb-6 leading-relaxed"></p>
-            <div class="flex justify-center gap-3">
-                <button onclick="closeConfirmModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold px-5 py-2.5 rounded-xl text-xs transition-all">
-                    Annuler
-                </button>
-                <button id="confirm-action-btn" onclick="executeTaskValidation()" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all">
-                    Confirmer la validation
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div id="mascot-modal" class="fixed inset-0 bg-stone-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-panel rounded-3xl shadow-2xl max-w-md w-full p-6 border border-amber-300 transform transition-all text-center relative overflow-hidden">
-            <div class="w-20 h-20 bg-gradient-to-tr from-amber-200 to-orange-200 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-4 shadow-md dancing-wizard border border-amber-300">
-                🤠✨
-            </div>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-amber-900 mb-1">Walker Texas Ranger approuve !</h3>
-            <p id="mascot-congrats-text" class="text-sm font-bold text-stone-900 mb-6 leading-relaxed px-2 italic"></p>
-            <button onclick="closeMascotModal()" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white font-bold px-8 py-3 rounded-xl text-xs shadow-lg transition-all transform active:scale-95">
-                Célébrer 🎉
-            </button>
-        </div>
-    </div>
-
-    <div id="task-modal" class="fixed inset-0 bg-stone-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="glass-panel rounded-3xl shadow-2xl max-w-lg w-full p-6 border border-stone-200 transform transition-all">
-            <div class="flex justify-between items-center mb-4">
-                <h3 id="modal-title" class="text-lg font-bold text-stone-800">Ajouter une nouvelle tâche</h3>
-                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-600 font-bold text-sm">✕</button>
-            </div>
-            
-            <form id="task-form" onsubmit="saveTaskForm(event)" class="space-y-4">
-                <input type="hidden" id="task-edit-id">
-                <div>
-                    <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Nom de la tâche</label>
-                    <input type="text" id="form-name" required placeholder="ex: Nettoyer le four" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600">
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Fréquence</label>
-                        <select id="form-freq-type" onchange="toggleCustomFreq()" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600">
-                            <option value="weekly">Toutes les semaines (7j)</option>
-                            <option value="biweekly">Toutes les 2 semaines (14j)</option>
-                            <option value="monthly">Tous les mois (30j)</option>
-                            <option value="quarterly">Trimestriel (90j)</option>
-                            <option value="custom">Personnalisée (jours)</option>
-                        </select>
-                    </div>
-                    <div id="custom-freq-box" class="hidden">
-                        <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Nombre de jours</label>
-                        <input type="number" id="form-custom-days" min="1" value="7" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1">Bloc / Catégorie</label>
-                    <select id="form-category" class="w-full bg-stone-50 border border-stone-200 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-600">
-                        <option value="Semaines">Semaines (≤ 30j - Actives vacances)</option>
-                        <option value="Mois">Mois (≤ 30j - Actives vacances)</option>
-                        <option value="Trimestriel / Annuel (>1 mois)">Trimestriel / Annuel (>1 mois - Suspendues vacances / lissées)</option>
-                    </select>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-4">
-                    <button type="button" onclick="closeModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold px-5 py-2.5 rounded-xl text-xs transition-all">Annuler</button>
-                    <button type="submit" class="bg-gradient-to-r from-amber-700 to-orange-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md transition-all">Enregistrer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- SCRIPT APPLICATION MÉMOIRE STABLE -->
-    <script>
-        const CHUCK_FACTS = [
-            "Certains disent : 'La violence ne résout rien'. Chuck Norris leur répond : 'C'est que t'as pas tapé assez fort'.",
-            "Chuck Norris n'a pas de père. On ne nique pas la mère de Chuck Norris.",
-            "Chuck Norris et Superman ont fait un bras de fer, le perdant devait mettre son slip par dessus son pantalon.",
-            "Chuck Norris a déjà compté jusqu'à l'infini. Deux fois.",
-            "Un jour Chuck Norris a dit 'Va voir la-bas si j'y suis'... et il y était...",
-            "Chuck Norris ne ment pas, c'est la vérité qui se trompe.",
-            "Quand Chuck Norris pisse face au vent, le vent préfère changer de direction.",
-            "Un jour Chuck Norris a eu un zéro en latin, depuis c'est une langue morte.",
-            "Chuck Norris a inventé l'écriture pour faire comprendre a un sourd qu'il allait lui péter la gueule.",
-            "Chuck Norris ne se mouille pas, c'est l'eau qui se Chuck Norris."
-        ];
-
-        const DEFAULT_TASKS = [
-            { id: 1, name: "Changer les draps Adulte", lastDone: "2026-10-12T09:00:00", frequencyDays: 7, category: "Semaines" },
-            { id: 2, name: "Changer les draps Enfant", lastDone: "2026-10-14T09:00:00", frequencyDays: 7, category: "Semaines" },
-            { id: 3, name: "Lavage complet des sols", lastDone: "2026-10-15T09:00:00", frequencyDays: 7, category: "Semaines" },
-            { id: 4, name: "Nettoyage filtre lave-linge", lastDone: "2026-10-11T09:00:00", frequencyDays: 14, category: "Mois" },
-            { id: 5, name: "Détartrage cafetière & bouilloire", lastDone: "2026-09-27T09:00:00", frequencyDays: 30, category: "Mois" },
-            { id: 6, name: "Nettoyage intérieur du four", lastDone: "2026-08-01T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" },
-            { id: 7, name: "Nettoyage des vitres du salon", lastDone: "2026-08-05T09:00:00", frequencyDays: 90, category: "Trimestriel / Annuel (>1 mois)" },
-            { id: 8, name: "Shampoinnage tapis & canapé", lastDone: "2026-06-13T09:00:00", frequencyDays: 180, category: "Trimestriel / Annuel (>1 mois)" }
-        ];
-
-        let state = loadInitialState();
-
-        // CHARGEMENT QUI NE PERD JAMAIS LES MODIFICATIONS UTILISATEUR
-        function loadInitialState() {
-            const savedTasks = localStorage.getItem('walker_tasks_v2');
-            const savedVacation = localStorage.getItem('walker_vacation_v2');
-            const savedSeason = localStorage.getItem('walker_season_v2');
-
-            if (savedTasks) {
-                try {
-                    return {
-                        tasks: JSON.parse(savedTasks),
-                        manualVacation: JSON.parse(savedVacation) || false,
-                        currentSeason: savedSeason || 'automne'
-                    };
-                } catch(e) {
-                    console.error("Erreur de lecture du cache, chargement défaut");
-                }
-            }
-
-            return {
-                tasks: JSON.parse(JSON.stringify(DEFAULT_TASKS)),
-                manualVacation: false,
-                currentSeason: 'automne'
-            };
-        }
-
-        let pendingTaskIdForValidation = null;
-
-        const expressTasksList = [
-            { title: "Passer un coup d'éponge sur le plan de travail", category: "Cuisine" },
-            { title: "Ranger rapidement la table du salon", category: "Salon" },
-            { title: "Aérer toutes les chambres pendant 10 minutes", category: "Chambres" },
-            { title: "Nettoyer le miroir de la salle de bain", category: "Salle de bain" },
-            { title: "Sortir les poubelles et tri sélectif", category: "Entrée" },
-            { title: "Passer un coup de balai rapide dans l'entrée", category: "Entrée" }
-        ];
-
-        window.onload = function() {
-            const seasonSelect = document.getElementById('season-selector');
-            if (seasonSelect) seasonSelect.value = state.currentSeason;
-            applySeasonStyle(state.currentSeason);
-            updateUI();
-            pickExpressTask();
-            checkNotificationStatus();
-            setupDailyAlarm();
-        };
-
-        function changeSeason(season) {
-            state.currentSeason = season;
-            localStorage.setItem('walker_season_v2', season);
-            applySeasonStyle(season);
-            showToast(`Ambiance changée : ${season}`, 'info');
-        }
-
-        function applySeasonStyle(season) {
-            document.body.className = `min-h-screen text-stone-800 pb-12 theme-${season}`;
-        }
-
-        function getRandomChuckFact() {
-            return CHUCK_FACTS[Math.floor(Math.random() * CHUCK_FACTS.length)];
-        }
-
-        function triggerChuckFact() {
-            const factBox = document.getElementById('wizard-message');
-            factBox.innerText = `"${getRandomChuckFact()}"`;
-        }
-
-        function checkNotificationStatus() {
-            const btn = document.getElementById('notification-btn');
-            const statusText = document.getElementById('notification-status-text');
-            if (!btn || !statusText) return;
-
-            if (!("Notification" in window)) {
-                statusText.innerText = "Utilisez le bouton 📅 iCal pour ajouter les rappels à l'agenda de votre téléphone.";
-                btn.style.display = "none";
-                return;
-            }
-
-            if (Notification.permission === "granted") {
-                statusText.innerText = "Rappel quotidien à 9h00 actif sur cet appareil !";
-                btn.innerText = "🔔 Rappel 9h Actif";
-                btn.className = "bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-xl shadow-sm text-xs cursor-default";
-            } else if (Notification.permission === "denied") {
-                statusText.innerText = "Notifications bloquées. Utilisez le bouton 📅 iCal ci-contre pour votre agenda.";
-                btn.innerText = "Bloqué";
-                btn.className = "bg-stone-300 text-stone-600 font-bold py-1.5 px-3 rounded-xl text-xs cursor-not-allowed";
-            }
-        }
-
-        function requestNotificationPermission() {
-            if (!("Notification" in window)) {
-                alert("Votre navigateur ne gère pas les notifications. Utilisez le bouton iCal !");
-                return;
-            }
-            Notification.requestPermission().then(permission => {
-                checkNotificationStatus();
-                if (permission === "granted") {
-                    testImmediateNotification();
-                }
-            });
-        }
-
-        function testImmediateNotification() {
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification("Walker Texas Ranger", {
-                    body: "Test réussi ! Walker veillera sur vos tâches.",
-                    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='65' x='15' font-size='60'>🤠</text></svg>"
-                });
-                showToast("Notification envoyée !", "success");
-            } else {
-                requestNotificationPermission();
-            }
-        }
-
-        function setupDailyAlarm() {
-            setInterval(() => {
-                const now = new Date();
-                if (now.getHours() === 9 && now.getMinutes() === 0 && ("Notification" in window) && Notification.permission === "granted") {
-                    new Notification("Walker Texas Ranger - Ménage", { 
-                        body: "C'est l'heure de vérifier vos tâches de ménage du jour !",
-                        icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='65' x='15' font-size='60'>🤠</text></svg>"
-                    });
-                }
-            }, 60000);
-        }
-
-        function downloadCalendarICS() {
-            let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Walker Texas Ranger//FR\r\n";
-            state.tasks.forEach(t => {
-                const due = new Date(new Date(t.lastDone).getTime() + t.frequencyDays * 86400000);
-                const dStr = due.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-                ics += "BEGIN:VEVENT\r\nSUMMARY:" + t.name + "\r\nDTSTART:" + dStr + "\r\nDESCRIPTION:Tâche de ménage programmée par Walker Texas Ranger\r\nEND:VEVENT\r\n";
-            });
-            ics += "END:VCALENDAR";
-            const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = "walker_planning_menage.ics";
-            link.click();
-        }
-
-        function switchTab(tabId) {
-            ['tasks', 'planning', 'express', 'settings'].forEach(id => {
-                const el = document.getElementById(`tab-${id}`);
-                const btn = document.getElementById(`tab-btn-${id}`);
-                if (el) el.classList.add('hidden');
-                if (btn) {
-                    btn.className = "flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-white text-stone-600 hover:bg-stone-50 border border-stone-200";
-                }
-            });
-
-            const activeEl = document.getElementById(`tab-${tabId}`);
-            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
-            if (activeEl) activeEl.classList.remove('hidden');
-            if (activeBtn) {
-                activeBtn.className = "flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex-shrink-0 shadow-sm bg-gradient-to-r from-amber-700 to-orange-600 text-white shadow-amber-900/30";
-            }
-        }
-
-        // SAUVEGARDE EN TEMPS RÉEL PERMANENTE
-        function updateUI() {
-            localStorage.setItem('walker_tasks_v2', JSON.stringify(state.tasks));
-            localStorage.setItem('walker_vacation_v2', JSON.stringify(state.manualVacation));
-            localStorage.setItem('walker_season_v2', state.currentSeason);
-            
-            const btnVac = document.getElementById('vacation-toggle-btn');
-            const titleVac = document.getElementById('vacation-status-title');
-            const descVac = document.getElementById('vacation-status-desc');
-            if (btnVac) {
-                if (state.manualVacation) {
-                    btnVac.innerText = "Désactiver le Mode Absence";
-                    btnVac.className = "bg-rose-700 hover:bg-rose-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm";
-                    if (titleVac) titleVac.innerText = "Mode Absence Actif ✈️";
-                    if (descVac) descVac.innerText = "Vos tâches >30j sont actuellement en pause.";
-                } else {
-                    btnVac.innerText = "Activer le Mode Absence";
-                    btnVac.className = "bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold py-2.5 px-5 rounded-xl transition-all shadow-sm";
-                    if (titleVac) titleVac.innerText = "Mode Absence du Foyer / Congés";
-                    if (descVac) descVac.innerText = "Active la pause immédiate des tâches >30j pendant votre absence.";
-                }
-            }
-
-            renderTasksContainer();
-            renderPlanningContainer();
-            updateGlobalProgress();
-        }
-
-        function renderTasksContainer() {
-            const container = document.getElementById('tasks-container');
-            if (!container) return;
-            container.innerHTML = '';
-
-            const categories = ["Semaines", "Mois", "Trimestriel / Annuel (>1 mois)"];
-            categories.forEach(cat => {
-                const tasksInCat = state.tasks.filter(t => t.category === cat);
-                if (tasksInCat.length === 0) return;
-
-                let html = `
-                    <div class="glass-panel rounded-3xl shadow-xl p-6">
-                        <h2 class="text-base font-extrabold text-stone-800 mb-4 flex items-center justify-between border-b border-stone-200 pb-3">
-                            <span>📂 ${cat}</span>
-                            <span class="text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full font-bold">${tasksInCat.length} tâches</span>
-                        </h2>
-                        <div class="space-y-3">
-                `;
-
-                tasksInCat.forEach(t => {
-                    const nextDue = new Date(new Date(t.lastDone).getTime() + t.frequencyDays * 86400000);
-                    const today = new Date();
-                    today.setHours(0,0,0,0);
-                    const diffDays = Math.ceil((nextDue - today) / (1000 * 60 * 60 * 24));
-
-                    let badge = '';
-                    if (diffDays < 0) {
-                        badge = `<span class="bg-rose-100 text-rose-800 font-bold text-[10px] px-2.5 py-1 rounded-full border border-rose-300">En retard de ${Math.abs(diffDays)}j</span>`;
-                    } else if (diffDays === 0) {
-                        badge = `<span class="bg-amber-100 text-amber-800 font-bold text-[10px] px-2.5 py-1 rounded-full border border-amber-300">Aujourd'hui</span>`;
-                    } else {
-                        badge = `<span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-1 rounded-full border border-emerald-300">Dans ${diffDays}j</span>`;
-                    }
-
-                    const dateStr = nextDue.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
-
-                    html += `
-                        <div class="bg-white/80 border border-stone-200/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm hover:shadow-md transition-all">
-                            <div>
-                                <h4 class="text-sm font-bold text-stone-900">${t.name}</h4>
-                                <div class="flex items-center gap-2 mt-1 text-xs text-stone-500 font-medium">
-                                    <span>Échéance : <strong class="text-stone-700">${dateStr}</strong></span>
-                                    <span>•</span>
-                                    <span>Tous les ${t.frequencyDays}j</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
-                                ${badge}
-                                <div class="flex items-center gap-1">
-                                    <button onclick="openConfirmModal(${t.id})" class="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-all shadow-sm">
-                                        ✓ Fait
-                                    </button>
-                                    <button onclick="openEditTaskModal(${t.id})" class="bg-stone-100 hover:bg-stone-200 text-stone-700 p-2 rounded-xl text-xs transition-all" title="Éditer">
-                                        ✏️
-                                    </button>
-                                    <button onclick="deleteTask(${t.id})" class="bg-stone-100 hover:bg-rose-100 text-stone-500 hover:text-rose-700 p-2 rounded-xl text-xs transition-all" title="Supprimer">
-                                        🗑️
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html += `</div></div>`;
-                container.innerHTML += html;
-            });
-        }
-
-        function renderPlanningContainer() {
-            const list = document.getElementById('planning-list');
-            if (!list) return;
-            list.innerHTML = '';
-
-            const sorted = [...state.tasks].sort((a,b) => {
-                const dateA = new Date(a.lastDone).getTime() + a.frequencyDays * 86400000;
-                const dateB = new Date(b.lastDone).getTime() + b.frequencyDays * 86400000;
-                return dateA - dateB;
-            });
-
-            sorted.forEach(t => {
-                const due = new Date(new Date(t.lastDone).getTime() + t.frequencyDays * 86400000);
-                const dateStr = due.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                list.innerHTML += `
-                    <div class="bg-white/80 border border-stone-200 rounded-2xl p-4 flex items-center justify-between gap-4 text-xs">
-                        <div>
-                            <span class="font-bold text-stone-900 text-sm">${t.name}</span>
-                            <p class="text-stone-500 mt-0.5">Fréquence : ${t.frequencyDays} jours</p>
-                        </div>
-                        <div class="text-right font-bold text-amber-900 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
-                            ${dateStr}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function updateGlobalProgress() {
-            const bar = document.getElementById('progress-bar');
-            const txt = document.getElementById('progress-text');
-            if (!bar || !txt) return;
-            bar.style.width = "100%";
-            txt.innerText = "100%";
-        }
-
-        function openConfirmModal(id) {
-            pendingTaskIdForValidation = id;
-            const task = state.tasks.find(t => t.id === id);
-            document.getElementById('confirm-modal-text').innerText = `Valider "${task.name}" relancera son cycle d'échéance à partir d'aujourd'hui.`;
-            document.getElementById('confirm-modal').classList.remove('hidden');
-        }
-
-        function closeConfirmModal() {
-            document.getElementById('confirm-modal').classList.add('hidden');
-            pendingTaskIdForValidation = null;
-        }
-
-        function executeTaskValidation() {
-            if (!pendingTaskIdForValidation) return;
-            const task = state.tasks.find(t => t.id === pendingTaskIdForValidation);
-            if (task) {
-                task.lastDone = new Date().toISOString();
-                updateUI();
-                closeConfirmModal();
-                showMascotCongrats(getRandomChuckFact());
-            }
-        }
-
-        function showMascotCongrats(msg) {
-            document.getElementById('mascot-congrats-text').innerText = `"${msg}"`;
-            document.getElementById('mascot-modal').classList.remove('hidden');
-        }
-
-        function closeMascotModal() {
-            document.getElementById('mascot-modal').classList.add('hidden');
-        }
-
-        function pickExpressTask() {
-            const rand = expressTasksList[Math.floor(Math.random() * expressTasksList.length)];
-            document.getElementById('express-title').innerText = rand.title;
-            document.getElementById('express-category').innerText = rand.category;
-        }
-
-        function completeExpressTask() {
-            showMascotCongrats(getRandomChuckFact());
-            pickExpressTask();
-        }
-
-        function openAddTaskModal() {
-            document.getElementById('modal-title').innerText = "Ajouter une nouvelle tâche";
-            document.getElementById('task-edit-id').value = "";
-            document.getElementById('form-name').value = "";
-            document.getElementById('form-freq-type').value = "weekly";
-            document.getElementById('custom-freq-box').classList.add('hidden');
-            document.getElementById('task-modal').classList.remove('hidden');
-        }
-
-        function openEditTaskModal(id) {
-            const task = state.tasks.find(t => t.id === id);
-            if (!task) return;
-            document.getElementById('modal-title').innerText = "Éditer la tâche";
-            document.getElementById('task-edit-id').value = task.id;
-            document.getElementById('form-name').value = task.name;
-            document.getElementById('form-freq-type').value = "custom";
-            document.getElementById('form-custom-days').value = task.frequencyDays;
-            document.getElementById('custom-freq-box').classList.remove('hidden');
-            document.getElementById('form-category').value = task.category;
-            document.getElementById('task-modal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('task-modal').classList.add('hidden');
-        }
-
-        function toggleCustomFreq() {
-            const type = document.getElementById('form-freq-type').value;
-            const box = document.getElementById('custom-freq-box');
-            if (type === 'custom') box.classList.remove('hidden');
-            else box.classList.add('hidden');
-        }
-
-        function saveTaskForm(e) {
-            e.preventDefault();
-            const editId = document.getElementById('task-edit-id').value;
-            const name = document.getElementById('form-name').value;
-            const freqType = document.getElementById('form-freq-type').value;
-            const category = document.getElementById('form-category').value;
-
-            let days = 7;
-            if (freqType === 'weekly') days = 7;
-            else if (freqType === 'biweekly') days = 14;
-            else if (freqType === 'monthly') days = 30;
-            else if (freqType === 'quarterly') days = 90;
-            else if (freqType === 'custom') days = parseInt(document.getElementById('form-custom-days').value) || 7;
-
-            if (editId) {
-                const task = state.tasks.find(t => t.id == editId);
-                if (task) {
-                    task.name = name;
-                    task.frequencyDays = days;
-                    task.category = category;
-                }
-            } else {
-                const newTask = {
-                    id: Date.now(),
-                    name: name,
-                    lastDone: new Date().toISOString(),
-                    frequencyDays: days,
-                    category: category
-                };
-                state.tasks.push(newTask);
-            }
-
-            updateUI();
-            closeModal();
-            showToast("Tâche enregistrée dans la mémoire !", "success");
-        }
-
-        function deleteTask(id) {
-            if (confirm("Voulez-vous vraiment supprimer cette tâche ?")) {
-                state.tasks = state.tasks.filter(t => t.id !== id);
-                updateUI();
-                showToast("Tâche supprimée.", "info");
-            }
-        }
-
-        function toggleVacationMode() {
-            state.manualVacation = !state.manualVacation;
-            updateUI();
-            showToast(state.manualVacation ? "Mode Absence activé !" : "Mode Absence désactivé.", "info");
-        }
-
-        function clearBrowserCacheAndReset() {
-            if (confirm("Voulez-vous vider la mémoire locale et recharger ?")) {
-                localStorage.removeItem('walker_tasks_v2');
-                localStorage.removeItem('walker_vacation_v2');
-                localStorage.removeItem('walker_season_v2');
-                location.reload();
-            }
-        }
-
-        function resetToDefaultData() {
-            if (confirm("Rétablir les tâches de départ d'origine ?")) {
-                state.tasks = JSON.parse(JSON.stringify(DEFAULT_TASKS));
-                updateUI();
-                showToast("Données rétablies avec succès !", "success");
-            }
-        }
-
-        // SAUVEGARDE SUR TÉLÉPHONE (JSON)
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr);
-            dlAnchor.setAttribute("download", "sauvegarde_walker_menage.json");
-            dlAnchor.click();
-            showToast("Fichier de sauvegarde téléchargé !", "success");
-        }
-
-        function triggerImport() {
-            document.getElementById('import-file').click();
-        }
-
-        function importData(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                try {
-                    const parsed = JSON.parse(evt.target.result);
-                    if (parsed.tasks) {
-                        state = parsed;
-                        updateUI();
-                        showToast("Vos tâches ont été restaurées !", "success");
-                    }
-                } catch(err) {
-                    alert("Fichier de sauvegarde invalide.");
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function showToast(msg, type = 'info') {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = `glass-panel px-4 py-3 rounded-2xl shadow-xl text-xs font-bold border ${type === 'success' ? 'border-emerald-500 text-emerald-950' : 'border-amber-500 text-amber-950'} pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300`;
-            toast.innerText = msg;
-            container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-    </script>
+<body class="max-w-md mx-auto min-h-screen pb-40">
+
+<header class="px-5 pt-5 flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl leading-tight" id="ttl">Ma Maison Joyeuse</h1>
+    <p class="text-sm font-bold" style="color:var(--mu)" id="sub"></p>
+  </div>
+  <button onclick="openSettings()" class="card w-11 h-11 grid place-items-center text-xl" aria-label="Réglages">⚙️</button>
+</header>
+
+<main id="main" class="px-4 mt-4 space-y-3"></main>
+
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto px-4 pt-2" style="padding-bottom:calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 35%)">
+  <div class="card flex p-1.5 gap-1" id="tabs"></div>
+</nav>
+
+<button id="fab" class="fab" onclick="editTask()" aria-label="Ajouter une tâche">+</button>
+<div id="layer"></div>
+
+<script>
+/* ============ DONNÉES ============ */
+// [id, nom, périodicité (jours), icône] — tâches de base ; les tâches ajoutées vivent dans l’état synchronisé
+const BASE=[
+ ['asp-rdc','Aspirateur & serpillière (RDC)',7,'🧹'],
+ ['asp-et','Aspirateur & serpillière (étage)',7,'🧹'],
+ ['sdb-rdc','Salle de bain / WC (RDC)',7,'🚿'],
+ ['sdb-et','Salle de bain / WC (étage)',7,'🚽'],
+ ['dr-par','Changer les draps (parents)',15,'🛏️'],
+ ['dr-mar','Changer les draps (Marie)',15,'🧸'],
+ ['dr-lou','Changer les draps (Louise)',15,'🌷'],
+ ['poub','Désinfecter les poubelles',30,'🗑️'],
+ ['frigo','Nettoyer le réfrigérateur',30,'🧊'],
+ ['plint','Dépoussiérer plinthes et dessus de meubles',30,'🪶'],
+ ['lv','Nettoyer le filtre du lave-vaisselle',90,'🍽️'],
+ ['canap','Shampouinage du canapé',90,'🛋️'],
+ ['dress','Tri du dressing (changement de saison)',90,'👗'],
+ ['vmc','Nettoyer les grilles de VMC et aérations',90,'🌬️'],
+ ['vitres','Laver les vitres et fenêtres',365,'🪟']
+];
+let TASKS=[];
+const EMO=['🧹','🧽','🧺','🪣','🧴','🚿','🛁','🚽','🛏️','🧸','🪟','🍽️','🗑️','🧊','🛋️','👗','🌿','🪴','🐾','🚗','🧼','🪥','📦','✨'];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PER={7:'chaque semaine',15:'tous les 15 jours',30:'chaque mois',90:'chaque trimestre',365:'chaque année'};
+const per=n=>PER[n]||('tous les '+n+' jours');
+
+// {t} = nom de la tâche
+const JOKES=[
+ ['🥋','Chuck Norris','« {t} » ? Chuck Norris n’a pas eu besoin de le faire : la poussière s’est rendue d’elle-même en te voyant.'],
+ ['🥋','Chuck Norris','Chuck Norris dit : « {t} », c’est du niveau ceinture noire. Tu viens de le valider.'],
+ ['🥋','Chuck Norris','Même Chuck Norris a pris des notes sur ta technique pour « {t} ». Respect.'],
+ ['🎸','Francis Cabrel','Francis Cabrel gratte une petite chanson en ton honneur : « {t} » est terminé, le salon est en paix.'],
+ ['🎸','Francis Cabrel','Petite Marie, petite Louise et grande reine du ménage ! « {t} » : c’est fait.'],
+ ['🎸','Francis Cabrel','Cabrel t’écrit un refrain, mais en vrai tu mérites tout l’album pour « {t} ».'],
+ ['🖤','Indochine','Nicola Sirkis lève le poing : tu es l’aventurière de la maison, « {t} » est dans la boîte !'],
+ ['🖤','Indochine','Concert complet ce soir à la maison : « {t} » validé, tout le public est debout.'],
+ ['🖤','Indochine','Trois tâches, zéro stress, un look de rock star : « {t} » bien joué !'],
+ ['⚗️','Jesse Pinkman','Yo ! « {t} », c’est propre à 99,1 %. Yeah, science !'],
+ ['⚗️','Jesse Pinkman','Yeah ! « {t} » terminé. Même Mr. White serait fier de cette pureté.'],
+ ['⚗️','Jesse Pinkman','Yo, t’es la meilleure du quartier : « {t} », zéro trace, aucun témoin.']
+];
+const THEMES={printemps:['🌷','Printemps'],ete:['☀️','Été'],automne:['🍂','Automne'],hiver:['❄️','Hiver'],noel:['🎄','Noël'],paques:['🐣','Pâques'],halloween:['🎃','Halloween']};
+/* Thème automatique : saison en cours ; un thème de fête prend le relais 15 jours avant la date. */
+function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),n=h+l-7*m+114;return new Date(y,Math.floor(n/31)-1,n%31+1,12)}
+function autoTheme(d=new Date()){
+  const y=d.getFullYear(),t0=new Date(y,d.getMonth(),d.getDate(),12);
+  const near=f=>{const n=Math.round((f-t0)/864e5);return n>=0&&n<=15};
+  if(near(new Date(y,11,25,12)))return'noel';
+  if(near(new Date(y,9,31,12)))return'halloween';
+  if(near(easter(y)))return'paques';
+  const md=(d.getMonth()+1)*100+d.getDate();
+  return md>=1221||md<320?'hiver':md<621?'printemps':md<923?'ete':'automne';
+}
+/* Fonds : 3 motifs par thème, répétés en mosaïque (emoji, plus une boule de Noël dessinée) */
+const BALL='<circle r="15" cy="6" fill="#d6303f"/><rect x="-5" y="-14" width="10" height="7" rx="2" fill="#e6bd55"/><path d="M-9 3q3-10 11-9" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/>';
+const MOT={printemps:['🌷','🐝','🦋'],ete:['☀️','🍉','🏖️'],automne:['🍂','🌰','🍄'],hiver:['❄️','⛄','🧤'],noel:['🎄','🎅',BALL],paques:['🐣','🥚','🐇'],halloween:['🎃','👻','🦇']};
+const SPOT=[[40,60,-12],[150,45,10],[215,130,-8],[80,160,8],[170,225,-10],[25,235,12]];
+function pattern(th){
+  const g=SPOT.map(([x,y,r],i)=>{const m=MOT[th][i%3],tr=`translate(${x} ${y}) rotate(${r})`;
+    return m[0]==='<'?`<g transform="${tr}">${m}</g>`:`<text transform="${tr}" font-size="34" text-anchor="middle" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,sans-serif">${m}</text>`}).join('');
+  return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="260" height="260"><g opacity=".4">${g}</g></svg>`)}")`;
+}
+
+/* ============ OUTILS DATES ============ */
+const $=s=>document.querySelector(s);
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const pd=s=>new Date(s+'T12:00:00');
+const add=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return iso(d)};
+const today=()=>iso(new Date());
+const diff=(a,b)=>Math.round((pd(a)-pd(b))/864e5);
+const fmt=(s,o)=>pd(s).toLocaleDateString('fr-FR',o||{weekday:'short',day:'numeric',month:'short'});
+const monday=s=>{const d=pd(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return iso(d)};
+
+/* ============ ÉTAT + SYNCHRO ============ */
+// Chaque tâche porte "at" (horodatage) : à la fusion, la modification la plus récente gagne, tâche par tâche.
+const init=()=>{const t0=today(),o={};BASE.forEach((k,i)=>o[k[0]]={last:null,next:add(t0,i%Math.min(k[2],7)),at:0});return{tasks:o,score:0}};
+const ls=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
+const lset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let S=ls('mmj',null)||init(), themePref=ls('mmj-theme','auto'), theme='printemps', who=ls('mmj-who',''), cfg=ls('mmj-cfg',null);
+let V='day', mo=0, sel=today();
+
+const ids=(a,b)=>[...new Set([...Object.keys(a.tasks),...Object.keys(b?b.tasks:{})])];
+const merge=(a,b)=>{const r={tasks:{},score:Math.max(a.score||0,b.score||0)};
+  ids(a,b).forEach(i=>{const x=a.tasks[i],y=b.tasks[i];r.tasks[i]=!y||(x&&x.at>=y.at)?x:y});return r};
+const sig=s=>ids(s).sort().map(i=>i+s.tasks[i].at).join()+s.score;
+// Liste affichée = tâches de base (modifiables) + tâches ajoutées, sans les supprimées. Textes échappés.
+function rebuild(){
+  const o=S.tasks,out=[];
+  BASE.forEach(d=>{const t=o[d[0]];if(t&&!t.del)out.push([d[0],esc(t.name||d[1]),+(t.days||d[2]),esc(t.icon||d[3])])});
+  Object.keys(o).filter(i=>o[i].custom&&!o[i].del).sort((a,b)=>(o[a].ord||0)-(o[b].ord||0))
+    .forEach(i=>{const t=o[i];out.push([i,esc(t.name),+t.days||7,esc(t.icon||'✨')])});
+  TASKS=out;
+}
+
+/* Synchro temps réel : Firebase Realtime Database via REST + SSE (aucun SDK).
+   Réglages ⚙️ : URL de la base (https://xxx.firebaseio.com) + code du foyer partagé par les deux personnes.
+   Sans configuration : localStorage, synchronisé entre onglets du même appareil. */
+const rurl=()=>cfg&&cfg.url&&cfg.code?cfg.url.replace(/\/$/,'')+'/maison/'+encodeURIComponent(cfg.code)+'.json':null;
+async function push(){const u=rurl();if(u)try{await fetch(u,{method:'PUT',body:JSON.stringify(S)})}catch(e){}}
+async function pull(){const u=rurl();if(!u)return;
+  try{const r=await(await fetch(u)).json();
+    if(r&&r.tasks){const m=merge(S,r);const ch=sig(m)!==sig(S);S=m;lset('mmj',S);if(ch)render();if(sig(m)!==sig(r))push()}
+    else push()}catch(e){}}
+let es;function listen(){if(es)es.close();const u=rurl();if(!u)return;try{es=new EventSource(u);es.addEventListener('put',pull);es.addEventListener('patch',pull)}catch(e){}}
+function save(){lset('mmj',S);push()}
+window.addEventListener('storage',e=>{if(e.key==='mmj'){S=ls('mmj',S);render()}});
+
+/* ============ ACTIONS ============ */
+function validate(id){
+  const k=TASKS.find(x=>x[0]===id),t=S.tasks[id],d=today();
+  t.prev={last:t.last,next:t.next};t.last=d;t.next=add(d,k[2]);t.by=who;t.at=Date.now();S.score++;
+  save();render();celebrate(k);
+}
+function undo(id){
+  const t=S.tasks[id];if(!t.prev)return;
+  t.last=t.prev.last;t.next=t.prev.next;t.prev=null;t.at=Date.now();S.score=Math.max(0,S.score-1);save();render();
+}
+function celebrate(k){
+  const [ic,who_,txt]=JOKES[Math.floor(Math.random()*JOKES.length)];
+  const nxt=S.tasks[k[0]].next;
+  const base=THEMES[theme][0],set=[base,'✨','💖',base,'🎉'];
+  for(let i=0;i<26;i++){const s=document.createElement('span');s.className='cf';s.textContent=set[i%set.length];
+    s.style.left=Math.random()*95+'vw';s.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),2600)}
+  if(navigator.vibrate)navigator.vibrate(40);
+  $('#layer').innerHTML=`<div class="toast card p-4 flex gap-3 items-center" onclick="this.remove()">
+    <div class="text-4xl">${ic}</div>
+    <div><div class="fr text-sm" style="color:var(--ac)">${who_}</div>
+    <div class="font-bold leading-snug">${txt.replace('{t}',k[1])}</div>
+    <div class="text-sm font-extrabold mt-2" style="color:var(--ac)">📅 Prochaine fois : ${fmt(nxt,{weekday:'long',day:'numeric',month:'long'})} (dans ${diff(nxt,today())} jours)</div></div></div>`;
+  clearTimeout(window._tt);window._tt=setTimeout(()=>{const e=$('.toast');if(e)e.remove()},5200);
+}
+
+/* ============ CALCUL DES OCCURRENCES ============ */
+// Projette chaque tâche : prochaine date, puis + périodicité. Une tâche en retard apparaît à aujourd’hui.
+function occ(from,to){
+  const m={},T=today();
+  TASKS.forEach(k=>{const t=S.tasks[k[0]];
+    if(t.last&&t.last>=from&&t.last<=to)(m[t.last]=m[t.last]||[]).push({k,done:1});
+    let d=t.next,late=0;if(d<T){late=diff(T,d);d=T}
+    for(let n=0;d<=to&&n<400;n++){if(d>=from)(m[d]=m[d]||[]).push({k,late:n===0?late:0,n});d=add(d,k[2])}});
+  return m;
+}
+
+/* ============ AFFICHAGE ============ */
+function row(o,date){
+  const {k,done,late,n}=o,t=S.tasks[k[0]],isToday=date===today();
+  const can=done||(date<=today()||n===0);
+  const sub=done?`Fait ${t.by?'par '+t.by+' ':''}aujourd’hui`:late?`En retard de ${late} jour${late>1?'s':''}`:per(k[2]);
+  const act=done?`undo('${k[0]}')`:`validate('${k[0]}')`;
+  return `<div class="card p-3 flex items-center gap-3 ${done?'opacity-70':''}">
+    <div class="text-2xl w-10 h-10 grid place-items-center rounded-2xl flex-none" style="background:var(--ac2)">${k[3]}</div>
+    <div class="flex-1 min-w-0"><div class="font-extrabold leading-tight ${done?'line-through':''}">${k[1]}</div>
+    <div class="text-xs font-bold" style="color:${late?'var(--ac)':'var(--mu)'}">${sub}</div></div>
+    ${can?`<button class="btn ${done?'done':''}" onclick="${act}" aria-label="Valider">✓</button>`:`<div class="w-11 text-center text-xs font-bold" style="color:var(--mu)">${fmt(date,{day:'numeric',month:'short'})}</div>`}
+  </div>`}
+
+const dayHead=s=>`<h2 class="text-lg capitalize mt-2 px-1">${fmt(s,{weekday:'long',day:'numeric',month:'long'})}</h2>`;
+const empty=t=>`<div class="card p-5 text-center font-bold" style="color:var(--mu)">${t}</div>`;
+
+function vDay(){
+  const T=today(),m=occ(T,T),L=(m[T]||[]);
+  const todo=L.filter(o=>!o.done).sort((a,b)=>(b.late||0)-(a.late||0)),dn=L.filter(o=>o.done);
+  const tot=todo.length+dn.length,p=tot?Math.round(dn.length/tot*100):100;
+  const up=TASKS.map(k=>[k,S.tasks[k[0]].next]).filter(x=>x[1]>T).sort((a,b)=>a[1]<b[1]?-1:1).slice(0,3);
+  let h=`<div class="card p-4 flex items-center gap-4">
+    <div class="bubble" style="--p:${p}"><div><div><div class="fr text-3xl leading-none">${dn.length}/${tot}</div><div class="text-xs font-bold" style="color:var(--mu)">aujourd’hui</div></div></div></div>
+    <div><div class="fr text-xl leading-tight">${!tot?'Journée libre !':todo.length?'Allez, on y va doucement':'Tout est fait, bravo !'}</div>
+    <div class="text-sm font-bold mt-1" style="color:var(--mu)">${S.score} tâche${S.score>1?'s':''} validée${S.score>1?'s':''} au total</div></div></div>`;
+  h+=todo.length?todo.map(o=>row(o,T)).join(''):(tot?'':empty('Rien de prévu aujourd’hui. Profite !'));
+  if(dn.length)h+=`<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Déjà fait</h2>`+dn.map(o=>row(o,T)).join('');
+  if(up.length)h+=`<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Bientôt</h2>`+up.map(([k,d])=>`<div class="card p-3 flex items-center gap-3 opacity-80"><div class="text-xl">${k[3]}</div><div class="flex-1 font-bold text-sm">${k[1]}</div><div class="text-xs font-extrabold" style="color:var(--mu)">${fmt(d)}</div></div>`).join('');
+  return h;
+}
+// Cellule de jour et en-tête partagés par les vues Semaine et Mois
+const cell=(s,label,c)=>{
+  const on=s===sel,td=s===today();
+  const dot='<i class="w-1.5 h-1.5 rounded-full" style="background:'+(on?'#fff':'var(--ac)')+'"></i>';
+  return `<button onclick="sel='${s}';render()" class="rounded-2xl font-extrabold text-sm h-12 flex flex-col items-center justify-center" style="background:${on?'var(--ac)':td?'var(--ac2)':'transparent'};color:${on?'#fff':'var(--tx)'}">${label}
+    <div class="flex justify-center gap-0.5 h-1.5 mt-0.5">${dot.repeat(Math.min(c,3))}</div></button>`};
+const wdHead=L=>`<div class="grid grid-cols-7 text-center text-xs font-extrabold mb-1" style="color:var(--mu)">${L.map(x=>`<div>${x}</div>`).join('')}</div>`;
+const wdays=wdHead(['L','M','M','J','V','S','D']);
+const wd=a=>{const L=['D','L','M','M','J','V','S'],i=pd(a).getDay();return wdHead([...L.slice(i),...L.slice(0,i)])}; // initiales à partir du jour a
+const dayList=(m,d)=>dayHead(d)+`<div class="space-y-2">`+((m[d]||[]).length?m[d].map(o=>row(o,d)).join(''):empty('Rien ce jour-là'))+`</div>`;
+let wk=0;
+function vWeek(){
+  const a=add(today(),wk*7),b=add(a,6),m=occ(a,b); // la semaine commence aujourd’hui (jour J)
+  if(sel<a||sel>b)sel=wk===0?today():a;
+  let g='';for(let i=0;i<7;i++){const d=add(a,i);g+=cell(d,pd(d).getDate(),(m[d]||[]).length)}
+  return `<div class="card p-3"><div class="flex items-center justify-between mb-2">
+    <button class="chip" onclick="wk--;render()">‹</button>
+    <div class="fr text-lg">${fmt(a,{day:'numeric',month:'short'})} – ${fmt(b,{day:'numeric',month:'short'})}</div>
+    <button class="chip" onclick="wk++;render()">›</button></div>
+    ${wd(a)}<div class="grid grid-cols-7 gap-y-1 text-center">${g}</div></div>`+dayList(m,sel);
+}
+function vMonth(){
+  const b=new Date();b.setDate(1);b.setMonth(b.getMonth()+mo);
+  const y=b.getFullYear(),mm=b.getMonth(),first=iso(b),last=iso(new Date(y,mm+1,0));
+  const m=occ(first,last),off=(b.getDay()+6)%7,n=new Date(y,mm+1,0).getDate();
+  if(sel<first||sel>last)sel=mo===0?today():first;
+  let g='';for(let i=0;i<off;i++)g+='<div></div>';
+  for(let d=1;d<=n;d++){const s=iso(new Date(y,mm,d));g+=cell(s,d,(m[s]||[]).length)}
+  return `<div class="card p-3"><div class="flex items-center justify-between mb-2">
+    <button class="chip" onclick="mo--;render()">‹</button>
+    <div class="fr text-lg capitalize">${b.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div>
+    <button class="chip" onclick="mo++;render()">›</button></div>
+    ${wdays}<div class="grid grid-cols-7 gap-y-1 text-center">${g}</div></div>`+dayList(m,sel);
+}
+function vYear(){
+  const T=today(),m=occ(T,add(T,365)),by={};
+  Object.keys(m).sort().forEach(d=>{const key=d.slice(0,7);(by[key]=by[key]||[]).push(...m[d].filter(o=>!o.done))});
+  return Object.keys(by).map(key=>{const L=by[key],ids=[...new Set(L.map(o=>o.k[0]))].map(i=>TASKS.find(k=>k[0]===i));
+    const lab=new Date(key+'-15T12:00:00').toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
+    return `<div class="card p-3"><div class="flex items-center justify-between"><div class="fr text-lg capitalize">${lab}</div>
+      <div class="chip on text-xs">${L.length} tâche${L.length>1?'s':''}</div></div>
+      <div class="flex flex-wrap gap-1.5 mt-2">${ids.map(k=>`<span class="rounded-full px-2.5 py-1 text-xs font-bold" style="background:var(--ac2)">${k[3]} ${k[1].split(' (')[0]}</span>`).join('')}</div></div>`}).join('');
+}
+
+function render(){
+  rebuild();
+  theme=themePref!=='auto'&&THEMES[themePref]?themePref:autoTheme();
+  document.documentElement.dataset.th=theme;
+  document.documentElement.style.backgroundImage=pattern(theme);document.documentElement.style.backgroundSize='260px';
+  $('#ttl').textContent=THEMES[theme][0]+' Ma Maison Joyeuse';
+  $('#sub').textContent=(who?'Coucou '+who+' · ':'')+fmt(today(),{weekday:'long',day:'numeric',month:'long'});
+  const tabs=[['day','Jour'],['week','Semaine'],['month','Mois'],['year','Année'],['manage','Gérer']];
+  $('#tabs').innerHTML=tabs.map(([k,l])=>`<button class="chip flex-1 text-center ${V===k?'on':''}" style="padding:.5rem .1rem;font-size:.8rem" onclick="V='${k}';render();scrollTo(0,0)">${l}</button>`).join('');
+  $('#main').innerHTML={day:vDay,week:vWeek,month:vMonth,year:vYear,manage:vManage}[V]();
+  $('#fab').style.display=V==='manage'?'none':'grid';
+}
+
+/* ============ GESTION DES TÂCHES ============ */
+function vManage(){
+  const T=today(),L=[...TASKS].sort((a,b)=>a[2]-b[2]||a[1].localeCompare(b[1]));
+  const gone=Object.keys(S.tasks).filter(i=>S.tasks[i].del);
+  let h=`<button class="chip on w-full text-center py-3 fr text-base" onclick="editTask()">+ Ajouter une tâche</button>
+    <p class="text-sm font-bold px-1" style="color:var(--mu)">${L.length} tâches. Touche le crayon pour changer le nom, le rythme ou la prochaine date.</p>`;
+  h+=L.map(k=>{const t=S.tasks[k[0]];
+    return `<div class="card p-3 flex items-center gap-3">
+      <div class="text-2xl w-10 h-10 grid place-items-center rounded-2xl flex-none" style="background:var(--ac2)">${k[3]}</div>
+      <div class="flex-1 min-w-0"><div class="font-extrabold leading-tight">${k[1]}</div>
+      <div class="text-xs font-bold" style="color:var(--mu)">${per(k[2])} · prochaine : ${t.next<T?'en retard':fmt(t.next,{day:'numeric',month:'short'})}</div></div>
+      <button class="card w-10 h-10 grid place-items-center" onclick="editTask('${k[0]}')" aria-label="Modifier">✏️</button></div>`}).join('');
+  if(gone.length)h+=`<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Supprimées</h2>`+gone.map(i=>{
+    const t=S.tasks[i],d=BASE.find(x=>x[0]===i)||[];
+    return `<div class="card p-3 flex items-center gap-3 opacity-70"><div class="text-xl">${esc(t.icon||d[3])}</div><div class="flex-1 font-bold text-sm">${esc(t.name||d[1])}</div><button class="chip on text-xs" onclick="restoreTask('${i}')">Remettre</button></div>`}).join('');
+  return h;
+}
+let EI='✨';
+function editTask(id){
+  const t=id&&S.tasks[id],k=id&&TASKS.find(x=>x[0]===id);
+  const name=k?k[1]:'',days=k?k[2]:7,next=t?t.next:today();EI=k?k[3]:'✨';
+  $('#layer').innerHTML=`<div class="sheet" onclick="if(event.target===this)closeSettings()"><div>
+    <h2 class="text-xl mb-3">${id?'Modifier la tâche':'Nouvelle tâche'}</h2>
+    <div class="font-extrabold mb-2">Icône</div>
+    <div class="flex flex-wrap gap-2 mb-4" id="ico">${EMO.map(e=>`<button class="chip ${e===EI?'on':''}" style="font-size:1.25rem;padding:.3rem .6rem" onclick="pickIcon('${e}')">${e}</button>`).join('')}</div>
+    <div class="font-extrabold mb-1">Nom</div>
+    <input id="e-name" value="${name}" placeholder="Ex. Arroser les plantes" class="mb-4">
+    <div class="font-extrabold mb-2">À refaire</div>
+    <div class="flex flex-wrap gap-2 mb-2">${[[7,'Chaque semaine'],[15,'15 jours'],[30,'Chaque mois'],[90,'Trimestre'],[365,'Chaque année']].map(([n,l])=>`<button class="chip" onclick="$('#e-days').value=${n}">${l}</button>`).join('')}</div>
+    <div class="flex items-center gap-2 mb-4"><span class="font-bold">Tous les</span><input id="e-days" type="number" min="1" max="999" value="${days}" style="width:90px"><span class="font-bold">jours</span></div>
+    <div class="font-extrabold mb-1">Prochaine échéance</div>
+    <input id="e-next" type="date" value="${next}" class="mb-4">
+    <button class="chip on w-full text-center py-3" onclick="saveTask('${id||''}')">Enregistrer</button>
+    ${id?`<button class="w-full text-center py-3 mt-1 font-extrabold" style="color:var(--ac)" onclick="delTask('${id}')">Supprimer cette tâche</button>`:''}
+  </div></div>`;
+}
+function pickIcon(e){EI=e;document.querySelectorAll('#ico .chip').forEach(b=>b.classList.toggle('on',b.textContent===e))}
+function saveTask(id){
+  const name=$('#e-name').value.trim(),days=parseInt($('#e-days').value),next=$('#e-next').value||today();
+  if(!name){$('#e-name').focus();return}
+  if(!(days>0)){$('#e-days').focus();return}
+  if(id){const t=S.tasks[id];t.name=name;t.days=Math.min(days,999);t.icon=EI;t.next=next;t.at=Date.now()}
+  else{const i='c'+Date.now().toString(36);S.tasks[i]={last:null,next,at:Date.now(),name,days:Math.min(days,999),icon:EI,custom:1,ord:Date.now()}}
+  save();closeSettings();render();
+}
+function delTask(id){
+  if(!confirm('Supprimer cette tâche ? Tu pourras la remettre depuis l’onglet Gérer.'))return;
+  const t=S.tasks[id];t.del=1;t.at=Date.now();save();closeSettings();render();
+}
+function restoreTask(id){const t=S.tasks[id];t.del=0;t.at=Date.now();save();render()}
+
+/* ============ RÉGLAGES ============ */
+function openSettings(){
+  $('#layer').innerHTML=`<div class="sheet" onclick="if(event.target===this)closeSettings()"><div>
+    <h2 class="text-xl mb-3">Réglages</h2>
+    <div class="font-extrabold mb-2">Thème</div>
+    <div class="flex flex-wrap gap-2 mb-1"><button class="chip ${themePref==='auto'||!THEMES[themePref]?'on':''}" onclick="themePref='auto';lset('mmj-theme',themePref);render();openSettings()">✨ Auto</button>${Object.entries(THEMES).map(([k,[e,l]])=>`<button class="chip ${themePref===k?'on':''}" onclick="themePref='${k}';lset('mmj-theme',themePref);render();openSettings()">${e} ${l}</button>`).join('')}</div>
+    <p class="text-xs font-bold mb-4" style="color:var(--mu)">Auto : la saison change toute seule, et Noël, Pâques et Halloween arrivent 15 jours avant. Thème actuel : ${THEMES[theme][1]}.</p>
+    <div class="font-extrabold mb-2">Mon prénom</div>
+    <input id="f-who" value="${who}" placeholder="Ton prénom" class="mb-4">
+    <div class="font-extrabold mb-1">Synchronisation à deux</div>
+    <p class="text-sm mb-2" style="color:var(--mu)">Même code du foyer sur les deux téléphones, et l’adresse d’une base Firebase Realtime Database (mode test). Sans cela, tout reste sur cet appareil.</p>
+    <input id="f-url" value="${cfg?cfg.url:''}" placeholder="https://mon-projet-default-rtdb.firebaseio.com" class="mb-2">
+    <input id="f-code" value="${cfg?cfg.code:''}" placeholder="Code du foyer (ex. maison-fleurie-42)" class="mb-4">
+    <button class="chip on w-full text-center py-3" onclick="saveSettings()">Enregistrer</button>
+  </div></div>`;
+}
+function closeSettings(){$('#layer').innerHTML=''}
+function saveSettings(){
+  who=$('#f-who').value.trim();lset('mmj-who',who);
+  const u=$('#f-url').value.trim(),c=$('#f-code').value.trim();
+  cfg=u&&c?{url:u,code:c}:null;lset('mmj-cfg',cfg);
+  closeSettings();render();listen();pull();
+}
+
+/* ============ PWA ============ */
+const icon="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="#ff8fb1"/><text x="50" y="68" font-size="56" text-anchor="middle">🏡</text></svg>');
+$('#mf').href=URL.createObjectURL(new Blob([JSON.stringify({name:'Ma Maison Joyeuse',short_name:'Maison',display:'standalone',background_color:'#fff0f5',theme_color:'#ff8fb1',icons:[{src:icon,sizes:'any',type:'image/svg+xml',purpose:'any'}]})],{type:'application/manifest+json'}));
+/* Mode hors-ligne : ajoute à côté de ce fichier un sw.js contenant :
+   const C='mmj-v1';
+   self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['./','./maison-joyeuse.html']))));
+   self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>caches.match(e.request))));
+*/
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+render();listen();pull();
+setInterval(()=>{if(document.visibilityState==='visible')pull()},30000);
+</script>
 </body>
 </html>
