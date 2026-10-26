@@ -240,24 +240,35 @@ const VS=[['2026-10-17','2026-11-01','Toussaint'],['2026-12-19','2027-01-03','No
 const D0={day:'numeric',month:'short'};
 const inAbs=d=>Object.values(S.abs||{}).some(a=>a&&!a.del&&d>=a.from&&d<=a.to);
 const inVac=d=>VS.some(v=>d>=v[0]&&d<=v[1]);
+const inRent=d=>Object.values(S.abs||{}).some(a=>a&&!a.del&&d>a.to&&d<=add(a.to,7)); // 7 jours après le retour d’une absence
 const resume=f=>{let d=today();for(let i=0;i<400&&f(d);i++)d=add(d,1);return d};
 const legend=`<p class="text-xs font-bold mt-2 text-center" style="color:var(--mu)">🟠 à faire · 🟢 tout est fait · trait bleu : vacances scolaires · trait gris : absence</p>`;
 
-/* Règles :
-   - absence : toutes les tâches à venir sont décalées du nombre de jours d’absence (rien n’est programmé pendant l’absence) ;
-   - vacances scolaires : seules les tâches de 15 jours ou moins ; les autres sont reportées après les vacances,
-     2 par semaine maximum, dans l’ordre où elles étaient prévues.
-   Calcul à l’affichage : la prochaine date de chaque tâche reste « validation + périodicité ». */
+/* Règles (« douceur ») :
+   - absence : toutes les tâches à venir sont décalées du nombre de jours d’absence ; rien pendant l’absence ;
+   - semaine de rentrée (7 jours après une absence) : seulement l’hygiène essentielle ; le reste repart ensuite ;
+   - vacances scolaires : seules les tâches de 15 jours ou moins ; les autres sont reportées après, 2 par semaine maximum ;
+   - toute l’année : 2 tâches par jour au maximum, dont une seule hors hygiène (l’hygiène essentielle d’abord, puis les plus anciennes),
+     et jamais deux jours de suite à 2 tâches ;
+   - ce qui est reporté (absence, vacances, plafond) n’est jamais affiché « en retard ». */
+const CAP=2;
+const ESS=['asp-rdc','asp-et','sdb-rdc','sdb-et']; // hygiène essentielle
 function plan(to){
-  const T=today(),out=[],cur={},cnt={},nn={};
+  const T=today(),Y=add(T,-1),out=[],cur={},cnt={},nn={},dc={},dn={}; // dc : tâches par jour ; dn : dont hors hygiène
   const ab=Object.values(S.abs||{}).filter(a=>a&&!a.del).sort((x,y)=>x.from<y.from?-1:1);
   // Une absence située entre la dernière réalisation (prev) et l’échéance (d) décale cette échéance du nombre de jours d’absence
   const shift=(prev,d)=>{ab.forEach(a=>{if(prev<a.from&&d>=a.from)d=add(d,diff(a.to,a.from)+1)});return d};
-  TASKS.forEach(k=>{const t=S.tasks[k[0]];cur[k[0]]=shift(t.last||T,t.next);nn[k[0]]=0});
+  TASKS.forEach(k=>{const t=S.tasks[k[0]],x=add(t.next,-k[2]);
+    cur[k[0]]=shift(t.last||(x<T?x:T),t.next);nn[k[0]]=0; // jamais validée : on part de « échéance − périodicité »
+    if(t.last===T||t.last===Y){dc[t.last]=(dc[t.last]||0)+1;if(!ESS.includes(k[0]))dn[t.last]=(dn[t.last]||0)+1}}); // tâches faites hier et aujourd’hui : comptées dans le plafond
+  // jamais 2 tâches deux jours de suite : un jour à 2 tâches n’a pas de voisin (veille ou lendemain) à 2 tâches
+  const hv=d=>(dc[d]||0)>=1&&((dc[add(d,-1)]||0)>=2||(dc[add(d,1)]||0)>=2);
+  const key=x=>ESS.includes(x[0])?add(cur[x[0]],-3):cur[x[0]]; // l’hygiène essentielle passe en premier
   for(let g=0;g<1500;g++){
-    let k=null;TASKS.forEach(x=>{const d=cur[x[0]];if(d<=to&&(!k||d<cur[k[0]]))k=x});
+    let k=null,kk='';TASKS.forEach(x=>{if(cur[x[0]]<=to){const y=key(x);if(!k||y<kk){k=x;kk=y}}});
     if(!k)break;
-    const id=k[0],nom=cur[id],long=k[2]>15,bl=d=>inAbs(d)||(long&&inVac(d));
+    const id=k[0],nom=cur[id],long=k[2]>15,ess=ESS.includes(id);
+    const bl=d=>inAbs(d)||(long&&inVac(d))||(!ess&&inRent(d));
     let s=nom<T?T:nom,rep=0;
     if(bl(s)){
       let f=s;for(let i=0;i<400&&bl(f);i++)f=add(f,1);
@@ -265,9 +276,12 @@ function plan(to){
       if(long){let b=0;while((cnt[f+b]||0)>=2)b++;const c=cnt[f+b]||0;cnt[f+b]=c+1;
         s=add(f,7*b+3*c);for(let i=0;i<60&&bl(s);i++)s=add(s,1)}
     }
+    // plafond : 2 par jour, dont 1 seule hors hygiène (une place reste toujours pour l’essentiel) ; le surplus glisse au lendemain
+    const s0=s;for(let i=0;i<400&&(bl(s)||(dc[s]||0)>=CAP||(!ess&&(dn[s]||0)>=1)||hv(s));i++)s=add(s,1);
+    if(s!==s0)rep=1;dc[s]=(dc[s]||0)+1;if(!ess)dn[s]=(dn[s]||0)+1;
     if(nom<T)for(let d=nom;d<T&&d<=to;d=add(d,1))out.push({k,d,late:diff(d,nom),n:-1,rep:0}); // rappel les jours précédents
     cur[id]=s>to?'9999-12-31':shift(s,add(s,k[2]));
-    if(s<=to)out.push({k,d:s,late:s===T&&nom<T?diff(T,nom):0,n:nn[id]++,rep});
+    if(s<=to)out.push({k,d:s,late:s===T&&nom<T&&!rep?diff(T,nom):0,n:nn[id]++,rep});
   }
   return out;
 }
@@ -285,7 +299,7 @@ function nextMap(from){const m=occ(from,add(today(),420)),r={};
 function row(o,date){
   const {k,done,late,n,rep}=o,t=S.tasks[k[0]],isToday=date===today();
   const can=done||(date<=today()||n===0);
-  const sub=done?`Fait ${t.by?'par '+t.by+' ':''}aujourd’hui`:late?`⏰ En retard de ${late} jour${late>1?'s':''}`:rep?'Reportée (vacances ou absence)':per(k[2]);
+  const sub=done?`Fait ${t.by?'par '+t.by+' ':''}aujourd’hui`:late?`⏰ En retard de ${late} jour${late>1?'s':''}`:rep?'🌿 Reportée, sans stress':per(k[2]);
   const act=done?`undo('${k[0]}')`:`validate('${k[0]}')`;
   return `<div class="card p-3 flex items-center gap-3 ${done?'opacity-70':''}" style="${late>0&&!done?'box-shadow:inset 4px 0 0 var(--ac)':''}">
     <div class="text-2xl w-10 h-10 grid place-items-center rounded-2xl flex-none" style="background:var(--ac2)">${k[3]}</div>
@@ -303,7 +317,7 @@ function vDay(){
   const tot=todo.length+dn.length,p=tot?Math.round(dn.length/tot*100):100;
   const nm=nextMap(add(T,1)),up=TASKS.filter(k=>nm[k[0]]).map(k=>[k,nm[k[0]].d]).sort((a,b)=>a[1]<b[1]?-1:1).slice(0,3);
   const fl={weekday:'long',day:'numeric',month:'long'};
-  const bn=inAbs(T)?`✈️ Absence : toutes les tâches sont décalées du nombre de jours d’absence. Reprise le ${fmt(resume(inAbs),fl)}.`:inVac(T)?`🏖️ Vacances scolaires : seules les tâches de 15 jours ou moins sont programmées. Les autres reprennent après le ${fmt(add(resume(inVac),-1),fl)}, 2 par semaine maximum.`:'';
+  const bn=inAbs(T)?`✈️ Absence : toutes les tâches sont décalées du nombre de jours d’absence. Reprise le ${fmt(resume(inAbs),fl)}.`:inRent(T)?`🌿 Rentrée en douceur : seulement l’essentiel cette semaine (salle de bain, WC, aspirateur), 2 tâches maximum par jour. Le reste repart ensuite.`:inVac(T)?`🏖️ Vacances scolaires : seules les tâches de 15 jours ou moins sont programmées. Les autres reprennent après le ${fmt(add(resume(inVac),-1),fl)}, 2 par semaine maximum.`:'';
   let h=(bn?`<div class="card p-3 text-sm font-extrabold leading-snug" style="color:var(--ac)">${bn}</div>`:'')+`<div class="card p-4 flex items-center gap-4">
     <div class="bubble" style="--p:${p}"><div><div><div class="fr text-3xl leading-none">${dn.length}/${tot}</div><div class="text-xs font-bold" style="color:var(--mu)">aujourd’hui</div></div></div></div>
     <div><div class="fr text-xl leading-tight">${!tot?'Journée libre !':todo.length?'Allez, on y va doucement':'Tout est fait, bravo !'}</div>
@@ -438,13 +452,13 @@ function absList(){
 function vacInfo(){
   const nv=VS.filter(v=>v[1]>=today()).slice(0,3);
   return `<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Vacances scolaires</h2>
-    <div class="card p-3 text-sm font-bold leading-snug" style="color:var(--mu)">🏖️ Zone B : ${nv.map(v=>v[2]+' du '+fmt(v[0],D0)+' au '+fmt(v[1],D0)).join(' · ')}.<br>Pendant ces périodes, seules les tâches de 15 jours ou moins sont programmées. Les autres sont reportées après, 2 par semaine maximum, dans l’ordre prévu.</div>`;
+    <div class="card p-3 text-sm font-bold leading-snug" style="color:var(--mu)">🏖️ Zone B : ${nv.map(v=>v[2]+' du '+fmt(v[0],D0)+' au '+fmt(v[1],D0)).join(' · ')}.<br>Pendant ces périodes, seules les tâches de 15 jours ou moins sont programmées. Les autres sont reportées après, 2 par semaine maximum, dans l’ordre prévu.<br>🌿 Toute l’année : 2 tâches par jour au maximum (l’hygiène d’abord), jamais 2 jours de suite à 2 tâches. Après une absence, la première semaine ne garde que l’essentiel.</div>`;
 }
 function editAbs(id){
   const a=id&&S.abs[id];
   $('#layer').innerHTML=`<div class="sheet" onclick="if(event.target===this)closeSettings()"><div>
     <h2 class="text-xl mb-1">${id?'Modifier l’absence':'Nouvelle absence'}</h2>
-    <p class="text-sm mb-3" style="color:var(--mu)">Toutes les tâches à venir sont décalées du nombre de jours d’absence. Rien n’est programmé pendant l’absence.</p>
+    <p class="text-sm mb-3" style="color:var(--mu)">Toutes les tâches à venir sont décalées du nombre de jours d’absence. Celles restées en retard au départ reprennent après le retour, 2 par jour maximum.</p>
     <div class="font-extrabold mb-1">Nom (facultatif)</div>
     <input id="a-name" value="${a?esc(a.name||''):''}" placeholder="Ex. Vacances en famille" class="mb-4">
     <div class="font-extrabold mb-1">Premier jour d’absence</div>
