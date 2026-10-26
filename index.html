@@ -299,7 +299,7 @@ function nextMap(from){const m=occ(from,add(today(),420)),r={};
 function row(o,date){
   const {k,done,late,n,rep}=o,t=S.tasks[k[0]],isToday=date===today();
   const can=done||(date<=today()||n===0);
-  const sub=done?`Fait ${t.by?'par '+t.by+' ':''}aujourd’hui`:late?`⏰ En retard de ${late} jour${late>1?'s':''}`:rep?'🌿 Reportée, sans stress':per(k[2]);
+  const sub=done?`Fait ${t.by?'par '+t.by+' ':''}aujourd’hui`:late?`⏰ En retard de ${late} jour${late>1?'s':''}`:per(k[2]);
   const act=done?`undo('${k[0]}')`:`validate('${k[0]}')`;
   return `<div class="card p-3 flex items-center gap-3 ${done?'opacity-70':''}" style="${late>0&&!done?'box-shadow:inset 4px 0 0 var(--ac)':''}">
     <div class="text-2xl w-10 h-10 grid place-items-center rounded-2xl flex-none" style="background:var(--ac2)">${k[3]}</div>
@@ -399,7 +399,7 @@ function vManage(){
     return `<div class="card p-3 flex items-center gap-3">
       <div class="text-2xl w-10 h-10 grid place-items-center rounded-2xl flex-none" style="background:var(--ac2)">${k[3]}</div>
       <div class="flex-1 min-w-0"><div class="font-extrabold leading-tight">${k[1]}</div>
-      <div class="text-xs font-bold" style="color:var(--mu)">${per(k[2])} · prochaine : ${NX[k[0]]?(NX[k[0]].late?'en retard':fmt(NX[k[0]].d,D0)+(NX[k[0]].rep?' (reportée)':'')):'—'}</div></div>
+      <div class="text-xs font-bold" style="color:var(--mu)">${per(k[2])} · prochaine : ${NX[k[0]]?(NX[k[0]].late?'en retard':fmt(NX[k[0]].d,D0)):'—'}</div></div>
       <button class="card w-10 h-10 grid place-items-center" onclick="editTask('${k[0]}')" aria-label="Modifier">✏️</button></div>`}).join('');
   h+=vacInfo();
   if(gone.length)h+=`<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Supprimées</h2>`+gone.map(i=>{
