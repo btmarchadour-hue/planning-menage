@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ma Maison Joyeuse</title>
+<title>Chez Nous, Tout Doux</title>
 <meta name="theme-color" content="#ff8fb1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="manifest" id="mf">
@@ -16,6 +16,7 @@
 [data-th=automne]{--bg:#fff1e1;--ac:#d4701f;--ac2:#fbdab8;--tx:#4a2f1f;--mu:#a58468;--ok:#7f9a3a}
 [data-th=hiver]{--bg:#eaf3ff;--ac:#4a8fe0;--ac2:#d3e6fb;--tx:#23374f;--mu:#6f88a6;--ok:#3bb7c9}
 [data-th=noel]{--bg:#eef8f0;--ac:#d6303f;--ac2:#fbd9dc;--tx:#2a3d31;--mu:#6c8b76;--ok:#238a52}
+[data-th=nouvelan]{--bg:#f2f0fb;--ac:#6c4fd1;--ac2:#e3dcfa;--tx:#2a2350;--mu:#8479b0;--ok:#d9a21b}
 [data-th=paques]{--bg:#fffbe0;--ac:#f2a516;--ac2:#e4f5c4;--tx:#4a4326;--mu:#9a9266;--ok:#e667a2}
 [data-th=halloween]{--bg:#fff0de;--ac:#ff7515;--ac2:#e6d9f8;--tx:#3a2347;--mu:#8e739c;--ok:#7a4fc4}
 html{background-color:var(--bg);min-height:100%}
@@ -81,7 +82,7 @@ input{font:inherit;color:inherit}
 
 <header class="px-5 pt-5 flex items-center justify-between">
   <div>
-    <h1 class="text-2xl leading-tight" id="ttl">Ma Maison Joyeuse</h1>
+    <h1 class="text-2xl leading-tight" id="ttl">Chez Nous, Tout Doux</h1>
     <p class="text-sm font-bold" style="color:var(--mu)" id="sub"></p>
   </div>
   <button onclick="openSettings()" class="card w-11 h-11 grid place-items-center text-xl" aria-label="Réglages">⚙️</button>
@@ -137,21 +138,22 @@ const JOKES=[
  ['⚗️','Jesse Pinkman','Yeah ! « {t} » terminé. Même Mr. White serait fier de cette pureté.'],
  ['⚗️','Jesse Pinkman','Yo, t’es la meilleure du quartier : « {t} », zéro trace, aucun témoin.']
 ];
-const THEMES={printemps:['🌷','Printemps'],ete:['☀️','Été'],automne:['🍂','Automne'],hiver:['❄️','Hiver'],noel:['🎄','Noël'],paques:['🐣','Pâques'],halloween:['🎃','Halloween']};
+const THEMES={printemps:['🌷','Printemps'],ete:['☀️','Été'],automne:['🍂','Automne'],hiver:['❄️','Hiver'],noel:['🎄','Noël'],nouvelan:['🎆','Nouvel An'],paques:['🐣','Pâques'],halloween:['🎃','Halloween']};
 /* Thème automatique : saison en cours ; un thème de fête prend le relais 15 jours avant la date. */
 function easter(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),n=h+l-7*m+114;return new Date(y,Math.floor(n/31)-1,n%31+1,12)}
 function autoTheme(d=new Date()){
   const y=d.getFullYear(),t0=new Date(y,d.getMonth(),d.getDate(),12);
   const near=f=>{const n=Math.round((f-t0)/864e5);return n>=0&&n<=15};
-  if(near(new Date(y,11,25,12)))return'noel';
+  const md=(d.getMonth()+1)*100+d.getDate();
+  if(md>=1210&&md<=1229)return'noel';      // Noël : du 10 au 29 décembre
+  if(md>=1230||md<=105)return'nouvelan';   // Nouvel An : du 30 décembre au 5 janvier
   if(near(new Date(y,9,31,12)))return'halloween';
   if(near(easter(y)))return'paques';
-  const md=(d.getMonth()+1)*100+d.getDate();
   return md>=1221||md<320?'hiver':md<621?'printemps':md<923?'ete':'automne';
 }
 /* Fonds : 3 motifs par thème, répétés en mosaïque (emoji, plus une boule de Noël dessinée) */
 const BALL='<circle r="15" cy="6" fill="#d6303f"/><rect x="-5" y="-14" width="10" height="7" rx="2" fill="#e6bd55"/><path d="M-9 3q3-10 11-9" stroke="#fff" stroke-width="3" fill="none" opacity=".7"/>';
-const MOT={printemps:['🌷','🐝','🦋'],ete:['☀️','🍉','🏖️'],automne:['🍂','🌰','🍄'],hiver:['❄️','⛄','🧤'],noel:['🎄','🎅',BALL],paques:['🐣','🥚','🐇'],halloween:['🎃','👻','🦇']};
+const MOT={printemps:['🌷','🐝','🦋'],ete:['☀️','🍉','🏖️'],automne:['🍂','🌰','🍄'],hiver:['❄️','⛄','🧤'],noel:['🎄','🎅',BALL],nouvelan:['🥂','🎆','🎉'],paques:['🐣','🥚','🐇'],halloween:['🎃','👻','🦇']};
 const SPOT=[[40,60,-12],[150,45,10],[215,130,-8],[80,160,8],[170,225,-10],[25,235,12]];
 function pattern(th){
   const g=SPOT.map(([x,y,r],i)=>{const m=MOT[th][i%3],tr=`translate(${x} ${y}) rotate(${r})`;
@@ -171,16 +173,18 @@ const monday=s=>{const d=pd(s);d.setDate(d.getDate()-((d.getDay()+6)%7));return 
 
 /* ============ ÉTAT + SYNCHRO ============ */
 // Chaque tâche porte "at" (horodatage) : à la fusion, la modification la plus récente gagne, tâche par tâche.
-const init=()=>{const t0=today(),o={};BASE.forEach((k,i)=>o[k[0]]={last:null,next:add(t0,i%Math.min(k[2],7)),at:0});return{tasks:o,score:0}};
+const init=()=>{const t0=today(),o={};BASE.forEach((k,i)=>o[k[0]]={last:null,next:add(t0,i%Math.min(k[2],7)),at:0});return{tasks:o,abs:{},score:0}};
 const ls=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
 const lset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 let S=ls('mmj',null)||init(), themePref=ls('mmj-theme','auto'), theme='printemps', who=ls('mmj-who',''), cfg=ls('mmj-cfg',null);
 let V='day', mo=0, sel=today();
 
 const ids=(a,b)=>[...new Set([...Object.keys(a.tasks),...Object.keys(b?b.tasks:{})])];
-const merge=(a,b)=>{const r={tasks:{},score:Math.max(a.score||0,b.score||0)};
-  ids(a,b).forEach(i=>{const x=a.tasks[i],y=b.tasks[i];r.tasks[i]=!y||(x&&x.at>=y.at)?x:y});return r};
-const sig=s=>ids(s).sort().map(i=>i+s.tasks[i].at).join()+s.score;
+const pick=(x,y)=>!y||(x&&x.at>=y.at)?x:y;
+const merge=(a,b)=>{const r={tasks:{},abs:{},score:Math.max(a.score||0,b.score||0)};
+  ids(a,b).forEach(i=>{r.tasks[i]=pick(a.tasks[i],b.tasks[i])});
+  const A=a.abs||{},B=b.abs||{};[...new Set([...Object.keys(A),...Object.keys(B)])].forEach(i=>{r.abs[i]=pick(A[i],B[i])});return r};
+const sig=s=>ids(s).sort().map(i=>i+s.tasks[i].at).join()+Object.keys(s.abs||{}).sort().map(i=>i+s.abs[i].at).join()+s.score;
 // Liste affichée = tâches de base (modifiables) + tâches ajoutées, sans les supprimées. Textes échappés.
 function rebuild(){
   const o=S.tasks,out=[];
@@ -215,7 +219,7 @@ function undo(id){
 }
 function celebrate(k){
   const [ic,who_,txt]=JOKES[Math.floor(Math.random()*JOKES.length)];
-  const nxt=S.tasks[k[0]].next;
+  const nm=nextMap(add(today(),1))[k[0]],nxt=nm?nm.d:S.tasks[k[0]].next;
   const base=THEMES[theme][0],set=[base,'✨','💖',base,'🎉'];
   for(let i=0;i<26;i++){const s=document.createElement('span');s.className='cf';s.textContent=set[i%set.length];
     s.style.left=Math.random()*95+'vw';s.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),2600)}
@@ -229,23 +233,60 @@ function celebrate(k){
 }
 
 /* ============ CALCUL DES OCCURRENCES ============ */
-// Projette chaque tâche : prochaine date, puis + périodicité. Une tâche en retard apparaît à aujourd’hui.
+/* ---- Vacances scolaires zone B (dernier jour de congé inclus) : à compléter chaque année ---- */
+const VS=[['2026-10-17','2026-11-01','Toussaint'],['2026-12-19','2027-01-03','Noël'],['2027-02-20','2027-03-07','Hiver'],
+  ['2027-04-17','2027-05-02','Printemps'],['2027-07-03','2027-09-01','Été'],['2027-10-23','2027-11-07','Toussaint']];
+const D0={day:'numeric',month:'short'};
+const inAbs=d=>Object.values(S.abs||{}).some(a=>a&&!a.del&&d>=a.from&&d<=a.to);
+const inVac=d=>VS.some(v=>d>=v[0]&&d<=v[1]);
+const resume=f=>{let d=today();for(let i=0;i<400&&f(d);i++)d=add(d,1);return d};
+const legend=`<p class="text-xs font-bold mt-2 text-center" style="color:var(--mu)">Trait vert : vacances scolaires · trait gris : absence</p>`;
+
+/* Règles :
+   - absence : toutes les tâches à venir sont décalées du nombre de jours d’absence (rien n’est programmé pendant l’absence) ;
+   - vacances scolaires : seules les tâches de 15 jours ou moins ; les autres sont reportées après les vacances,
+     2 par semaine maximum, dans l’ordre où elles étaient prévues.
+   Calcul à l’affichage : la prochaine date de chaque tâche reste « validation + périodicité ». */
+function plan(to){
+  const T=today(),out=[],cur={},cnt={},nn={};
+  const ab=Object.values(S.abs||{}).filter(a=>a&&!a.del).sort((x,y)=>x.from<y.from?-1:1);
+  // Une absence située entre la dernière réalisation (prev) et l’échéance (d) décale cette échéance du nombre de jours d’absence
+  const shift=(prev,d)=>{ab.forEach(a=>{if(prev<a.from&&d>=a.from)d=add(d,diff(a.to,a.from)+1)});return d};
+  TASKS.forEach(k=>{const t=S.tasks[k[0]];cur[k[0]]=shift(t.last||T,t.next);nn[k[0]]=0});
+  for(let g=0;g<1500;g++){
+    let k=null;TASKS.forEach(x=>{const d=cur[x[0]];if(d<=to&&(!k||d<cur[k[0]]))k=x});
+    if(!k)break;
+    const id=k[0],nom=cur[id],long=k[2]>15,bl=d=>inAbs(d)||(long&&inVac(d));
+    let s=nom<T?T:nom,rep=0;
+    if(bl(s)){
+      let f=s;for(let i=0;i<400&&bl(f);i++)f=add(f,1);
+      s=f;rep=1;
+      if(long){let b=0;while((cnt[f+b]||0)>=2)b++;const c=cnt[f+b]||0;cnt[f+b]=c+1;
+        s=add(f,7*b+3*c);for(let i=0;i<60&&bl(s);i++)s=add(s,1)}
+    }
+    if(nom<T)for(let d=nom;d<T&&d<=to;d=add(d,1))out.push({k,d,late:diff(d,nom),n:-1,rep:0}); // rappel les jours précédents
+    cur[id]=s>to?'9999-12-31':shift(s,add(s,k[2]));
+    if(s<=to)out.push({k,d:s,late:s===T&&nom<T?diff(T,nom):0,n:nn[id]++,rep});
+  }
+  return out;
+}
 function occ(from,to){
-  const m={},T=today();
-  TASKS.forEach(k=>{const t=S.tasks[k[0]];
-    if(t.last&&t.last>=from&&t.last<=to)(m[t.last]=m[t.last]||[]).push({k,done:1});
-    let d=t.next,late=0;if(d<T){late=diff(T,d);d=T}
-    for(let n=0;d<=to&&n<400;n++){if(d>=from)(m[d]=m[d]||[]).push({k,late:n===0?late:0,n});d=add(d,k[2])}});
+  const m={};
+  TASKS.forEach(k=>{const t=S.tasks[k[0]];if(t.last&&t.last>=from&&t.last<=to)(m[t.last]=m[t.last]||[]).push({k,done:1})});
+  plan(to).forEach(o=>{if(o.d>=from&&o.d<=to)(m[o.d]=m[o.d]||[]).push(o)});
   return m;
 }
+// Prochaine occurrence programmée de chaque tâche, à partir de la date from
+function nextMap(from){const m=occ(from,add(today(),420)),r={};
+  Object.keys(m).sort().forEach(d=>m[d].forEach(o=>{if(!o.done&&!r[o.k[0]])r[o.k[0]]={d,rep:o.rep,late:o.late}}));return r}
 
 /* ============ AFFICHAGE ============ */
 function row(o,date){
-  const {k,done,late,n}=o,t=S.tasks[k[0]],isToday=date===today();
+  const {k,done,late,n,rep}=o,t=S.tasks[k[0]],isToday=date===today();
   const can=done||(date<=today()||n===0);
-  const sub=done?`Fait ${t.by?'par '+t.by+' ':''}aujourd’hui`:late?`En retard de ${late} jour${late>1?'s':''}`:per(k[2]);
+  const sub=done?`Fait ${t.by?'par '+t.by+' ':''}aujourd’hui`:late?`⏰ En retard de ${late} jour${late>1?'s':''}`:rep?'Reportée (vacances ou absence)':per(k[2]);
   const act=done?`undo('${k[0]}')`:`validate('${k[0]}')`;
-  return `<div class="card p-3 flex items-center gap-3 ${done?'opacity-70':''}">
+  return `<div class="card p-3 flex items-center gap-3 ${done?'opacity-70':''}" style="${late>0&&!done?'box-shadow:inset 4px 0 0 var(--ac)':''}">
     <div class="text-2xl w-10 h-10 grid place-items-center rounded-2xl flex-none" style="background:var(--ac2)">${k[3]}</div>
     <div class="flex-1 min-w-0"><div class="font-extrabold leading-tight ${done?'line-through':''}">${k[1]}</div>
     <div class="text-xs font-bold" style="color:${late?'var(--ac)':'var(--mu)'}">${sub}</div></div>
@@ -259,12 +300,17 @@ function vDay(){
   const T=today(),m=occ(T,T),L=(m[T]||[]);
   const todo=L.filter(o=>!o.done).sort((a,b)=>(b.late||0)-(a.late||0)),dn=L.filter(o=>o.done);
   const tot=todo.length+dn.length,p=tot?Math.round(dn.length/tot*100):100;
-  const up=TASKS.map(k=>[k,S.tasks[k[0]].next]).filter(x=>x[1]>T).sort((a,b)=>a[1]<b[1]?-1:1).slice(0,3);
-  let h=`<div class="card p-4 flex items-center gap-4">
+  const nm=nextMap(add(T,1)),up=TASKS.filter(k=>nm[k[0]]).map(k=>[k,nm[k[0]].d]).sort((a,b)=>a[1]<b[1]?-1:1).slice(0,3);
+  const fl={weekday:'long',day:'numeric',month:'long'};
+  const bn=inAbs(T)?`✈️ Absence : toutes les tâches sont décalées du nombre de jours d’absence. Reprise le ${fmt(resume(inAbs),fl)}.`:inVac(T)?`🏖️ Vacances scolaires : seules les tâches de 15 jours ou moins sont programmées. Les autres reprennent après le ${fmt(add(resume(inVac),-1),fl)}, 2 par semaine maximum.`:'';
+  let h=(bn?`<div class="card p-3 text-sm font-extrabold leading-snug" style="color:var(--ac)">${bn}</div>`:'')+`<div class="card p-4 flex items-center gap-4">
     <div class="bubble" style="--p:${p}"><div><div><div class="fr text-3xl leading-none">${dn.length}/${tot}</div><div class="text-xs font-bold" style="color:var(--mu)">aujourd’hui</div></div></div></div>
     <div><div class="fr text-xl leading-tight">${!tot?'Journée libre !':todo.length?'Allez, on y va doucement':'Tout est fait, bravo !'}</div>
     <div class="text-sm font-bold mt-1" style="color:var(--mu)">${S.score} tâche${S.score>1?'s':''} validée${S.score>1?'s':''} au total</div></div></div>`;
-  h+=todo.length?todo.map(o=>row(o,T)).join(''):(tot?'':empty('Rien de prévu aujourd’hui. Profite !'));
+  const lt=todo.filter(o=>o.late>0),tdy=todo.filter(o=>!(o.late>0));
+  if(lt.length)h+=`<h2 class="text-base mt-2 px-1" style="color:var(--ac)">⏰ En retard (${lt.length}) · à faire dès que possible</h2>`+lt.map(o=>row(o,T)).join('');
+  if(tdy.length)h+=(lt.length?`<h2 class="text-base mt-2 px-1" style="color:var(--mu)">Aujourd’hui</h2>`:'')+tdy.map(o=>row(o,T)).join('');
+  else if(!tot)h+=empty('Rien de prévu aujourd’hui. Profite !');
   if(dn.length)h+=`<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Déjà fait</h2>`+dn.map(o=>row(o,T)).join('');
   if(up.length)h+=`<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Bientôt</h2>`+up.map(([k,d])=>`<div class="card p-3 flex items-center gap-3 opacity-80"><div class="text-xl">${k[3]}</div><div class="flex-1 font-bold text-sm">${k[1]}</div><div class="text-xs font-extrabold" style="color:var(--mu)">${fmt(d)}</div></div>`).join('');
   return h;
@@ -273,7 +319,7 @@ function vDay(){
 const cell=(s,label,c)=>{
   const on=s===sel,td=s===today();
   const dot='<i class="w-1.5 h-1.5 rounded-full" style="background:'+(on?'#fff':'var(--ac)')+'"></i>';
-  return `<button onclick="sel='${s}';render()" class="rounded-2xl font-extrabold text-sm h-12 flex flex-col items-center justify-center" style="background:${on?'var(--ac)':td?'var(--ac2)':'transparent'};color:${on?'#fff':'var(--tx)'}">${label}
+  return `<button onclick="sel='${s}';render()" class="rounded-2xl font-extrabold text-sm h-12 flex flex-col items-center justify-center" style="background:${on?'var(--ac)':td?'var(--ac2)':'transparent'};color:${on?'#fff':'var(--tx)'};box-shadow:${inAbs(s)?'inset 0 -3px 0 var(--mu)':inVac(s)?'inset 0 -3px 0 var(--ok)':'none'}">${label}
     <div class="flex justify-center gap-0.5 h-1.5 mt-0.5">${dot.repeat(Math.min(c,3))}</div></button>`};
 const wdHead=L=>`<div class="grid grid-cols-7 text-center text-xs font-extrabold mb-1" style="color:var(--mu)">${L.map(x=>`<div>${x}</div>`).join('')}</div>`;
 const wdays=wdHead(['L','M','M','J','V','S','D']);
@@ -288,7 +334,7 @@ function vWeek(){
     <button class="chip" onclick="wk--;render()">‹</button>
     <div class="fr text-lg">${fmt(a,{day:'numeric',month:'short'})} – ${fmt(b,{day:'numeric',month:'short'})}</div>
     <button class="chip" onclick="wk++;render()">›</button></div>
-    ${wd(a)}<div class="grid grid-cols-7 gap-y-1 text-center">${g}</div></div>`+dayList(m,sel);
+    ${wd(a)}<div class="grid grid-cols-7 gap-y-1 text-center">${g}</div>${legend}</div>`+dayList(m,sel);
 }
 function vMonth(){
   const b=new Date();b.setDate(1);b.setMonth(b.getMonth()+mo);
@@ -301,7 +347,7 @@ function vMonth(){
     <button class="chip" onclick="mo--;render()">‹</button>
     <div class="fr text-lg capitalize">${b.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div>
     <button class="chip" onclick="mo++;render()">›</button></div>
-    ${wdays}<div class="grid grid-cols-7 gap-y-1 text-center">${g}</div></div>`+dayList(m,sel);
+    ${wdays}<div class="grid grid-cols-7 gap-y-1 text-center">${g}</div>${legend}</div>`+dayList(m,sel);
 }
 function vYear(){
   const T=today(),m=occ(T,add(T,365)),by={};
@@ -318,7 +364,7 @@ function render(){
   theme=themePref!=='auto'&&THEMES[themePref]?themePref:autoTheme();
   document.documentElement.dataset.th=theme;
   document.documentElement.style.backgroundImage=pattern(theme);document.documentElement.style.backgroundSize='260px';
-  $('#ttl').textContent=THEMES[theme][0]+' Ma Maison Joyeuse';
+  $('#ttl').textContent=THEMES[theme][0]+' Chez Nous, Tout Doux';
   $('#sub').textContent=(who?'Coucou '+who+' · ':'')+fmt(today(),{weekday:'long',day:'numeric',month:'long'});
   const tabs=[['day','Jour'],['week','Semaine'],['month','Mois'],['year','Année'],['manage','Gérer']];
   $('#tabs').innerHTML=tabs.map(([k,l])=>`<button class="chip flex-1 text-center ${V===k?'on':''}" style="padding:.5rem .1rem;font-size:.8rem" onclick="V='${k}';render();scrollTo(0,0)">${l}</button>`).join('');
@@ -328,16 +374,18 @@ function render(){
 
 /* ============ GESTION DES TÂCHES ============ */
 function vManage(){
-  const T=today(),L=[...TASKS].sort((a,b)=>a[2]-b[2]||a[1].localeCompare(b[1]));
+  const T=today(),NX=nextMap(T),L=[...TASKS].sort((a,b)=>a[2]-b[2]||a[1].localeCompare(b[1]));
   const gone=Object.keys(S.tasks).filter(i=>S.tasks[i].del);
   let h=`<button class="chip on w-full text-center py-3 fr text-base" onclick="editTask()">+ Ajouter une tâche</button>
+    <button class="chip on w-full text-center py-3 fr text-base" onclick="editAbs()">✈️ Ajouter une absence</button>${absList()}
     <p class="text-sm font-bold px-1" style="color:var(--mu)">${L.length} tâches. Touche le crayon pour changer le nom, le rythme ou la prochaine date.</p>`;
   h+=L.map(k=>{const t=S.tasks[k[0]];
     return `<div class="card p-3 flex items-center gap-3">
       <div class="text-2xl w-10 h-10 grid place-items-center rounded-2xl flex-none" style="background:var(--ac2)">${k[3]}</div>
       <div class="flex-1 min-w-0"><div class="font-extrabold leading-tight">${k[1]}</div>
-      <div class="text-xs font-bold" style="color:var(--mu)">${per(k[2])} · prochaine : ${t.next<T?'en retard':fmt(t.next,{day:'numeric',month:'short'})}</div></div>
+      <div class="text-xs font-bold" style="color:var(--mu)">${per(k[2])} · prochaine : ${NX[k[0]]?(NX[k[0]].late?'en retard':fmt(NX[k[0]].d,D0)+(NX[k[0]].rep?' (reportée)':'')):'—'}</div></div>
       <button class="card w-10 h-10 grid place-items-center" onclick="editTask('${k[0]}')" aria-label="Modifier">✏️</button></div>`}).join('');
+  h+=vacInfo();
   if(gone.length)h+=`<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Supprimées</h2>`+gone.map(i=>{
     const t=S.tasks[i],d=BASE.find(x=>x[0]===i)||[];
     return `<div class="card p-3 flex items-center gap-3 opacity-70"><div class="text-xl">${esc(t.icon||d[3])}</div><div class="flex-1 font-bold text-sm">${esc(t.name||d[1])}</div><button class="chip on text-xs" onclick="restoreTask('${i}')">Remettre</button></div>`}).join('');
@@ -377,15 +425,58 @@ function delTask(id){
 }
 function restoreTask(id){const t=S.tasks[id];t.del=0;t.at=Date.now();save();render()}
 
+/* ============ VACANCES & ABSENCES ============ */
+// Absences à venir (affichées en haut de l’onglet Gérer, sous les boutons d’ajout)
+function absList(){
+  const T=today(),A=Object.keys(S.abs||{}).filter(i=>S.abs[i]&&!S.abs[i].del&&S.abs[i].to>=T).sort((x,y)=>S.abs[x].from<S.abs[y].from?-1:1);
+  return A.map(i=>{const a=S.abs[i];return `<div class="card p-3 flex items-center gap-3"><div class="text-2xl">✈️</div>
+      <div class="flex-1 min-w-0"><div class="font-extrabold leading-tight">${esc(a.name||'Absence')}</div><div class="text-xs font-bold" style="color:var(--mu)">du ${fmt(a.from,D0)} au ${fmt(a.to,D0)} · tâches décalées de ${diff(a.to,a.from)+1} j</div></div>
+      <button class="card w-10 h-10 grid place-items-center" onclick="editAbs('${i}')" aria-label="Modifier">✏️</button></div>`}).join('');
+}
+function vacInfo(){
+  const nv=VS.filter(v=>v[1]>=today()).slice(0,3);
+  return `<h2 class="text-base mt-3 px-1" style="color:var(--mu)">Vacances scolaires</h2>
+    <div class="card p-3 text-sm font-bold leading-snug" style="color:var(--mu)">🏖️ Zone B : ${nv.map(v=>v[2]+' du '+fmt(v[0],D0)+' au '+fmt(v[1],D0)).join(' · ')}.<br>Pendant ces périodes, seules les tâches de 15 jours ou moins sont programmées. Les autres sont reportées après, 2 par semaine maximum, dans l’ordre prévu.</div>`;
+}
+function editAbs(id){
+  const a=id&&S.abs[id];
+  $('#layer').innerHTML=`<div class="sheet" onclick="if(event.target===this)closeSettings()"><div>
+    <h2 class="text-xl mb-1">${id?'Modifier l’absence':'Nouvelle absence'}</h2>
+    <p class="text-sm mb-3" style="color:var(--mu)">Toutes les tâches à venir sont décalées du nombre de jours d’absence. Rien n’est programmé pendant l’absence.</p>
+    <div class="font-extrabold mb-1">Nom (facultatif)</div>
+    <input id="a-name" value="${a?esc(a.name||''):''}" placeholder="Ex. Vacances en famille" class="mb-4">
+    <div class="font-extrabold mb-1">Premier jour d’absence</div>
+    <input id="a-from" type="date" value="${a?a.from:today()}" class="mb-4">
+    <div class="font-extrabold mb-1">Dernier jour d’absence</div>
+    <input id="a-to" type="date" value="${a?a.to:add(today(),6)}" class="mb-4">
+    <button class="chip on w-full text-center py-3" onclick="saveAbs('${id||''}')">Enregistrer</button>
+    ${id?`<button class="w-full text-center py-3 mt-1 font-extrabold" style="color:var(--ac)" onclick="delAbs('${id}')">Supprimer cette absence</button>`:''}
+  </div></div>`;
+}
+function saveAbs(id){
+  const name=$('#a-name').value.trim(),from=$('#a-from').value,to=$('#a-to').value;
+  if(!from||!to||to<from){$('#a-to').focus();return}
+  S.abs=S.abs||{};S.abs[id||'a'+Date.now().toString(36)]={from,to,name,at:Date.now()};
+  save();closeSettings();render();
+}
+function delAbs(id){if(!confirm('Supprimer cette absence ?'))return;const a=S.abs[id];a.del=1;a.at=Date.now();save();closeSettings();render()}
+
 /* ============ RÉGLAGES ============ */
 function openSettings(){
   $('#layer').innerHTML=`<div class="sheet" onclick="if(event.target===this)closeSettings()"><div>
     <h2 class="text-xl mb-3">Réglages</h2>
     <div class="font-extrabold mb-2">Thème</div>
     <div class="flex flex-wrap gap-2 mb-1"><button class="chip ${themePref==='auto'||!THEMES[themePref]?'on':''}" onclick="themePref='auto';lset('mmj-theme',themePref);render();openSettings()">✨ Auto</button>${Object.entries(THEMES).map(([k,[e,l]])=>`<button class="chip ${themePref===k?'on':''}" onclick="themePref='${k}';lset('mmj-theme',themePref);render();openSettings()">${e} ${l}</button>`).join('')}</div>
-    <p class="text-xs font-bold mb-4" style="color:var(--mu)">Auto : la saison change toute seule, et Noël, Pâques et Halloween arrivent 15 jours avant. Thème actuel : ${THEMES[theme][1]}.</p>
+    <p class="text-xs font-bold mb-4" style="color:var(--mu)">Auto : la saison change toute seule, et les fêtes (Halloween, Noël, Nouvel An, Pâques) arrivent 15 jours avant. Thème actuel : ${THEMES[theme][1]}.</p>
     <div class="font-extrabold mb-2">Mon prénom</div>
     <input id="f-who" value="${who}" placeholder="Ton prénom" class="mb-4">
+    <div class="font-extrabold mb-1">Rappel quotidien</div>
+    <div class="flex items-center gap-2 mb-1">
+      <button class="chip ${NT.on?'on':''}" onclick="toggleNotif()">${NT.on?'🔔 Activé':'🔕 Désactivé'}</button>
+      <input type="time" value="${NT.time}" style="width:120px" onchange="NT.time=this.value||'09:00';lset('mmj-notif',NT);checkNotify()">
+      <button class="chip" onclick="testNotif()">Tester</button>
+    </div>
+    <p class="text-xs font-bold mb-4" style="color:var(--mu)">Chaque jour, la liste des tâches du jour (avec celles en retard). Pas de rappel pendant une absence ni s’il n’y a rien à faire.</p>
     <div class="font-extrabold mb-1">Synchronisation à deux</div>
     <p class="text-sm mb-2" style="color:var(--mu)">Même code du foyer sur les deux téléphones, et l’adresse d’une base Firebase Realtime Database (mode test). Sans cela, tout reste sur cet appareil.</p>
     <input id="f-url" value="${cfg?cfg.url:''}" placeholder="https://mon-projet-default-rtdb.firebaseio.com" class="mb-2">
@@ -401,17 +492,57 @@ function saveSettings(){
   closeSettings();render();listen();pull();
 }
 
+/* ============ RAPPEL QUOTIDIEN (9 h par défaut) ============ */
+/* Une appli web sans serveur ne peut pas se réveiller seule : le rappel part à l’heure choisie si l’appli est ouverte
+   ou en arrière-plan, sinon à la première ouverture de la journée (si l’heure est passée). */
+let NT=ls('mmj-notif',{on:false,time:'09:00'}),ntTimer;
+const unesc=t=>t.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&amp;/g,'&');
+function todayBrief(){
+  const T=today();if(inAbs(T))return null;
+  const L=(occ(T,T)[T]||[]).filter(o=>!o.done).sort((a,b)=>(b.late||0)-(a.late||0));if(!L.length)return null;
+  const late=L.filter(o=>o.late>0).length,names=L.slice(0,4).map(o=>unesc(o.k[1]));
+  return `${L.length} tâche${L.length>1?'s':''} aujourd’hui${late?' (dont '+late+' en retard ⏰)':''} : ${names.join(', ')}${L.length>4?'…':''}`;
+}
+async function notify(force){
+  if(!('Notification' in window)||Notification.permission!=='granted')return false;
+  const b=todayBrief();if(!b&&!force)return false;
+  const title=THEMES[theme][0]+' Chez Nous, Tout Doux',o={body:b||'Rien de prévu aujourd’hui. Profite !',tag:'jour-'+today()};
+  try{
+    if(!navigator.serviceWorker)throw 0;
+    const r=await Promise.race([navigator.serviceWorker.ready,new Promise((_,j)=>setTimeout(j,1500))]);
+    await r.showNotification(title,o);
+  }catch(e){try{new Notification(title,o)}catch(e2){return false}}
+  return true;
+}
+const dueAt=()=>{const [h,m]=NT.time.split(':'),d=new Date();d.setHours(+h||9,+m||0,0,0);return d};
+async function checkNotify(){
+  clearTimeout(ntTimer);if(!NT.on)return;
+  const T=today(),at=dueAt();
+  if(ls('mmj-last','')!==T&&new Date()>=at){lset('mmj-last',T);await notify()}
+  const next=ls('mmj-last','')!==T&&new Date()<at?at:new Date(at.getTime()+864e5);
+  ntTimer=setTimeout(checkNotify,Math.min(next-new Date()+1000,2e9));
+}
+async function toggleNotif(){
+  if(!NT.on){
+    if(!('Notification' in window)){alert('Les notifications ne sont pas disponibles ici. Sur iPhone, installe d’abord l’appli sur l’écran d’accueil.');return}
+    const p=Notification.permission==='granted'?'granted':await Notification.requestPermission();
+    if(p!=='granted'){alert('Autorise les notifications dans les réglages du navigateur pour activer le rappel.');return}
+  }
+  NT.on=!NT.on;lset('mmj-notif',NT);openSettings();checkNotify();
+}
+async function testNotif(){
+  if(!('Notification' in window)||Notification.permission!=='granted'){alert('Active d’abord le rappel.');return}
+  await notify(true);
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkNotify()});
+
 /* ============ PWA ============ */
 const icon="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="24" fill="#ff8fb1"/><text x="50" y="68" font-size="56" text-anchor="middle">🏡</text></svg>');
-$('#mf').href=URL.createObjectURL(new Blob([JSON.stringify({name:'Ma Maison Joyeuse',short_name:'Maison',display:'standalone',background_color:'#fff0f5',theme_color:'#ff8fb1',icons:[{src:icon,sizes:'any',type:'image/svg+xml',purpose:'any'}]})],{type:'application/manifest+json'}));
-/* Mode hors-ligne : ajoute à côté de ce fichier un sw.js contenant :
-   const C='mmj-v1';
-   self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(['./','./maison-joyeuse.html']))));
-   self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>caches.match(e.request))));
-*/
+$('#mf').href=URL.createObjectURL(new Blob([JSON.stringify({name:'Chez Nous, Tout Doux',short_name:'Chez Nous',display:'standalone',background_color:'#fff0f5',theme_color:'#ff8fb1',icons:[{src:icon,sizes:'any',type:'image/svg+xml',purpose:'any'}]})],{type:'application/manifest+json'}));
+/* sw.js (fichier fourni à côté de celui-ci) : mode hors-ligne, mises à jour automatiques et notifications. */
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 
-render();listen();pull();
+render();listen();pull();checkNotify();
 setInterval(()=>{if(document.visibilityState==='visible')pull()},30000);
 </script>
 </body>
