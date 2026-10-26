@@ -241,7 +241,7 @@ const D0={day:'numeric',month:'short'};
 const inAbs=d=>Object.values(S.abs||{}).some(a=>a&&!a.del&&d>=a.from&&d<=a.to);
 const inVac=d=>VS.some(v=>d>=v[0]&&d<=v[1]);
 const resume=f=>{let d=today();for(let i=0;i<400&&f(d);i++)d=add(d,1);return d};
-const legend=`<p class="text-xs font-bold mt-2 text-center" style="color:var(--mu)">Trait vert : vacances scolaires · trait gris : absence</p>`;
+const legend=`<p class="text-xs font-bold mt-2 text-center" style="color:var(--mu)">🟠 à faire · 🟢 tout est fait · trait bleu : vacances scolaires · trait gris : absence</p>`;
 
 /* Règles :
    - absence : toutes les tâches à venir sont décalées du nombre de jours d’absence (rien n’est programmé pendant l’absence) ;
@@ -317,10 +317,11 @@ function vDay(){
   return h;
 }
 // Cellule de jour et en-tête partagés par les vues Semaine et Mois
-const cell=(s,label,c)=>{
-  const on=s===sel,td=s===today();
-  const dot='<i class="w-1.5 h-1.5 rounded-full" style="background:'+(on?'#fff':'var(--ac)')+'"></i>';
-  return `<button onclick="sel='${s}';render()" class="rounded-2xl font-extrabold text-sm h-12 flex flex-col items-center justify-center" style="background:${on?'var(--ac)':td?'var(--ac2)':'transparent'};color:${on?'#fff':'var(--tx)'};box-shadow:${inAbs(s)?'inset 0 -3px 0 var(--mu)':inVac(s)?'inset 0 -3px 0 var(--ok)':'none'}">${label}
+// Points : aucun = pas de tâche ; orange = il reste des tâches à faire ; vert = toutes les tâches du jour sont faites
+const cell=(s,label,L)=>{
+  const on=s===sel,td=s===today(),c=L.length,fin=c>0&&L.every(o=>o.done);
+  const dot='<i class="w-1.5 h-1.5 rounded-full" style="background:'+(fin?'#2fb86d':'#ff9a3c')+(on?';box-shadow:0 0 0 1.5px #fff':'')+'"></i>';
+  return `<button onclick="sel='${s}';render()" class="rounded-2xl font-extrabold text-sm h-12 flex flex-col items-center justify-center" style="background:${on?'var(--ac)':td?'var(--ac2)':'transparent'};color:${on?'#fff':'var(--tx)'};box-shadow:${inAbs(s)?'inset 0 -3px 0 var(--mu)':inVac(s)?'inset 0 -3px 0 #5aa9e6':'none'}">${label}
     <div class="flex justify-center gap-0.5 h-1.5 mt-0.5">${dot.repeat(Math.min(c,3))}</div></button>`};
 const wdHead=L=>`<div class="grid grid-cols-7 text-center text-xs font-extrabold mb-1" style="color:var(--mu)">${L.map(x=>`<div>${x}</div>`).join('')}</div>`;
 const wdays=wdHead(['L','M','M','J','V','S','D']);
@@ -330,7 +331,7 @@ let wk=0;
 function vWeek(){
   const a=add(today(),wk*7),b=add(a,6),m=occ(a,b); // la semaine commence aujourd’hui (jour J)
   if(sel<a||sel>b)sel=wk===0?today():a;
-  let g='';for(let i=0;i<7;i++){const d=add(a,i);g+=cell(d,pd(d).getDate(),(m[d]||[]).length)}
+  let g='';for(let i=0;i<7;i++){const d=add(a,i);g+=cell(d,pd(d).getDate(),m[d]||[])}
   return `<div class="card p-3"><div class="flex items-center justify-between mb-2">
     <button class="chip" onclick="wk--;render()">‹</button>
     <div class="fr text-lg">${fmt(a,{day:'numeric',month:'short'})} – ${fmt(b,{day:'numeric',month:'short'})}</div>
@@ -343,7 +344,7 @@ function vMonth(){
   const m=occ(first,last),off=(b.getDay()+6)%7,n=new Date(y,mm+1,0).getDate();
   if(sel<first||sel>last)sel=mo===0?today():first;
   let g='';for(let i=0;i<off;i++)g+='<div></div>';
-  for(let d=1;d<=n;d++){const s=iso(new Date(y,mm,d));g+=cell(s,d,(m[s]||[]).length)}
+  for(let d=1;d<=n;d++){const s=iso(new Date(y,mm,d));g+=cell(s,d,m[s]||[])}
   return `<div class="card p-3"><div class="flex items-center justify-between mb-2">
     <button class="chip" onclick="mo--;render()">‹</button>
     <div class="fr text-lg capitalize">${b.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})}</div>
