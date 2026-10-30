@@ -237,6 +237,7 @@ function celebrate(k){
 /* ---- Vacances scolaires zone B (dernier jour de congé inclus) : à compléter chaque année ---- */
 const VS=[['2026-10-17','2026-11-01','Toussaint'],['2026-12-19','2027-01-03','Noël'],['2027-02-20','2027-03-07','Hiver'],
   ['2027-04-17','2027-05-02','Printemps'],['2027-07-03','2027-09-01','Été'],['2027-10-23','2027-11-07','Toussaint']];
+const VERSION='30/10/2026 (b)'; // à changer à chaque mise à jour pour vérifier quelle version tourne
 const D0={day:'numeric',month:'short'};
 const inAbs=d=>Object.values(S.abs||{}).some(a=>a&&!a.del&&d>=a.from&&d<=a.to);
 const inVac=d=>VS.some(v=>d>=v[0]&&d<=v[1]);
@@ -498,6 +499,7 @@ function openSettings(){
     <input id="f-url" value="${cfg?cfg.url:''}" placeholder="https://mon-projet-default-rtdb.firebaseio.com" class="mb-2">
     <input id="f-code" value="${cfg?cfg.code:''}" placeholder="Code du foyer (ex. maison-fleurie-42)" class="mb-4">
     <button class="chip on w-full text-center py-3" onclick="saveSettings()">Enregistrer</button>
+    <p class="text-xs font-bold text-center mt-3" style="color:var(--mu)">Version du ${VERSION}</p>
   </div></div>`;
 }
 function closeSettings(){$('#layer').innerHTML=''}
